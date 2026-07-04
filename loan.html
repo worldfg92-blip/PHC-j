@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PHC Loan</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        .page {
+            min-height: 100vh;
+            background: #eef2f7;
+            padding: 20px;
+        }
+
+        .header {
+            font-size: 20px;
+            font-weight: 800;
+            color: #004b87;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+
+        .loan-card {
+            background: white;
+            border-radius: 25px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, .08);
+        }
+
+        .balance {
+            font-size: 30px;
+            font-weight: 900;
+            color: #004b87;
+            margin: 15px 0;
+        }
+
+        .input {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            background: #f3f6fa;
+            border-radius: 15px;
+            margin: 12px 0;
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 30px;
+            background: #004b87;
+            color: white;
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            background: #003d70;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 15px;
+            background: #e8f5ed;
+            color: #1a8a4a;
+            font-weight: 600;
+        }
+
+        .status.pending {
+            background: #fff8e6;
+            color: #b8860b;
+        }
+
+        .status.rejected {
+            background: #fde8e8;
+            color: #b33a4a;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #0a1a2a;
+            color: white;
+            padding: 14px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 14px;
+            z-index: 9999;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+            display: none;
+            max-width: 90%;
+            text-align: center;
+        }
+        .toast.show { display: block; }
+    </style>
+</head>
+
+<body>
+
+    <div class="page">
+
+        <div class="header" onclick="history.back()">
+            <i class="fas fa-arrow-left"></i>
+            Loan
+        </div>
+
+        <div class="loan-card">
+            <h2>Request Loan</h2>
+            <p>Available Loan Limit</p>
+            <div class="balance" id="loanLimitDisplay">$0.00</div>
+
+            <input class="input" id="loanAmount" type="number" placeholder="Enter loan amount">
+
+            <button id="requestLoanBtn" onclick="requestLoan()">
+                <i class="fas fa-hand-holding-dollar"></i>
+                Request Loan
+            </button>
+
+            <div class="status" id="loanStatus">
+                No active loan
+            </div>
+        </div>
+
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // ==========================================================
+        // GLOBAL DARK MODE LOADER
+        // ==========================================================
+        (function() {
+            if (localStorage.getItem("phc_dark_mode") === "true") {
+                document.body.classList.add("dark");
+            }
+        })();
+
+        // ==========================================================
+        // SUPABASE CONFIG (✅ UPDATED KEY)
+        // ==========================================================
+        const SUPABASE_URL = "https://yeemcqozapopxyealasj.supabase.co";
+        const SUPABASE_ANON_KEY = "B_WcY4iFru-asD5NHaiNmxoPYGfebna1mXhvavDRJsk";
+
+        // ==========================================================
+        // HELPERS
+        // ==========================================================
+        function showToast(msg, duration = 3000) {
+            const toast = document.getElementById('toast');
+            if (!toast) return;
+            toast.textContent = msg;
+            toast.classList.add('show');
+            clearTimeout(toast._timer);
+            toast._timer = setTimeout(() => toast.classList.remove('show'), duration);
+        }
+
+        function getCurrentUser() {
+            const localUser = JSON.parse(localStorage.getItem('phc_current_user'));
+            if (!localUser || !localUser.email) return null;
+            return localUser;
+        }
+
+        async function fetchFromSupabase(table, query = '') {
+            const response = await fetch(`${SUPABASE_URL}/rest/v1/${table}${query}`, {
+                headers: {
+                    'apikey': SUPABASE_ANON_KEY,
+                    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                }
+            });
+            if (!response.ok) return [];
+            return await response.json();
+        }
+
+        async function saveToSupabase(table, data) {
+            const response = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
+                method: 'POST',
+                headers: {
+                    'apikey': SUPABASE_ANON_KEY,
+                    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                    'Content-Type': 'application/json',
+                    'Prefer': 'return=minimal'
+                },
+                body: JSON.stringify(data)
+            });
+            return response.ok;
+        }
+
+        async function updateSupabase(table, query, data) {
+            const response = await fetch(`${SUPABASE_URL}/rest/v1/${table}${query}`, {
+                method: 'PATCH',
+                headers: {
+                    'apikey': SUPABASE_ANON_KEY,
+                    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+            return response.ok;
+        }
+
+        // ==========================================================
+        // LOAD LOAN DATA
+        // ==========================================================
+        async function loadLoanPage() {
+            const user = getCurrentUser();
+            if (!user) {
+                showToast('⚠️ Please login first.');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Fetch user from Supabase
+            const users = await fetchFromSupabase('users', `?email=eq.${user.email}`);
+            if (users.length === 0) return;
+            const userData = users[0];
+
+            // Update loan limit display
+            const loanLimit = 5000.00;
+            document.getElementById('loanLimitDisplay').textContent = `$${loanLimit.toFixed(2)}`;
+
+            // Update loan status
+            const statusEl = document.getElementById('loanStatus');
+            const loanStatus = userData.loan_status || 'No active loan';
+            statusEl.textContent = loanStatus;
+            statusEl.className = 'status';
+            if (loanStatus === 'Approved') statusEl.classList.add('approved');
+            else if (loanStatus === 'Pending Review') statusEl.classList.add('pending');
+            else if (loanStatus === 'Rejected') statusEl.classList.add('rejected');
+        }
+
+        // ==========================================================
+        // REQUEST LOAN
+        // ==========================================================
+        async function requestLoan() {
+            const user = getCurrentUser();
+            if (!user) {
+                showToast('⚠️ Please login first.');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const amount = parseFloat(document.getElementById('loanAmount').value);
+            const btn = document.getElementById('requestLoanBtn');
+            const statusEl = document.getElementById('loanStatus');
+
+            if (!amount || amount <= 0) {
+                showToast('⚠️ Please enter a valid loan amount.');
+                return;
+            }
+
+            if (amount > 5000) {
+                showToast('⚠️ Maximum loan amount is $5,000.');
+                return;
+            }
+
+            btn.textContent = '⏳ Submitting...';
+            btn.disabled = true;
+
+            try {
+                // Save loan application to Supabase
+                await saveToSupabase('loans', {
+                    user_email: user.email,
+                    user_name: user.firstName + ' ' + user.lastName,
+                    amount: amount,
+                    months: '12',
+                    employed: 'Yes',
+                    property: 'No',
+                    housing: 'Rent',
+                    children: '0',
+                    marital: 'Single',
+                    status: 'pending'
+                });
+
+                // Update user's loan status in the users table
+                await updateSupabase('users', `?email=eq.${user.email}`, { loan_status: 'Pending Review' });
+
+                // Show success
+                statusEl.textContent = 'Pending Review';
+                statusEl.className = 'status pending';
+                showToast(`✅ Loan request of $${amount.toFixed(2)} submitted for review!`);
+                document.getElementById('loanAmount').value = '';
+
+            } catch (error) {
+                showToast('❌ Error submitting loan request. Please try again.');
+                console.error(error);
+            }
+
+            btn.textContent = 'Request Loan';
+            btn.disabled = false;
+        }
+
+        // ==========================================================
+        // INIT
+        // ==========================================================
+        document.addEventListener('DOMContentLoaded', loadLoanPage);
+    </script>
+
+</body>
+</html>

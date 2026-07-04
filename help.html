@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PHC Help</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        /* ========================================================== */
+        /* HELP PAGE - PROFESSIONAL STYLE                             */
+        /* ========================================================== */
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #eef2f7;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            color: #1a1a2e;
+            min-height: 100vh;
+        }
+
+        body.dark {
+            background: #0f172a;
+            color: #e2e8f0;
+        }
+
+        .app {
+            max-width: 480px;
+            margin: 0 auto;
+            background: #eef2f7;
+            min-height: 100vh;
+            padding-bottom: 80px;
+            position: relative;
+        }
+
+        body.dark .app {
+            background: #0f172a;
+        }
+
+        /* ========================================================== */
+        /* TOP BAR                                                     */
+        /* ========================================================== */
+        .topbar {
+            background: linear-gradient(135deg, #0d1b4a, #1a237e);
+            color: white;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        body.dark .topbar {
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            border-bottom: 1px solid #334155;
+        }
+
+        .topbar .logo {
+            font-size: 18px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #ffd700;
+        }
+
+        .topbar .logo i {
+            cursor: pointer;
+            font-size: 18px;
+            color: #ffffff;
+        }
+
+        .topbar .right-icons {
+            display: flex;
+            gap: 14px;
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .topbar .right-icons i {
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .topbar .right-icons i:hover {
+            color: #ffd700;
+        }
+
+        /* ========================================================== */
+        /* WELCOME BANNER                                              */
+        /* ========================================================== */
+        .welcome-banner {
+            background: linear-gradient(135deg, #1a237e, #0d47a1);
+            padding: 18px 20px 20px;
+            margin: 0 0 12px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body.dark .welcome-banner {
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            border-bottom: 2px solid #f5b342;
+        }
+
+        .welcome-banner::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -30%;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .welcome-banner h1 {
+            font-size: 22px;
+            font-weight: 800;
+            color: #ffffff;
+            position: relative;
+            z-index: 1;
+        }
+
+        .welcome-banner p {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            position: relative;
+            z-index: 1;
+            margin-top: 2px;
+        }
+
+        .welcome-banner .live-chat-btn {
+            display: inline-block;
+            margin-top: 10px;
+            background: rgba(255, 215, 0, 0.15);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            color: #ffd700;
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            position: relative;
+            z-index: 1;
+        }
+
+        .welcome-banner .live-chat-btn:hover {
+            background: rgba(255, 215, 0, 0.25);
+            transform: scale(1.02);
+        }
+
+        .welcome-banner .live-chat-btn .dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10b981;
+            margin-right: 6px;
+            animation: pulseDot 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulseDot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.8); }
+        }
+
+        /* ========================================================== */
+        /* MAIN CARD                                                   */
+        /* ========================================================== */
+        .card {
+            margin: 0 16px 16px 16px;
+            padding: 20px;
+            border-radius: 12px;
+            background: #ffffff;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+            border: 1px solid #e8ecf1;
+        }
+
+        body.dark .card {
+            background: #1e293b;
+            border-color: #334155;
+            box-shadow: none;
+        }
+
+        .card h2 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #212529;
+            margin-bottom: 12px;
+        }
+
+        body.dark .card h2 {
+            color: #f8fafc;
+        }
+
+        .card .card-subtitle {
+            font-size: 13px;
+            color: #6c757d;
+            margin-bottom: 12px;
+        }
+
+        body.dark .card .card-subtitle {
+            color: #94a3b8;
+        }
+
+        /* ========================================================== */
+        /* TRANSACTION ITEMS (FAQ)                                     */
+        /* ========================================================== */
+        .transaction {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 0;
+            border-bottom: 1px solid #f0f2f5;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        body.dark .transaction {
+            border-bottom-color: #334155;
+        }
+
+        .transaction:last-child {
+            border-bottom: none;
+        }
+
+        .transaction:hover {
+            background: #f8fafc;
+            margin: 0 -8px;
+            padding: 14px 8px;
+            border-radius: 8px;
+        }
+
+        body.dark .transaction:hover {
+            background: #2a3a5a;
+        }
+
+        .tx-left {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex: 1;
+        }
+
+        .tx-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .tx-icon.game {
+            background: #e8f1ff;
+            color: #1a237e;
+        }
+
+        .tx-icon.clock {
+            background: #fff8e6;
+            color: #b8860b;
+        }
+
+        .tx-icon.support {
+            background: #e6f7e6;
+            color: #1a8a4a;
+        }
+
+        .tx-icon.chat {
+            background: #f0e6ff;
+            color: #7c3aed;
+        }
+
+        body.dark .tx-icon.game {
+            background: #1a2a4a;
+            color: #60a5fa;
+        }
+
+        body.dark .tx-icon.clock {
+            background: #3a3a1a;
+            color: #f5b342;
+        }
+
+        body.dark .tx-icon.support {
+            background: #1a3a2a;
+            color: #10b981;
+        }
+
+        body.dark .tx-icon.chat {
+            background: #2a1a4a;
+            color: #a78bfa;
+        }
+
+        .tx-left div b {
+            font-size: 14px;
+            font-weight: 600;
+            color: #212529;
+            display: block;
+        }
+
+        body.dark .tx-left div b {
+            color: #f8fafc;
+        }
+
+        .tx-left div small {
+            font-size: 12px;
+            color: #6c757d;
+        }
+
+        body.dark .tx-left div small {
+            color: #94a3b8;
+        }
+
+        .transaction .chat-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: #1a237e;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        body.dark .transaction .chat-badge {
+            background: #f5b342;
+            color: #0f172a;
+        }
+
+        .transaction .chat-badge .dot-small {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #10b981;
+            display: inline-block;
+            animation: pulseDot 1.5s ease-in-out infinite;
+        }
+
+        /* ========================================================== */
+        /* ANSWER SECTION                                              */
+        /* ========================================================== */
+        .help-answer {
+            display: none;
+            margin-top: 12px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .help-answer.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message {
+            background: #f8fafc;
+            padding: 16px 18px;
+            border-radius: 12px;
+            border-left: 4px solid #1a237e;
+            font-size: 14px;
+            line-height: 1.7;
+            color: #212529;
+        }
+
+        body.dark .message {
+            background: #2a3a5a;
+            border-left-color: #f5b342;
+            color: #e2e8f0;
+        }
+
+        .message strong {
+            color: #1a237e;
+        }
+
+        body.dark .message strong {
+            color: #f5b342;
+        }
+
+        .message .faq-icon {
+            font-size: 24px;
+            display: inline-block;
+            margin-right: 8px;
+        }
+
+        /* ========================================================== */
+        /* QUICK HELP OPTIONS                                          */
+        /* ========================================================== */
+        .quick-help-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .quick-help-item {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 14px 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+            border: 1px solid #e8ecf1;
+        }
+
+        body.dark .quick-help-item {
+            background: #2a3a5a;
+            border-color: #334155;
+        }
+
+        .quick-help-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+            border-color: #1a237e;
+        }
+
+        body.dark .quick-help-item:hover {
+            border-color: #f5b342;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .quick-help-item i {
+            font-size: 24px;
+            display: block;
+            margin-bottom: 4px;
+            color: #1a237e;
+        }
+
+        body.dark .quick-help-item i {
+            color: #f5b342;
+        }
+
+        .quick-help-item .label {
+            font-size: 11px;
+            font-weight: 700;
+            color: #212529;
+        }
+
+        body.dark .quick-help-item .label {
+            color: #f8fafc;
+        }
+
+        .quick-help-item .desc {
+            font-size: 9px;
+            color: #6c757d;
+        }
+
+        body.dark .quick-help-item .desc {
+            color: #94a3b8;
+        }
+
+        /* ========================================================== */
+        /* CONTACT SUPPORT CARD                                        */
+        /* ========================================================== */
+        .contact-support {
+            background: linear-gradient(135deg, #1a237e, #283593);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            margin-top: 12px;
+            color: white;
+        }
+
+        body.dark .contact-support {
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            border: 1px solid #334155;
+        }
+
+        .contact-support h3 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .contact-support p {
+            font-size: 13px;
+            opacity: 0.8;
+            margin-bottom: 12px;
+        }
+
+        .contact-support .chat-btn {
+            background: #ffd700;
+            color: #0a0a0a;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        body.dark .contact-support .chat-btn {
+            background: #f5b342;
+            color: #0f172a;
+        }
+
+        .contact-support .chat-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 20px rgba(255, 215, 0, 0.2);
+        }
+
+        .contact-support .chat-btn i {
+            margin-right: 6px;
+        }
+
+        /* ========================================================== */
+        /* BOTTOM NAV                                                  */
+        /* ========================================================== */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 480px;
+            background: #ffffff;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 8px 0 14px 0;
+            box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.08);
+            border-top: 1px solid #e8ecf1;
+            z-index: 200;
+        }
+
+        body.dark .bottom-nav {
+            background: #0f172a;
+            border-top-color: #1e293b;
+            box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-item {
+            text-align: center;
+            color: #6c757d;
+            font-size: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 4px 12px;
+            transition: 0.2s;
+            border: none;
+            background: transparent;
+            text-decoration: none;
+        }
+
+        body.dark .nav-item {
+            color: #94a3b8;
+        }
+
+        .nav-item i {
+            display: block;
+            font-size: 20px;
+            margin-bottom: 2px;
+        }
+
+        .nav-item.active {
+            color: #1a237e;
+        }
+
+        body.dark .nav-item.active {
+            color: #f5b342;
+        }
+
+        .nav-item:hover:not(.active) {
+            color: #1a237e;
+        }
+
+        body.dark .nav-item:hover:not(.active) {
+            color: #f8fafc;
+        }
+
+        /* ========================================================== */
+        /* TOAST                                                       */
+        /* ========================================================== */
+        .toast {
+            position: fixed;
+            bottom: 90px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #212529;
+            color: #ffffff;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 999;
+            max-width: 90%;
+            text-align: center;
+            pointer-events: none;
+        }
+
+        body.dark .toast {
+            background: #1e293b;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+
+        /* ========================================================== */
+        /* RESPONSIVE                                                  */
+        /* ========================================================== */
+        @media (max-width: 480px) {
+            .topbar .logo {
+                font-size: 16px;
+            }
+            .welcome-banner h1 {
+                font-size: 18px;
+            }
+            .card {
+                padding: 16px;
+                margin: 0 12px 12px 12px;
+            }
+            .quick-help-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+            .quick-help-item {
+                padding: 10px 6px;
+            }
+            .quick-help-item i {
+                font-size: 20px;
+            }
+            .message {
+                font-size: 13px;
+                padding: 12px 14px;
+            }
+            .contact-support .chat-btn {
+                font-size: 13px;
+                padding: 10px 24px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .quick-help-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 6px;
+            }
+            .quick-help-item {
+                padding: 8px 4px;
+            }
+            .quick-help-item .label {
+                font-size: 10px;
+            }
+            .card {
+                padding: 12px;
+            }
+            .transaction {
+                padding: 10px 0;
+            }
+            .tx-icon {
+                width: 32px;
+                height: 32px;
+                font-size: 12px;
+            }
+            .tx-left div b {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="app">
+
+        <!-- TOP BAR -->
+        <div class="topbar">
+            <div class="logo">
+                <i class="fas fa-arrow-left" onclick="history.back()"></i>
+                Help Center
+            </div>
+            <div class="right-icons">
+                <i class="fas fa-comment" onclick="openLiveChat()" style="color:#10b981;"></i>
+            </div>
+        </div>
+
+        <!-- WELCOME BANNER -->
+        <div class="welcome-banner">
+            <h1>How can we help? 👋</h1>
+            <p>Find answers, guides, and contact support</p>
+            <div class="live-chat-btn" onclick="openLiveChat()">
+                <span class="dot"></span>
+                Live Chat - Online Now
+            </div>
+        </div>
+
+        <!-- QUICK HELP OPTIONS -->
+        <div class="card">
+            <h2>Quick Help</h2>
+            <div class="quick-help-grid">
+                <div class="quick-help-item" onclick="showAnswer(1)">
+                    <i class="fas fa-gamepad"></i>
+                    <span class="label">How to Play</span>
+                    <span class="desc">Learn the basics</span>
+                </div>
+                <div class="quick-help-item" onclick="showAnswer(2)">
+                    <i class="fas fa-clock"></i>
+                    <span class="label">Round Timer</span>
+                    <span class="desc">Countdown explained</span>
+                </div>
+                <div class="quick-help-item" onclick="showAnswer(4)">
+                    <i class="fas fa-wallet"></i>
+                    <span class="label">Deposit Help</span>
+                    <span class="desc">Fund your wallet</span>
+                </div>
+                <div class="quick-help-item" onclick="openLiveChat()">
+                    <i class="fas fa-headset" style="color:#10b981;"></i>
+                    <span class="label">Live Chat</span>
+                    <span class="desc">Talk to support</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- FREQUENTLY ASKED QUESTIONS -->
+        <div class="card">
+            <h2>Frequently Asked Questions</h2>
+
+            <div class="transaction" onclick="showAnswer(1)">
+                <div class="tx-left">
+                    <div class="tx-icon game"><i class="fas fa-gamepad"></i></div>
+                    <div>
+                        <b>How do I play?</b>
+                        <small>Tap Play and select your card</small>
+                    </div>
+                </div>
+                <i class="fas fa-chevron-right" style="color:#aabbcc; font-size:14px;"></i>
+            </div>
+
+            <div class="transaction" onclick="showAnswer(2)">
+                <div class="tx-left">
+                    <div class="tx-icon clock"><i class="fas fa-clock"></i></div>
+                    <div>
+                        <b>How long is the round?</b>
+                        <small>Check the countdown timer</small>
+                    </div>
+                </div>
+                <i class="fas fa-chevron-right" style="color:#aabbcc; font-size:14px;"></i>
+            </div>
+
+            <div class="transaction" onclick="showAnswer(3)">
+                <div class="tx-left">
+                    <div class="tx-icon support"><i class="fas fa-headset"></i></div>
+                    <div>
+                        <b>Contact Support</b>
+                        <small>Chat with support team</small>
+                    </div>
+                </div>
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <span class="chat-badge">
+                        <span class="dot-small"></span>
+                        Live
+                    </span>
+                    <i class="fas fa-chevron-right" style="color:#aabbcc; font-size:14px;"></i>
+                </div>
+            </div>
+
+            <div class="transaction" onclick="showAnswer(4)">
+                <div class="tx-left">
+                    <div class="tx-icon chat"><i class="fas fa-wallet"></i></div>
+                    <div>
+                        <b>How to deposit?</b>
+                        <small>Add funds to your wallet</small>
+                    </div>
+                </div>
+                <i class="fas fa-chevron-right" style="color:#aabbcc; font-size:14px;"></i>
+            </div>
+
+            <div class="transaction" onclick="showAnswer(5)">
+                <div class="tx-left">
+                    <div class="tx-icon game"><i class="fas fa-trophy"></i></div>
+                    <div>
+                        <b>How to win?</b>
+                        <small>Jackpot rules explained</small>
+                    </div>
+                </div>
+                <i class="fas fa-chevron-right" style="color:#aabbcc; font-size:14px;"></i>
+            </div>
+
+        </div>
+
+        <!-- ANSWERS -->
+        <div class="card">
+            <h2>Answer</h2>
+
+            <div class="help-answer active" id="answer1">
+                <div class="message">
+                    <span class="faq-icon">🎮</span>
+                    <strong>How to Play:</strong><br><br>
+                    Choose a game from the Games tab, select your entry amount, upload a photo of your card, and submit. Your entry will be reviewed by admin.<br><br>
+                    <small style="color:#6c757d;">💡 Tip: Make sure your card photo is clear for faster approval.</small>
+                </div>
+            </div>
+
+            <div class="help-answer" id="answer2">
+                <div class="message">
+                    <span class="faq-icon">⏳</span>
+                    <strong>Round Time:</strong><br><br>
+                    The current round countdown is shown on the home page. Each round lasts 5 days. Once the timer hits zero, winners are drawn.<br><br>
+                    <small style="color:#6c757d;">📅 New rounds start every 5 days at 10:00 AM.</small>
+                </div>
+            </div>
+
+            <div class="help-answer" id="answer3">
+                <div class="message">
+                    <span class="faq-icon">💬</span>
+                    <strong>Contact Support:</strong><br><br>
+                    You can reach our support team instantly via the chat bubble on the home screen or by clicking the <strong>"Live Chat"</strong> button above.<br><br>
+                    <small style="color:#6c757d;">⏱️ Support is available 24/7. Average response time: 1-2 minutes.</small>
+                </div>
+            </div>
+
+            <div class="help-answer" id="answer4">
+                <div class="message">
+                    <span class="faq-icon">💰</span>
+                    <strong>How to Deposit:</strong><br><br>
+                    Go to <strong>Wallet → Deposit</strong> or tap <strong>Load & Play</strong> on the home screen. Select your card type, enter amount, and upload a photo.<br><br>
+                    <small style="color:#6c757d;">💳 Supported cards: Apple Card, Razer Gold, Steam Card.</small>
+                </div>
+            </div>
+
+            <div class="help-answer" id="answer5">
+                <div class="message">
+                    <span class="faq-icon">🏆</span>
+                    <strong>How to Win:</strong><br><br>
+                    Predict 12 matches correctly to win the jackpot! You can also win with 10 or 11 correct predictions.<br><br>
+                    <small style="color:#6c757d;">🎯 Prize structure: 12/12 = Jackpot, 11/12 = 2nd Prize, 10/12 = 3rd Prize.</small>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- CONTACT SUPPORT -->
+        <div class="card">
+            <div class="contact-support">
+                <h3>💬 Need More Help?</h3>
+                <p>Our support team is ready to assist you 24/7</p>
+                <button class="chat-btn" onclick="openLiveChat()">
+                    <i class="fas fa-comment"></i> Chat with Support
+                </button>
+            </div>
+        </div>
+
+        <!-- BOTTOM NAV -->
+        <div class="bottom-nav">
+            <div class="nav-item" onclick="location.href='index.html'">
+                <i class="fas fa-home"></i> Home
+            </div>
+            <div class="nav-item" onclick="location.href='bet.html'">
+                <i class="fas fa-gamepad"></i> Games
+            </div>
+            <div class="nav-item" onclick="location.href='history.html'">
+                <i class="fas fa-history"></i> History
+            </div>
+            <div class="nav-item active" onclick="location.href='help.html'">
+                <i class="fas fa-circle-info"></i> Help
+            </div>
+        </div>
+
+    </div>
+
+    <!-- TOAST -->
+    <div id="toast" class="toast">Message</div>
+
+    <script>
+        // ==========================================================
+        // GLOBAL DARK MODE LOADER
+        // ==========================================================
+        (function() {
+            if (localStorage.getItem("phc_dark_mode") === "true") {
+                document.body.classList.add("dark");
+            }
+        })();
+
+        // ==========================================================
+        // ✅ SUPABASE CONFIG - MATCHES YOUR WORKING FILES
+        // ==========================================================
+        const SUPABASE_URL = "https://gcesrhfyupmkrevaqpfr.supabase.co";
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdjZXNyaGZ5dXBta3JldmFxcGZyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI4MjQ0MjAsImV4cCI6MjA5ODQwMDQyMH0.LarBYjP0Eg4HfFV_x5GVS7K1d4AuRfBWOjo0D1kL2xM";
+
+        // ==========================================================
+        // HELPERS
+        // ==========================================================
+        function showToast(msg, duration = 3000) {
+            const toast = document.getElementById('toast');
+            if (!toast) return;
+            toast.textContent = msg;
+            toast.classList.add('show');
+            clearTimeout(toast._timer);
+            toast._timer = setTimeout(() => toast.classList.remove('show'), duration);
+        }
+
+        function getCurrentUser() {
+            const localUser = JSON.parse(localStorage.getItem('phc_current_user'));
+            if (!localUser || !localUser.email) return null;
+            return localUser;
+        }
+
+        // ==========================================================
+        // SHOW ANSWER FUNCTION
+        // ==========================================================
+        function showAnswer(num) {
+            // Hide all answers
+            document.querySelectorAll('.help-answer').forEach(el => el.classList.remove('active'));
+
+            // Show selected answer
+            let target = document.getElementById('answer' + num);
+            if (target) {
+                target.classList.add('active');
+            }
+
+            // Scroll to answer
+            setTimeout(() => {
+                target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 100);
+        }
+
+        // ==========================================================
+        // ✅ OPEN LIVE CHAT - CONNECTED TO PLATFORM
+        // ==========================================================
+        function openLiveChat() {
+            const user = getCurrentUser();
+            if (!user) {
+                showToast('⚠️ Please login first.');
+                setTimeout(() => window.location.href = 'login.html', 800);
+                return;
+            }
+
+            // Check if user is logged in and redirect to chat
+            showToast('💬 Opening live chat...');
+            setTimeout(() => {
+                window.location.href = 'chat.html';
+            }, 500);
+        }
+
+        // ==========================================================
+        // CHECK SUPPORT AVAILABILITY
+        // ==========================================================
+        async function checkSupportAvailability() {
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/chat_messages?is_admin=eq.true&order=created_at.desc&limit=1`, {
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                    }
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data && data.length > 0) {
+                        const lastMsg = new Date(data[0].created_at);
+                        const now = new Date();
+                        const diffMinutes = (now - lastMsg) / 1000 / 60;
+                        
+                        const statusDot = document.querySelector('.live-chat-btn .dot');
+                        const statusText = document.querySelector('.live-chat-btn');
+                        
+                        if (diffMinutes < 5) {
+                            // Admin is online
+                            statusDot.style.background = '#10b981';
+                            if (statusText) {
+                                statusText.innerHTML = `<span class="dot" style="background:#10b981;"></span> Live Chat - Online Now`;
+                            }
+                        } else {
+                            statusDot.style.background = '#f59e0b';
+                            if (statusText) {
+                                statusText.innerHTML = `<span class="dot" style="background:#f59e0b;"></span> Support Away - Will Respond Soon`;
+                            }
+                        }
+                    }
+                }
+            } catch (e) {
+                console.log('Support availability check failed');
+            }
+        }
+
+        // ==========================================================
+        // INIT
+        // ==========================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            checkSupportAvailability();
+            
+            // Check support status every 30 seconds
+            setInterval(checkSupportAvailability, 30000);
+
+            console.log('📖 Help Center loaded!');
+            console.log('✅ Live Chat connected to platform');
+            console.log('💬 Support availability checking...');
+        });
+
+        // Make functions global
+        window.showAnswer = showAnswer;
+        window.openLiveChat = openLiveChat;
+    </script>
+
+</body>
+</html>

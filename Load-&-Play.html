@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Load & Play - PHC Casino</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        /* ========================================================== */
+        /* PROFESSIONAL LOAD & PLAY - SPORTYBET STYLE                 */
+        /* ========================================================== */
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #eef2f7;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            color: #1a1a2e;
+            min-height: 100vh;
+        }
+
+        body.dark {
+            background: #0f172a;
+            color: #e2e8f0;
+        }
+
+        .app {
+            max-width: 480px;
+            margin: 0 auto;
+            background: #eef2f7;
+            min-height: 100vh;
+            padding-bottom: 80px;
+            position: relative;
+        }
+
+        body.dark .app {
+            background: #0f172a;
+        }
+
+        /* ========================================================== */
+        /* TOP BAR                                                     */
+        /* ========================================================== */
+        .topbar {
+            background: linear-gradient(135deg, #0d1b4a, #1a237e);
+            color: white;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        body.dark .topbar {
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            border-bottom: 1px solid #334155;
+        }
+
+        .topbar .logo {
+            font-size: 18px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #ffd700;
+        }
+
+        .topbar .logo i {
+            cursor: pointer;
+            font-size: 18px;
+            color: #ffffff;
+        }
+
+        .topbar .balance-display {
+            font-size: 14px;
+            font-weight: 700;
+            background: rgba(255, 215, 0, 0.1);
+            padding: 6px 14px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border: 1px solid rgba(255, 215, 0, 0.15);
+            color: #ffd700;
+        }
+
+        .topbar .balance-display i {
+            font-size: 14px;
+            color: #ffd700;
+        }
+
+        /* ========================================================== */
+        /* WELCOME BANNER                                              */
+        /* ========================================================== */
+        .welcome-banner {
+            background: linear-gradient(135deg, #1a237e, #0d47a1);
+            padding: 20px 20px 24px;
+            margin: 0 0 16px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body.dark .welcome-banner {
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            border-bottom: 2px solid #f5b342;
+        }
+
+        .welcome-banner::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -30%;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .welcome-banner h1 {
+            font-size: 22px;
+            font-weight: 800;
+            color: #ffffff;
+            position: relative;
+            z-index: 1;
+        }
+
+        .welcome-banner p {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            position: relative;
+            z-index: 1;
+            margin-top: 2px;
+        }
+
+        /* ========================================================== */
+        /* MAIN CARD - PROFESSIONAL                                   */
+        /* ========================================================== */
+        .main-card {
+            margin: 0 16px 16px 16px;
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid #e8ecf1;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+        }
+
+        body.dark .main-card {
+            background: #1e293b;
+            border-color: #334155;
+            box-shadow: none;
+        }
+
+        .main-card .card-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #212529;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+
+        body.dark .main-card .card-title {
+            color: #f8fafc;
+        }
+
+        .main-card .card-subtitle {
+            font-size: 13px;
+            color: #6c757d;
+            margin-bottom: 16px;
+        }
+
+        body.dark .main-card .card-subtitle {
+            color: #94a3b8;
+        }
+
+        /* ========================================================== */
+        /* CARD SELECTION - PROFESSIONAL                              */
+        /* ========================================================== */
+        .card-select-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .card-select-item {
+            background: #f8fafc;
+            border: 2px solid #e8ecf1;
+            border-radius: 12px;
+            padding: 16px 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+            position: relative;
+        }
+
+        body.dark .card-select-item {
+            background: #2a3a5a;
+            border-color: #334155;
+        }
+
+        .card-select-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+        }
+
+        .card-select-item.selected {
+            border-color: #1a237e;
+            background: #e8f1ff;
+            box-shadow: 0 0 0 3px rgba(26, 35, 126, 0.1);
+        }
+
+        body.dark .card-select-item.selected {
+            border-color: #f5b342;
+            background: #2a3a5a;
+            box-shadow: 0 0 0 3px rgba(245, 179, 66, 0.1);
+        }
+
+        .card-select-item .icon {
+            font-size: 28px;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .card-select-item .name {
+            font-size: 12px;
+            font-weight: 700;
+            color: #212529;
+            display: block;
+        }
+
+        body.dark .card-select-item .name {
+            color: #f8fafc;
+        }
+
+        .card-select-item .limit {
+            font-size: 10px;
+            color: #6c757d;
+            display: block;
+            margin-top: 2px;
+        }
+
+        body.dark .card-select-item .limit {
+            color: #94a3b8;
+        }
+
+        .card-select-item .check-mark {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #1a237e;
+            color: white;
+            font-size: 10px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        body.dark .card-select-item .check-mark {
+            background: #f5b342;
+            color: #0f172a;
+        }
+
+        .card-select-item.selected .check-mark {
+            display: flex;
+        }
+
+        /* ========================================================== */
+        /* FORM FIELDS - PROFESSIONAL                                 */
+        /* ========================================================== */
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #212529;
+            margin-bottom: 6px;
+        }
+
+        body.dark .form-group label {
+            color: #f8fafc;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #dce5f0;
+            border-radius: 10px;
+            font-size: 14px;
+            background: #f8fafc;
+            transition: 0.3s;
+            color: #212529;
+            box-sizing: border-box;
+        }
+
+        body.dark .form-group input,
+        body.dark .form-group select {
+            background: #2a3a5a;
+            border-color: #334155;
+            color: #f8fafc;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #1a237e;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(26, 35, 126, 0.08);
+        }
+
+        body.dark .form-group input:focus,
+        body.dark .form-group select:focus {
+            border-color: #f5b342;
+            box-shadow: 0 0 0 3px rgba(245, 179, 66, 0.08);
+        }
+
+        .form-group .error-msg {
+            color: #b33a4a;
+            font-size: 12px;
+            margin-top: 4px;
+            display: none;
+        }
+
+        body.dark .form-group .error-msg {
+            color: #f87171;
+        }
+
+        /* ========================================================== */
+        /* UPLOAD AREA - PROFESSIONAL                                 */
+        /* ========================================================== */
+        .upload-area {
+            border: 2px dashed #dce5f0;
+            border-radius: 12px;
+            padding: 30px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+            background: #f8fafc;
+            position: relative;
+        }
+
+        body.dark .upload-area {
+            background: #2a3a5a;
+            border-color: #334155;
+        }
+
+        .upload-area:hover {
+            background: #eef6ff;
+            border-color: #1a237e;
+        }
+
+        body.dark .upload-area:hover {
+            background: #1a2a4a;
+            border-color: #f5b342;
+        }
+
+        .upload-area .icon {
+            font-size: 32px;
+            color: #1a237e;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        body.dark .upload-area .icon {
+            color: #f5b342;
+        }
+
+        .upload-area .hint {
+            font-size: 14px;
+            color: #6c757d;
+        }
+
+        body.dark .upload-area .hint {
+            color: #94a3b8;
+        }
+
+        .upload-area .hint small {
+            display: block;
+            font-size: 12px;
+            color: #aabbcc;
+            margin-top: 4px;
+        }
+
+        body.dark .upload-area .hint small {
+            color: #6c7a8a;
+        }
+
+        .upload-area img.preview {
+            max-width: 100%;
+            max-height: 150px;
+            border-radius: 8px;
+            display: none;
+            margin-top: 12px;
+        }
+
+        /* ========================================================== */
+        /* INFO BOX                                                    */
+        /* ========================================================== */
+        .info-box {
+            background: #f0f7ff;
+            border-radius: 10px;
+            padding: 12px 16px;
+            margin: 16px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            border-left: 4px solid #1a237e;
+        }
+
+        body.dark .info-box {
+            background: #1a2a4a;
+            border-left-color: #f5b342;
+        }
+
+        .info-box i {
+            color: #1a237e;
+            font-size: 16px;
+            margin-top: 2px;
+        }
+
+        body.dark .info-box i {
+            color: #f5b342;
+        }
+
+        .info-box .text {
+            font-size: 13px;
+            color: #2a4a6a;
+            line-height: 1.5;
+        }
+
+        body.dark .info-box .text {
+            color: #94a3b8;
+        }
+
+        .info-box .text strong {
+            color: #1a237e;
+        }
+
+        body.dark .info-box .text strong {
+            color: #f5b342;
+        }
+
+        /* ========================================================== */
+        /* BUTTONS                                                     */
+        /* ========================================================== */
+        .btn-primary {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: 0.3s;
+            background: linear-gradient(135deg, #1a237e, #283593);
+            color: #ffffff;
+            box-shadow: 0 4px 20px rgba(26, 35, 126, 0.2);
+            margin-top: 8px;
+        }
+
+        body.dark .btn-primary {
+            background: linear-gradient(135deg, #f5b342, #f59e0b);
+            color: #0f172a;
+            box-shadow: 0 4px 20px rgba(245, 179, 66, 0.2);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: scale(1.01);
+            box-shadow: 0 6px 30px rgba(26, 35, 126, 0.3);
+        }
+
+        body.dark .btn-primary:hover:not(:disabled) {
+            box-shadow: 0 6px 30px rgba(245, 179, 66, 0.3);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-primary .btn-sub {
+            display: block;
+            font-size: 11px;
+            font-weight: 600;
+            opacity: 0.7;
+            text-transform: none;
+            letter-spacing: 0;
+            margin-top: 2px;
+        }
+
+        .btn-primary.loading {
+            background: #b8860b;
+            animation: pulseBtn 1s ease-in-out infinite;
+        }
+
+        body.dark .btn-primary.loading {
+            background: #f59e0b;
+        }
+
+        @keyframes pulseBtn {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .btn-primary.success {
+            background: #1a8a4a;
+        }
+
+        body.dark .btn-primary.success {
+            background: #10b981;
+            color: #0f172a;
+        }
+
+        /* ========================================================== */
+        /* SUCCESS BOX                                                 */
+        /* ========================================================== */
+        .success-box {
+            display: none;
+            background: #e6f7e6;
+            border: 2px solid #1a8a4a;
+            border-radius: 16px;
+            padding: 30px 20px;
+            text-align: center;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        body.dark .success-box {
+            background: #1a3a2a;
+            border-color: #10b981;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .success-box .icon {
+            font-size: 56px;
+            color: #1a8a4a;
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        body.dark .success-box .icon {
+            color: #10b981;
+        }
+
+        .success-box h3 {
+            color: #1a8a4a;
+            font-size: 22px;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+
+        body.dark .success-box h3 {
+            color: #10b981;
+        }
+
+        .success-box p {
+            color: #3a5a6a;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        body.dark .success-box p {
+            color: #94a3b8;
+        }
+
+        /* ========================================================== */
+        /* BOTTOM NAV                                                  */
+        /* ========================================================== */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 480px;
+            background: #ffffff;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 8px 0 14px 0;
+            box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.08);
+            border-top: 1px solid #e8ecf1;
+            z-index: 200;
+        }
+
+        body.dark .bottom-nav {
+            background: #0f172a;
+            border-top-color: #1e293b;
+            box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-item {
+            text-align: center;
+            color: #6c757d;
+            font-size: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 4px 12px;
+            transition: 0.2s;
+            border: none;
+            background: transparent;
+            text-decoration: none;
+        }
+
+        body.dark .nav-item {
+            color: #94a3b8;
+        }
+
+        .nav-item i {
+            display: block;
+            font-size: 20px;
+            margin-bottom: 2px;
+        }
+
+        .nav-item.active {
+            color: #1a237e;
+        }
+
+        body.dark .nav-item.active {
+            color: #f5b342;
+        }
+
+        .nav-item:hover:not(.active) {
+            color: #1a237e;
+        }
+
+        body.dark .nav-item:hover:not(.active) {
+            color: #f8fafc;
+        }
+
+        /* ========================================================== */
+        /* TOAST                                                       */
+        /* ========================================================== */
+        .toast {
+            position: fixed;
+            bottom: 90px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #212529;
+            color: #ffffff;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 13px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 999;
+            max-width: 90%;
+            text-align: center;
+            pointer-events: none;
+        }
+
+        body.dark .toast {
+            background: #1e293b;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+
+        /* ========================================================== */
+        /* RESPONSIVE                                                  */
+        /* ========================================================== */
+        @media (max-width: 480px) {
+            .card-select-grid {
+                grid-template-columns: 1fr 1fr 1fr;
+                gap: 8px;
+            }
+            .card-select-item {
+                padding: 12px 6px;
+            }
+            .card-select-item .icon {
+                font-size: 22px;
+            }
+            .card-select-item .name {
+                font-size: 10px;
+            }
+            .card-select-item .limit {
+                font-size: 8px;
+            }
+            .topbar .logo {
+                font-size: 16px;
+            }
+            .topbar .balance-display {
+                font-size: 12px;
+                padding: 4px 10px;
+            }
+            .welcome-banner h1 {
+                font-size: 18px;
+            }
+            .main-card {
+                padding: 16px;
+            }
+            .btn-primary {
+                font-size: 16px;
+                padding: 14px;
+            }
+            .upload-area {
+                padding: 20px 16px;
+            }
+            .upload-area .icon {
+                font-size: 26px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .card-select-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 6px;
+            }
+            .card-select-item {
+                padding: 10px 6px;
+            }
+            .card-select-item .icon {
+                font-size: 20px;
+            }
+            .main-card {
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="app">
+
+        <!-- TOP BAR -->
+        <div class="topbar">
+            <div class="logo">
+                <i class="fas fa-arrow-left" onclick="history.back()"></i>
+                💳 Load & Play
+            </div>
+            <div class="balance-display">
+                <i class="fas fa-wallet"></i>
+                <span id="headerBalance">$0.00</span>
+            </div>
+        </div>
+
+        <!-- WELCOME BANNER -->
+        <div class="welcome-banner">
+            <h1>💰 Load Funds</h1>
+            <p>Select a card, enter amount, and upload photo</p>
+        </div>
+
+        <!-- MAIN CARD -->
+        <div class="main-card">
+
+            <div class="form-section" id="formSection">
+
+                <div class="card-title">🎴 Select Card Type</div>
+                <div class="card-subtitle">Choose your preferred card</div>
+
+                <div class="card-select-grid">
+                    <div class="card-select-item" data-card="apple" onclick="selectCard(this)">
+                        <span class="icon">🍎</span>
+                        <span class="name">Apple Card</span>
+                        <span class="limit">max $500</span>
+                        <span class="check-mark"><i class="fas fa-check"></i></span>
+                    </div>
+                    <div class="card-select-item" data-card="razer" onclick="selectCard(this)">
+                        <span class="icon">⚡</span>
+                        <span class="name">Razer Gold</span>
+                        <span class="limit">max $200</span>
+                        <span class="check-mark"><i class="fas fa-check"></i></span>
+                    </div>
+                    <div class="card-select-item" data-card="steam" onclick="selectCard(this)">
+                        <span class="icon">🎮</span>
+                        <span class="name">Steam Card</span>
+                        <span class="limit">max $100</span>
+                        <span class="check-mark"><i class="fas fa-check"></i></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Amount to load</label>
+                    <input type="number" id="depositAmount" placeholder="0.00" min="1" step="0.01" value="100">
+                    <div class="error-msg" id="depositAmountError">Please enter a valid amount (min $1).</div>
+                </div>
+
+                <div class="form-group">
+                    <label>📸 Take a picture of your card</label>
+                    <div class="upload-area" onclick="document.getElementById('depositCardPhoto').click()">
+                        <span class="icon"><i class="fas fa-camera"></i></span>
+                        <div class="hint">
+                            Tap to take a photo of your card
+                            <small>Supported: JPG, PNG, WebP</small>
+                        </div>
+                        <input type="file" accept="image/*" capture="environment" id="depositCardPhoto"
+                        style="display:none;" />
+                        <img id="depositPhotoPreview" class="preview" src="#" alt="preview" />
+                    </div>
+                    <div class="error-msg" id="depositPhotoError">Please take a photo of your card.</div>
+                </div>
+
+                <div class="info-box">
+                    <i class="fas fa-info-circle"></i>
+                    <div class="text">
+                        <strong>📌 Important:</strong> Your card will be reviewed by admin. Once approved, the amount
+                        will be added to your balance instantly.
+                    </div>
+                </div>
+
+                <button class="btn-primary" id="loadAndPlayBtn" onclick="loadAndPlay()">
+                    <i class="fas fa-arrow-right"></i> Load & Play
+                    <span class="btn-sub">Funds added to your wallet</span>
+                </button>
+
+            </div>
+
+            <!-- SUCCESS BOX -->
+            <div class="success-box" id="successBox">
+                <span class="icon">✅</span>
+                <h3>Successful!</h3>
+                <p id="successMessage">Your funds have been added to your balance.</p>
+            </div>
+
+        </div>
+
+        <!-- BOTTOM NAV -->
+        <div class="bottom-nav">
+            <div class="nav-item" onclick="location.href='index.html'">
+                <i class="fas fa-home"></i> Home
+            </div>
+            <div class="nav-item" onclick="location.href='bet.html'">
+                <i class="fas fa-gamepad"></i> Games
+            </div>
+            <div class="nav-item" onclick="location.href='history.html'">
+                <i class="fas fa-history"></i> History
+            </div>
+            <div class="nav-item active" onclick="location.href='wallet.html'">
+                <i class="fas fa-wallet"></i> Wallet
+            </div>
+        </div>
+
+    </div>
+
+    <!-- TOAST -->
+    <div id="toast" class="toast">Message</div>
+
+    <script>
+        // ==========================================================
+        // GLOBAL DARK MODE LOADER
+        // ==========================================================
+        (function() {
+            if (localStorage.getItem("phc_dark_mode") === "true") {
+                document.body.classList.add("dark");
+            }
+        })();
+
+        // ==========================================================
+        // SUPABASE CONFIG (✅ UPDATED KEY)
+        // ==========================================================
+        const SUPABASE_URL = "https://yeemcqozapopxyealasj.supabase.co";
+        const SUPABASE_ANON_KEY = "B_WcY4iFru-asD5NHaiNmxoPYGfebna1mXhvavDRJsk";
+
+        // ==========================================================
+        // HELPERS
+        // ==========================================================
+        function formatCurrency(val) {
+            return val.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
+
+        function showToast(msg, duration) {
+            duration = duration || 3000;
+            var toast = document.getElementById('toast');
+            if (!toast) return;
+            toast.textContent = msg;
+            toast.classList.add('show');
+            clearTimeout(toast._timer);
+            toast._timer = setTimeout(function() {
+                toast.classList.remove('show');
+            }, duration);
+        }
+
+        function getCurrentUser() {
+            var localUser = JSON.parse(localStorage.getItem('phc_current_user'));
+            if (!localUser || !localUser.email) return null;
+            return localUser;
+        }
+
+        function getSharedBalance() {
+            var localUser = JSON.parse(localStorage.getItem('phc_current_user'));
+            if (localUser && localUser.balance !== undefined) return localUser.balance;
+            return 0;
+        }
+
+        function updateSharedBalance(newBalance) {
+            var localUser = JSON.parse(localStorage.getItem('phc_current_user'));
+            if (localUser) {
+                localUser.balance = newBalance;
+                localStorage.setItem('phc_current_user', JSON.stringify(localUser));
+            }
+            localStorage.setItem('phc_wallet_balance', newBalance.toString());
+            document.getElementById('headerBalance').textContent = '$' + formatCurrency(newBalance);
+            window.dispatchEvent(new StorageEvent('storage', {
+                key: 'phc_wallet_balance',
+                newValue: newBalance.toString()
+            }));
+        }
+
+        // ==========================================================
+        // CARD SELECTION
+        // ==========================================================
+        function selectCard(el) {
+            document.querySelectorAll('.card-select-item').forEach(function(c) {
+                c.classList.remove('selected');
+            });
+            el.classList.add('selected');
+            document.getElementById('depositCardError').style.display = 'none';
+        }
+
+        // ==========================================================
+        // UPDATE USER BALANCE
+        // ==========================================================
+        async function updateUserBalance(email, newBalance) {
+            try {
+                await fetch(`${SUPABASE_URL}/rest/v1/users?email=eq.${email}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ balance: newBalance })
+                });
+                return true;
+            } catch (e) {
+                console.error('Update error:', e);
+                return false;
+            }
+        }
+
+        // ==========================================================
+        // LOAD & PLAY
+        // ==========================================================
+        async function loadAndPlay() {
+            var user = getCurrentUser();
+            if (!user) {
+                showToast('⚠️ Please login first.');
+                setTimeout(function() { window.location.href = 'login.html'; }, 800);
+                return;
+            }
+
+            var btn = document.getElementById('loadAndPlayBtn');
+            var selected = document.querySelector('.card-select-item.selected');
+            if (!selected) {
+                showToast('⚠️ Please select a card type.');
+                return;
+            }
+
+            var cardType = selected.dataset.card;
+            var limits = { apple: 500, razer: 200, steam: 100 };
+            var max = limits[cardType];
+            var cardName = { apple: 'Apple Card', razer: 'Razer Gold', steam: 'Steam Card' }[cardType];
+            var amt = parseFloat(document.getElementById('depositAmount').value);
+            var photoInput = document.getElementById('depositCardPhoto');
+
+            if (!amt || amt <= 0) {
+                document.getElementById('depositAmountError').style.display = 'block';
+                return;
+            }
+            document.getElementById('depositAmountError').style.display = 'none';
+
+            if (amt > max) {
+                showToast('⚠️ Maximum for ' + cardName + ' is $' + max + '.');
+                return;
+            }
+
+            if (!photoInput.files || photoInput.files.length === 0) {
+                document.getElementById('depositPhotoError').style.display = 'block';
+                return;
+            }
+            document.getElementById('depositPhotoError').style.display = 'none';
+
+            btn.innerHTML = '⏳ Processing...';
+            btn.className = 'btn-primary loading';
+            btn.disabled = true;
+
+            try {
+                var file = photoInput.files[0];
+                var reader = new FileReader();
+
+                reader.onload = async function(e) {
+                    var imageData = e.target.result;
+
+                    try {
+                        // Get current balance
+                        var userData = await fetch(`${SUPABASE_URL}/rest/v1/users?email=eq.${user.email}&select=*`, {
+                            headers: {
+                                'apikey': SUPABASE_ANON_KEY,
+                                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                            }
+                        });
+                        var userDataJson = await userData.json();
+                        var currentBalance = userDataJson.length > 0 ? userDataJson[0].balance || 0 : 0;
+                        var newBalance = currentBalance + amt;
+
+                        // Update balance
+                        var updated = await updateUserBalance(user.email, newBalance);
+
+                        if (updated) {
+                            // Save deposit record
+                            await fetch(`${SUPABASE_URL}/rest/v1/deposits`, {
+                                method: 'POST',
+                                headers: {
+                                    'apikey': SUPABASE_ANON_KEY,
+                                    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                                    'Content-Type': 'application/json',
+                                    'Prefer': 'return=minimal'
+                                },
+                                body: JSON.stringify({
+                                    user_email: user.email,
+                                    user_name: user.firstName + ' ' + user.lastName,
+                                    card_type: cardName,
+                                    amount: amt,
+                                    image_url: imageData,
+                                    status: 'completed'
+                                })
+                            });
+
+                            // Log transaction
+                            await fetch(`${SUPABASE_URL}/rest/v1/transactions`, {
+                                method: 'POST',
+                                headers: {
+                                    'apikey': SUPABASE_ANON_KEY,
+                                    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                                    'Content-Type': 'application/json',
+                                    'Prefer': 'return=minimal'
+                                },
+                                body: JSON.stringify({
+                                    user_email: user.email,
+                                    name: '💳 Deposit (' + cardName + ') - $' + formatCurrency(amt),
+                                    amount: amt
+                                })
+                            });
+
+                            // Update shared balance
+                            updateSharedBalance(newBalance);
+
+                            showToast('✅ $' + formatCurrency(amt) + ' added to your balance!');
+
+                            // Show success
+                            document.getElementById('formSection').style.display = 'none';
+                            var successBox = document.getElementById('successBox');
+                            successBox.style.display = 'block';
+                            document.getElementById('successMessage').textContent =
+                                '✅ $' + formatCurrency(amt) + ' has been added to your balance!';
+
+                            btn.innerHTML = '✅ Completed!';
+                            btn.className = 'btn-primary success';
+                            btn.disabled = true;
+
+                            setTimeout(function() {
+                                window.location.href = 'wallet.html';
+                            }, 2000);
+
+                        } else {
+                            showToast('❌ Error updating balance.');
+                            btn.innerHTML = '🔄 Try Again';
+                            btn.className = 'btn-primary';
+                            btn.disabled = false;
+                        }
+
+                    } catch (err) {
+                        console.error('Error:', err);
+                        showToast('❌ Error processing. Please try again.');
+                        btn.innerHTML = '🔄 Try Again';
+                        btn.className = 'btn-primary';
+                        btn.disabled = false;
+                    }
+                };
+
+                reader.onerror = function() {
+                    showToast('❌ Error reading photo.');
+                    btn.innerHTML = '🔄 Try Again';
+                    btn.className = 'btn-primary';
+                    btn.disabled = false;
+                };
+
+                reader.readAsDataURL(file);
+
+            } catch (err) {
+                console.error('Error:', err);
+                showToast('❌ Error processing. Please try again.');
+                btn.innerHTML = '🔄 Try Again';
+                btn.className = 'btn-primary';
+                btn.disabled = false;
+            }
+        }
+
+        // ==========================================================
+        // PHOTO PREVIEW
+        // ==========================================================
+        document.getElementById('depositCardPhoto').addEventListener('change', function(e) {
+            var file = this.files[0];
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function(ev) {
+                    var preview = document.getElementById('depositPhotoPreview');
+                    preview.src = ev.target.result;
+                    preview.style.display = 'block';
+                    document.getElementById('depositPhotoError').style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // ==========================================================
+        // LOAD BALANCE
+        // ==========================================================
+        function loadBalance() {
+            var balance = getSharedBalance();
+            document.getElementById('headerBalance').textContent = '$' + formatCurrency(balance);
+        }
+
+        // ==========================================================
+        // INIT
+        // ==========================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            loadBalance();
+
+            // Listen for balance updates
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'phc_wallet_balance') {
+                    var newBalance = parseFloat(e.newValue);
+                    if (!isNaN(newBalance)) {
+                        document.getElementById('headerBalance').textContent = '$' + formatCurrency(newBalance);
+                    }
+                }
+            });
+
+            console.log('💳 Load & Play loaded!');
+        });
+    </script>
+
+</body>
+</html>

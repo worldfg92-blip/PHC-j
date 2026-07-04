@@ -1,0 +1,1377 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Quick Pick - PHC Jackpot</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        /* ========================================================== */
+        /* QUICK PICK - REAL-TIME INSTANT GAME                        */
+        /* ========================================================== */
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: #0f0f1a;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            color: #ffffff;
+            min-height: 100vh;
+        }
+
+        body.dark {
+            background: #0f0f1a;
+            color: #ffffff;
+        }
+
+        .app {
+            max-width: 480px;
+            margin: 0 auto;
+            background: #0f0f1a;
+            min-height: 100vh;
+            padding-bottom: 80px;
+            position: relative;
+        }
+
+        body.dark .app {
+            background: #0f0f1a;
+        }
+
+        /* ========================================================== */
+        /* TOP BAR                                                     */
+        /* ========================================================== */
+        .topbar {
+            background: linear-gradient(135deg, #0d1b4a, #1a237e);
+            color: white;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        body.dark .topbar {
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            border-bottom: 1px solid #334155;
+        }
+
+        .topbar .logo {
+            font-size: 18px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .topbar .logo i {
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        .topbar .balance-display {
+            font-size: 14px;
+            font-weight: 700;
+            background: rgba(255, 255, 255, 0.12);
+            padding: 6px 14px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .topbar .balance-display i {
+            font-size: 14px;
+            color: #f5b342;
+        }
+
+        /* ========================================================== */
+        /* GAME BANNER                                                 */
+        /* ========================================================== */
+        .game-banner {
+            background: linear-gradient(135deg, #1a237e, #283593, #0d47a1);
+            padding: 30px 20px 24px;
+            text-align: center;
+            margin: 0 0 16px 0;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 3px solid #f5b342;
+        }
+
+        body.dark .game-banner {
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            border-bottom: 3px solid #f5b342;
+        }
+
+        .game-banner::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(245, 179, 66, 0.08) 0%, transparent 70%);
+            animation: pulseGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 1; }
+        }
+
+        .game-banner h1 {
+            font-size: 24px;
+            font-weight: 900;
+            color: #ffffff;
+            position: relative;
+            z-index: 1;
+        }
+
+        .game-banner .sub {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            position: relative;
+            z-index: 1;
+            margin-top: 4px;
+        }
+
+        .game-banner .prize-pool {
+            font-size: 32px;
+            font-weight: 900;
+            color: #f5b342;
+            position: relative;
+            z-index: 1;
+            margin-top: 8px;
+        }
+
+        .game-banner .prize-pool small {
+            font-size: 14px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* ========================================================== */
+        /* STATS ROW                                                   */
+        /* ========================================================== */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            padding: 0 16px;
+            margin-bottom: 16px;
+        }
+
+        .stat-box {
+            background: #1a1a2e;
+            border-radius: 12px;
+            padding: 14px 10px;
+            text-align: center;
+            border: 1px solid #2a2a4a;
+        }
+
+        body.dark .stat-box {
+            background: #1a1a2e;
+            border-color: #2a2a4a;
+        }
+
+        .stat-box .stat-number {
+            font-size: 22px;
+            font-weight: 800;
+            color: #f5b342;
+            display: block;
+        }
+
+        .stat-box .stat-label {
+            font-size: 10px;
+            font-weight: 600;
+            color: #6c757d;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: block;
+            margin-top: 2px;
+        }
+
+        .stat-box .stat-number.green {
+            color: #10b981;
+        }
+
+        .stat-box .stat-number.blue {
+            color: #60a5fa;
+        }
+
+        /* ========================================================== */
+        /* NUMBER GRID - MAIN GAME                                    */
+        /* ========================================================== */
+        .game-area {
+            padding: 0 16px;
+        }
+
+        .game-card {
+            background: #1a1a2e;
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid #2a2a4a;
+            margin-bottom: 16px;
+        }
+
+        body.dark .game-card {
+            background: #1a1a2e;
+            border-color: #2a2a4a;
+        }
+
+        .game-card .card-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .game-card .card-title .title-icon {
+            color: #f5b342;
+        }
+
+        /* Number Selection Grid */
+        .number-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .number-btn {
+            background: #2a2a4a;
+            border: 2px solid transparent;
+            border-radius: 10px;
+            padding: 14px 8px;
+            font-size: 18px;
+            font-weight: 800;
+            color: #ffffff;
+            cursor: pointer;
+            transition: 0.2s;
+            text-align: center;
+            position: relative;
+        }
+
+        body.dark .number-btn {
+            background: #2a2a4a;
+            color: #ffffff;
+        }
+
+        .number-btn:hover {
+            background: #3a3a5a;
+            transform: scale(1.05);
+        }
+
+        .number-btn.selected {
+            border-color: #f5b342;
+            background: #f5b342;
+            color: #0f172a;
+            box-shadow: 0 0 20px rgba(245, 179, 66, 0.3);
+        }
+
+        .number-btn.selected .number-label {
+            color: #0f172a;
+        }
+
+        .number-btn .number-label {
+            display: block;
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        .number-btn .number-odds {
+            font-size: 9px;
+            font-weight: 600;
+            color: #6c757d;
+            display: block;
+            margin-top: 2px;
+        }
+
+        .number-btn.selected .number-odds {
+            color: #0f172a;
+            opacity: 0.7;
+        }
+
+        /* ========================================================== */
+        /* BET CONTROLS - FIXED BUTTONS                               */
+        /* ========================================================== */
+        .bet-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .bet-controls .bet-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #6c757d;
+            min-width: 50px;
+        }
+
+        .bet-controls .bet-amount {
+            flex: 1;
+            background: #2a2a4a;
+            border: 1px solid #3a3a5a;
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 16px;
+            font-weight: 700;
+            color: #ffffff;
+            text-align: center;
+            outline: none;
+        }
+
+        body.dark .bet-controls .bet-amount {
+            background: #2a2a4a;
+            border-color: #3a3a5a;
+            color: #ffffff;
+        }
+
+        .bet-controls .bet-amount:focus {
+            border-color: #f5b342;
+        }
+
+        .bet-controls .bet-amount::-webkit-inner-spin-button,
+        .bet-controls .bet-amount::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .bet-controls .bet-amount[type=number] {
+            -moz-appearance: textfield;
+        }
+
+        .bet-controls .bet-btn {
+            background: #2a2a4a;
+            border: 1px solid #3a3a5a;
+            border-radius: 8px;
+            padding: 8px 14px;
+            font-size: 16px;
+            font-weight: 700;
+            color: #ffffff;
+            cursor: pointer;
+            transition: 0.2s;
+            user-select: none;
+        }
+
+        .bet-controls .bet-btn:hover {
+            background: #3a3a5a;
+            transform: scale(1.05);
+        }
+
+        .bet-controls .bet-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* ========================================================== */
+        /* PLAY BUTTON                                                 */
+        /* ========================================================== */
+        .play-btn-main {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: 0.3s;
+            background: linear-gradient(135deg, #f5b342, #f59e0b);
+            color: #0f172a;
+            box-shadow: 0 4px 20px rgba(245, 179, 66, 0.3);
+        }
+
+        .play-btn-main:hover {
+            transform: scale(1.02);
+            box-shadow: 0 6px 30px rgba(245, 179, 66, 0.4);
+        }
+
+        .play-btn-main:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .play-btn-main .btn-sub {
+            display: block;
+            font-size: 11px;
+            font-weight: 600;
+            opacity: 0.7;
+            text-transform: none;
+            letter-spacing: 0;
+            margin-top: 2px;
+        }
+
+        /* ========================================================== */
+        /* RESULT DISPLAY                                              */
+        /* ========================================================== */
+        .result-display {
+            display: none;
+            background: #1a1a2e;
+            border-radius: 16px;
+            padding: 20px;
+            border: 2px solid #2a2a4a;
+            margin-bottom: 16px;
+            text-align: center;
+            animation: resultSlideIn 0.5s ease;
+        }
+
+        @keyframes resultSlideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-display.show {
+            display: block;
+        }
+
+        .result-display .result-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #6c757d;
+            margin-bottom: 8px;
+        }
+
+        .result-display .result-number {
+            font-size: 48px;
+            font-weight: 900;
+            color: #f5b342;
+            display: block;
+            margin: 8px 0;
+        }
+
+        .result-display .result-number.win {
+            color: #10b981;
+            animation: winPulse 1s ease infinite;
+        }
+
+        @keyframes winPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .result-display .result-number.lose {
+            color: #ef4444;
+        }
+
+        .result-display .result-amount {
+            font-size: 20px;
+            font-weight: 800;
+            color: #ffffff;
+            margin: 6px 0;
+        }
+
+        .result-display .result-amount.win-amount {
+            color: #10b981;
+        }
+
+        .result-display .result-message {
+            font-size: 13px;
+            color: #6c757d;
+            margin-top: 4px;
+        }
+
+        /* ========================================================== */
+        /* HISTORY / RECENT RESULTS                                   */
+        /* ========================================================== */
+        .history-section {
+            background: #1a1a2e;
+            border-radius: 16px;
+            padding: 16px 20px;
+            border: 1px solid #2a2a4a;
+        }
+
+        .history-section .history-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .history-section .history-title .clear-btn {
+            font-size: 11px;
+            color: #6c757d;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+
+        .history-section .history-title .clear-btn:hover {
+            color: #ef4444;
+        }
+
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #2a2a4a;
+            font-size: 13px;
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .history-item .h-number {
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .history-item .h-number.win-number {
+            color: #10b981;
+        }
+
+        .history-item .h-number.lose-number {
+            color: #ef4444;
+        }
+
+        .history-item .h-result {
+            font-weight: 700;
+            padding: 2px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+        }
+
+        .history-item .h-result.win {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+        }
+
+        .history-item .h-result.lose {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+
+        .history-item .h-amount {
+            font-weight: 600;
+            color: #6c757d;
+            font-size: 12px;
+        }
+
+        .history-item .h-time {
+            font-size: 10px;
+            color: #4a4a6a;
+        }
+
+        /* ========================================================== */
+        /* BOTTOM NAV                                                  */
+        /* ========================================================== */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 480px;
+            background: #1a1a2e;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 8px 0 14px 0;
+            box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.3);
+            border-top: 1px solid #2a2a4a;
+            z-index: 200;
+        }
+
+        body.dark .bottom-nav {
+            background: #1a1a2e;
+            border-top-color: #2a2a4a;
+        }
+
+        .nav-item {
+            text-align: center;
+            color: #6c757d;
+            font-size: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 4px 12px;
+            transition: 0.2s;
+            border: none;
+            background: transparent;
+            text-decoration: none;
+        }
+
+        .nav-item i {
+            display: block;
+            font-size: 20px;
+            margin-bottom: 2px;
+        }
+
+        .nav-item.active {
+            color: #f5b342;
+        }
+
+        .nav-item:hover:not(.active) {
+            color: #ffffff;
+        }
+
+        /* ========================================================== */
+        /* TOAST                                                       */
+        /* ========================================================== */
+        .toast {
+            position: fixed;
+            bottom: 90px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1a1a2e;
+            color: #ffffff;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 13px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 999;
+            max-width: 90%;
+            text-align: center;
+            pointer-events: none;
+            border: 1px solid #2a2a4a;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+
+        /* ========================================================== */
+        /* RESPONSIVE                                                  */
+        /* ========================================================== */
+        @media (max-width: 480px) {
+            .game-banner h1 {
+                font-size: 20px;
+            }
+            .game-banner .prize-pool {
+                font-size: 26px;
+            }
+            .number-grid {
+                grid-template-columns: repeat(5, 1fr);
+                gap: 6px;
+            }
+            .number-btn {
+                padding: 12px 4px;
+                font-size: 16px;
+            }
+            .number-btn .number-label {
+                font-size: 17px;
+            }
+            .result-display .result-number {
+                font-size: 38px;
+            }
+            .stats-row {
+                gap: 8px;
+            }
+            .stat-box .stat-number {
+                font-size: 18px;
+            }
+            .topbar .balance-display {
+                font-size: 12px;
+                padding: 4px 10px;
+            }
+            .bet-controls .bet-btn {
+                padding: 6px 10px;
+                font-size: 14px;
+                min-width: 32px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .number-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            .game-banner .prize-pool {
+                font-size: 22px;
+            }
+            .bet-controls .bet-btn {
+                padding: 4px 8px;
+                font-size: 12px;
+                min-width: 28px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="app">
+
+        <!-- TOP BAR -->
+        <div class="topbar">
+            <div class="logo">
+                <i class="fas fa-arrow-left" onclick="history.back()"></i>
+                Quick Pick
+            </div>
+            <div class="balance-display">
+                <i class="fas fa-wallet"></i>
+                <span id="quickBalance">$0.00</span>
+            </div>
+        </div>
+
+        <!-- GAME BANNER -->
+        <div class="game-banner">
+            <h1>🎯 Quick Pick & Win!</h1>
+            <div class="sub">Pick a number, win instantly! No waiting.</div>
+            <div class="prize-pool">
+                <small>💰 Prize Pool</small><br>
+                <span id="prizePoolDisplay">$10,000</span>
+            </div>
+        </div>
+
+        <!-- STATS ROW -->
+        <div class="stats-row">
+            <div class="stat-box">
+                <span class="stat-number" id="gamesPlayed">0</span>
+                <span class="stat-label">Games Played</span>
+            </div>
+            <div class="stat-box">
+                <span class="stat-number green" id="gamesWon">0</span>
+                <span class="stat-label">Wins</span>
+            </div>
+            <div class="stat-box">
+                <span class="stat-number blue" id="totalWon">$0</span>
+                <span class="stat-label">Total Won</span>
+            </div>
+        </div>
+
+        <!-- GAME AREA -->
+        <div class="game-area">
+
+            <!-- Game Card -->
+            <div class="game-card">
+                <div class="card-title">
+                    <span class="title-icon">🎲</span>
+                    Pick Your Number
+                    <span style="margin-left:auto; font-size:11px; color:#6c757d; font-weight:400;">1 - 50</span>
+                </div>
+
+                <!-- Number Grid -->
+                <div class="number-grid" id="numberGrid">
+                    <!-- Numbers generated by JavaScript -->
+                </div>
+
+                <!-- Bet Controls - ALL BUTTONS WORKING -->
+                <div class="bet-controls">
+                    <span class="bet-label">Bet</span>
+                    <button class="bet-btn" onclick="adjustBet(-10)">-10</button>
+                    <button class="bet-btn" onclick="adjustBet(-1)">-1</button>
+                    <input type="number" class="bet-amount" id="betAmount" value="10" min="1" max="1000">
+                    <button class="bet-btn" onclick="adjustBet(1)">+1</button>
+                    <button class="bet-btn" onclick="adjustBet(10)">+10</button>
+                </div>
+
+                <!-- Play Button -->
+                <button class="play-btn-main" id="playQuickBtn" onclick="playQuickPick()">
+                    <i class="fas fa-play"></i> Play Now
+                    <span class="btn-sub">Instant result — Win up to 50x your bet!</span>
+                </button>
+            </div>
+
+            <!-- Result Display -->
+            <div class="result-display" id="resultDisplay">
+                <div class="result-title" id="resultTitle">🎯 Result</div>
+                <span class="result-number" id="resultNumber">--</span>
+                <div class="result-amount" id="resultAmount">---</div>
+                <div class="result-message" id="resultMessage"></div>
+            </div>
+
+            <!-- History Section -->
+            <div class="history-section">
+                <div class="history-title">
+                    <span>📋 Recent Games</span>
+                    <button class="clear-btn" onclick="clearHistory()">Clear All</button>
+                </div>
+                <div id="historyList">
+                    <div style="text-align:center; color:#4a4a6a; font-size:13px; padding:12px 0;">
+                        No games played yet. Pick a number and play!
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- BOTTOM NAV -->
+        <div class="bottom-nav">
+            <div class="nav-item" onclick="location.href='index.html'">
+                <i class="fas fa-home"></i> Home
+            </div>
+            <div class="nav-item active" onclick="location.href='quick-pick.html'">
+                <i class="fas fa-bolt"></i> Quick Pick
+            </div>
+            <div class="nav-item" onclick="location.href='bet.html'">
+                <i class="fas fa-gamepad"></i> Predictor
+            </div>
+            <div class="nav-item" onclick="location.href='wallet.html'">
+                <i class="fas fa-wallet"></i> Wallet
+            </div>
+        </div>
+
+    </div>
+
+    <div id="toast" class="toast">Message</div>
+
+    <script>
+        // ==========================================================
+        // GLOBAL DARK MODE LOADER
+        // ==========================================================
+        (function() {
+            if (localStorage.getItem("phc_dark_mode") === "true") {
+                document.body.classList.add("dark");
+            }
+        })();
+
+        // 🔒 GUARD: If not logged in, kick to login
+        if (!localStorage.getItem('phc_current_user')) {
+            window.location.href = 'login.html';
+        }
+
+        // ==========================================================
+        // ✅ SUPABASE CONFIG - MATCHES YOUR WORKING FILES
+        // ==========================================================
+        const SUPABASE_URL = "https://gcesrhfyupmkrevaqpfr.supabase.co";
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdjZXNyaGZ5dXBta3JldmFxcGZyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI4MjQ0MjAsImV4cCI6MjA5ODQwMDQyMH0.LarBYjP0Eg4HfFV_x5GVS7K1d4AuRfBWOjo0D1kL2xM";
+
+        // ==========================================================
+        // GAME STATE
+        // ==========================================================
+        let selectedNumber = null;
+        let gameHistory = JSON.parse(localStorage.getItem('quickPickHistory')) || [];
+        let stats = JSON.parse(localStorage.getItem('quickPickStats')) || { played: 0, won: 0, totalWon: 0 };
+
+        // Prize multipliers based on number rarity
+        const prizeMultipliers = {
+            1: 2, 2: 2, 3: 2, 4: 3, 5: 3,
+            6: 3, 7: 4, 8: 4, 9: 5, 10: 5,
+            11: 6, 12: 6, 13: 7, 14: 7, 15: 8,
+            16: 8, 17: 9, 18: 9, 19: 10, 20: 10,
+            21: 12, 22: 12, 23: 14, 24: 14, 25: 16,
+            26: 16, 27: 18, 28: 18, 29: 20, 30: 20,
+            31: 25, 32: 25, 33: 28, 34: 28, 35: 30,
+            36: 30, 37: 32, 38: 32, 39: 35, 40: 35,
+            41: 40, 42: 40, 43: 42, 44: 42, 45: 45,
+            46: 45, 47: 48, 48: 48, 49: 50, 50: 50
+        };
+
+        // ==========================================================
+        // HELPERS - MATCHES YOUR WORKING FILES
+        // ==========================================================
+        function formatCurrency(val) {
+            return val.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
+
+        function showToast(msg, duration = 3000) {
+            const toast = document.getElementById('toast');
+            if (!toast) return;
+            toast.textContent = msg;
+            toast.classList.add('show');
+            clearTimeout(toast._timer);
+            toast._timer = setTimeout(() => toast.classList.remove('show'), duration);
+        }
+
+        function getCurrentUser() {
+            const localUser = JSON.parse(localStorage.getItem('phc_current_user'));
+            if (!localUser || !localUser.email) return null;
+            return localUser;
+        }
+
+        // ==========================================================
+        // ✅ SUPABASE FUNCTIONS - MATCHES YOUR WORKING FILES
+        // ==========================================================
+        async function querySupabase(table, query = '') {
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/${table}${query}`, {
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                    }
+                });
+                if (!response.ok) return [];
+                return await response.json();
+            } catch (e) {
+                console.error("Supabase Error:", e);
+                return [];
+            }
+        }
+
+        async function saveToSupabase(table, data) {
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
+                    method: 'POST',
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                        'Content-Type': 'application/json',
+                        'Prefer': 'return=minimal'
+                    },
+                    body: JSON.stringify(data)
+                });
+                return response.ok;
+            } catch (e) {
+                console.error("Save Error:", e);
+                return false;
+            }
+        }
+
+        async function patchSupabase(table, query, data) {
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/${table}${query}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                return response.ok;
+            } catch (e) {
+                console.error("Patch Error:", e);
+                return false;
+            }
+        }
+
+        async function updateUserBalance(email, newBalance) {
+            try {
+                await patchSupabase('users', `?email=eq.${email}`, { balance: newBalance });
+                
+                const localUser = JSON.parse(localStorage.getItem('phc_current_user'));
+                if (localUser) {
+                    localUser.balance = newBalance;
+                    localStorage.setItem('phc_current_user', JSON.stringify(localUser));
+                }
+                return true;
+            } catch (e) {
+                console.error("Update Balance Error:", e);
+                return false;
+            }
+        }
+
+        async function saveTransaction(email, name, amount) {
+            try {
+                await saveToSupabase('transactions', {
+                    user_email: email,
+                    name: name,
+                    amount: amount
+                });
+                return true;
+            } catch (e) {
+                console.error("Save Transaction Error:", e);
+                return false;
+            }
+        }
+
+        // ==========================================================
+        // ✅ SAVE GAME TO HISTORY - SO IT APPEARS IN history.html
+        // ==========================================================
+        async function saveGameHistory(userEmail, gameName, betAmount, winAmount, result, details) {
+            try {
+                await saveToSupabase('game_history', {
+                    user_email: userEmail,
+                    game_name: gameName,
+                    game_type: 'quickpick',
+                    bet_amount: betAmount || 0,
+                    win_amount: winAmount || 0,
+                    result: result, // 'win' or 'lose'
+                    details: details || ''
+                });
+                console.log(`✅ ${gameName} saved to history`);
+            } catch (e) {
+                console.error('Error saving game history:', e);
+            }
+        }
+
+        // ==========================================================
+        // RENDER NUMBER GRID
+        // ==========================================================
+        function renderNumberGrid() {
+            const grid = document.getElementById('numberGrid');
+            grid.innerHTML = '';
+
+            for (let i = 1; i <= 50; i++) {
+                const btn = document.createElement('div');
+                btn.className = 'number-btn';
+                btn.dataset.number = i;
+                btn.innerHTML = `
+                    <span class="number-label">${i}</span>
+                    <span class="number-odds">${prizeMultipliers[i]}x</span>
+                `;
+                btn.onclick = function() { selectNumber(i); };
+                grid.appendChild(btn);
+            }
+        }
+
+        // ==========================================================
+        // SELECT NUMBER
+        // ==========================================================
+        function selectNumber(num) {
+            // Deselect all
+            document.querySelectorAll('.number-btn').forEach(el => el.classList.remove('selected'));
+            
+            // Select clicked
+            const selected = document.querySelector(`.number-btn[data-number="${num}"]`);
+            if (selected) {
+                selected.classList.add('selected');
+                selectedNumber = num;
+            }
+            
+            // Update button text
+            const btn = document.getElementById('playQuickBtn');
+            const multiplier = prizeMultipliers[num] || 1;
+            const bet = parseFloat(document.getElementById('betAmount').value) || 10;
+            const potentialWin = bet * multiplier;
+            btn.innerHTML = `
+                <i class="fas fa-play"></i> Play #${num} (${multiplier}x)
+                <span class="btn-sub">Win up to $${formatCurrency(potentialWin)}</span>
+            `;
+        }
+
+        // ==========================================================
+        // ✅ ADJUST BET - FIXED AND WORKING
+        // ==========================================================
+        function adjustBet(amount) {
+            const input = document.getElementById('betAmount');
+            let val = parseFloat(input.value) || 10;
+            
+            let newVal = val + amount;
+            if (newVal < 1) newVal = 1;
+            if (newVal > 1000) newVal = 1000;
+            
+            input.value = newVal;
+            
+            // Update potential win display
+            if (selectedNumber) {
+                const multiplier = prizeMultipliers[selectedNumber] || 1;
+                const potentialWin = newVal * multiplier;
+                const btn = document.getElementById('playQuickBtn');
+                btn.innerHTML = `
+                    <i class="fas fa-play"></i> Play #${selectedNumber} (${multiplier}x)
+                    <span class="btn-sub">Win up to $${formatCurrency(potentialWin)}</span>
+                `;
+            }
+            
+            // Visual feedback
+            input.style.borderColor = '#f5b342';
+            setTimeout(() => {
+                input.style.borderColor = '#3a3a5a';
+            }, 300);
+        }
+
+        // ==========================================================
+        // PLAY QUICK PICK - FULLY INTEGRATED
+        // ==========================================================
+        async function playQuickPick() {
+            const user = getCurrentUser();
+            if (!user) {
+                showToast('⚠️ Please login first.');
+                setTimeout(() => window.location.href = 'login.html', 800);
+                return;
+            }
+
+            if (!selectedNumber) {
+                showToast('⚠️ Please select a number first!');
+                return;
+            }
+
+            const bet = parseFloat(document.getElementById('betAmount').value) || 10;
+            if (bet < 1 || bet > 1000) {
+                showToast('⚠️ Bet must be between $1 and $1,000.');
+                return;
+            }
+
+            // Check balance from Supabase
+            const users = await querySupabase('users', `?email=eq.${user.email}`);
+            if (!users || users.length === 0) {
+                showToast('⚠️ Error fetching user data.');
+                return;
+            }
+            const userData = users[0];
+
+            if (userData.balance < bet) {
+                showToast(`⚠️ Insufficient balance! You have $${formatCurrency(userData.balance)}`);
+                return;
+            }
+
+            // Disable button during play
+            const btn = document.getElementById('playQuickBtn');
+            btn.disabled = true;
+            btn.textContent = '⏳ Drawing...';
+
+            // Simulate draw with suspense (1.5 seconds)
+            await new Promise(resolve => setTimeout(resolve, 1500));
+
+            // Generate winning number (1-50)
+            const winningNumber = Math.floor(Math.random() * 50) + 1;
+            const isWin = winningNumber === selectedNumber;
+            const multiplier = prizeMultipliers[selectedNumber] || 1;
+            const winAmount = isWin ? bet * multiplier : 0;
+
+            // Update balance
+            let newBalance = userData.balance - bet + winAmount;
+            await updateUserBalance(user.email, newBalance);
+            await saveTransaction(user.email, `⚡ Quick Pick ${isWin ? 'Win' : 'Loss'}`, isWin ? winAmount : -bet);
+
+            // ✅ SAVE TO GAME HISTORY
+            await saveGameHistory(user.email, 'Quick Pick', bet, winAmount, isWin ? 'win' : 'lose', 
+                isWin ? `Number ${selectedNumber} matched!` : `Number ${winningNumber} was drawn`);
+
+            // Update stats
+            stats.played++;
+            if (isWin) {
+                stats.won++;
+                stats.totalWon += winAmount;
+            }
+            localStorage.setItem('quickPickStats', JSON.stringify(stats));
+
+            // Add to history
+            gameHistory.unshift({
+                number: selectedNumber,
+                winningNumber: winningNumber,
+                bet: bet,
+                winAmount: winAmount,
+                isWin: isWin,
+                time: new Date().toLocaleTimeString(),
+                multiplier: multiplier
+            });
+            if (gameHistory.length > 50) gameHistory.pop();
+            localStorage.setItem('quickPickHistory', JSON.stringify(gameHistory));
+
+            // Show result
+            showResult(selectedNumber, winningNumber, bet, winAmount, isWin, multiplier);
+
+            // Update UI
+            updateStats();
+            renderHistory();
+            document.getElementById('quickBalance').textContent = '$' + formatCurrency(newBalance);
+
+            // Re-enable button
+            btn.disabled = false;
+            if (selectedNumber) {
+                const potentialWin = bet * multiplier;
+                btn.innerHTML = `
+                    <i class="fas fa-play"></i> Play #${selectedNumber} (${multiplier}x)
+                    <span class="btn-sub">Win up to $${formatCurrency(potentialWin)}</span>
+                `;
+            } else {
+                btn.innerHTML = `
+                    <i class="fas fa-play"></i> Play Now
+                    <span class="btn-sub">Instant result — Win up to 50x your bet!</span>
+                `;
+            }
+
+            // Toast
+            if (isWin) {
+                showToast(`🎉 YOU WON! $${formatCurrency(winAmount)}! #${winningNumber} matched!`);
+            } else {
+                showToast(`😢 #${winningNumber} was drawn. Try again!`);
+            }
+        }
+
+        // ==========================================================
+        // SHOW RESULT
+        // ==========================================================
+        function showResult(picked, winning, bet, winAmount, isWin, multiplier) {
+            const display = document.getElementById('resultDisplay');
+            const numberEl = document.getElementById('resultNumber');
+            const amountEl = document.getElementById('resultAmount');
+            const messageEl = document.getElementById('resultMessage');
+            const titleEl = document.getElementById('resultTitle');
+
+            display.classList.add('show');
+            numberEl.className = 'result-number ' + (isWin ? 'win' : 'lose');
+            numberEl.textContent = isWin ? `🎉 ${winning}` : `${winning}`;
+
+            if (isWin) {
+                titleEl.textContent = '🏆 YOU WON!';
+                amountEl.className = 'result-amount win-amount';
+                amountEl.textContent = `+$${formatCurrency(winAmount)}`;
+                messageEl.textContent = `You picked #${picked} (${multiplier}x) and won $${formatCurrency(winAmount)}!`;
+            } else {
+                titleEl.textContent = '😢 Not This Time';
+                amountEl.className = 'result-amount';
+                amountEl.textContent = `-$${formatCurrency(bet)}`;
+                messageEl.textContent = `You picked #${picked}, but #${winning} was drawn. Try again!`;
+            }
+
+            // Scroll to result
+            display.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // ==========================================================
+        // UPDATE STATS
+        // ==========================================================
+        function updateStats() {
+            document.getElementById('gamesPlayed').textContent = stats.played;
+            document.getElementById('gamesWon').textContent = stats.won;
+            document.getElementById('totalWon').textContent = '$' + formatCurrency(stats.totalWon);
+        }
+
+        // ==========================================================
+        // RENDER HISTORY
+        // ==========================================================
+        function renderHistory() {
+            const container = document.getElementById('historyList');
+            
+            if (gameHistory.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align:center; color:#4a4a6a; font-size:13px; padding:12px 0;">
+                        No games played yet. Pick a number and play!
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = '';
+            gameHistory.slice(0, 20).forEach(game => {
+                const div = document.createElement('div');
+                div.className = 'history-item';
+                div.innerHTML = `
+                    <div>
+                        <span class="h-number ${game.isWin ? 'win-number' : 'lose-number'}">
+                            #${game.winningNumber}
+                        </span>
+                        <span class="h-time">${game.time}</span>
+                    </div>
+                    <div>
+                        <span class="h-result ${game.isWin ? 'win' : 'lose'}">
+                            ${game.isWin ? 'WIN' : 'LOSE'}
+                        </span>
+                        <span class="h-amount">
+                            ${game.isWin ? '+' : '-'}$${formatCurrency(game.isWin ? game.winAmount : game.bet)}
+                        </span>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // ==========================================================
+        // CLEAR HISTORY
+        // ==========================================================
+        function clearHistory() {
+            if (confirm('Clear all game history?')) {
+                gameHistory = [];
+                localStorage.setItem('quickPickHistory', JSON.stringify(gameHistory));
+                renderHistory();
+                showToast('✅ History cleared.');
+            }
+        }
+
+        // ==========================================================
+        // LOAD USER BALANCE
+        // ==========================================================
+        async function loadUserBalance() {
+            const user = getCurrentUser();
+            if (user) {
+                const users = await querySupabase('users', `?email=eq.${user.email}`);
+                if (users && users.length > 0) {
+                    document.getElementById('quickBalance').textContent = '$' + formatCurrency(users[0].balance);
+                }
+            }
+        }
+
+        // ==========================================================
+        // INPUT VALIDATION
+        // ==========================================================
+        document.getElementById('betAmount').addEventListener('change', function() {
+            let val = parseFloat(this.value) || 10;
+            if (val < 1) val = 1;
+            if (val > 1000) val = 1000;
+            this.value = val;
+            
+            if (selectedNumber) {
+                const multiplier = prizeMultipliers[selectedNumber] || 1;
+                const potentialWin = val * multiplier;
+                const btn = document.getElementById('playQuickBtn');
+                btn.innerHTML = `
+                    <i class="fas fa-play"></i> Play #${selectedNumber} (${multiplier}x)
+                    <span class="btn-sub">Win up to $${formatCurrency(potentialWin)}</span>
+                `;
+            }
+        });
+
+        document.getElementById('betAmount').addEventListener('input', function() {
+            let val = parseFloat(this.value) || 10;
+            if (val >= 1 && val <= 1000 && selectedNumber) {
+                const multiplier = prizeMultipliers[selectedNumber] || 1;
+                const potentialWin = val * multiplier;
+                const btn = document.getElementById('playQuickBtn');
+                btn.innerHTML = `
+                    <i class="fas fa-play"></i> Play #${selectedNumber} (${multiplier}x)
+                    <span class="btn-sub">Win up to $${formatCurrency(potentialWin)}</span>
+                `;
+            }
+        });
+
+        // ==========================================================
+        // KEYBOARD SHORTCUTS
+        // ==========================================================
+        document.addEventListener('keydown', function(e) {
+            const input = document.getElementById('betAmount');
+            if (document.activeElement === input) {
+                if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    adjustBet(1);
+                } else if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    adjustBet(-1);
+                }
+            }
+            if (e.key === 'Enter' && document.activeElement === input) {
+                e.preventDefault();
+                playQuickPick();
+            }
+        });
+
+        // ==========================================================
+        // INIT
+        // ==========================================================
+        document.addEventListener('DOMContentLoaded', async function() {
+            renderNumberGrid();
+            renderHistory();
+            updateStats();
+            await loadUserBalance();
+
+            // Auto-select first number
+            selectNumber(1);
+
+            // Update prize pool periodically
+            const prizePool = document.getElementById('prizePoolDisplay');
+            setInterval(() => {
+                const base = 10000;
+                const random = Math.floor(Math.random() * 5000);
+                prizePool.textContent = '$' + formatCurrency(base + random);
+            }, 5000);
+
+            console.log('🎯 Quick Pick integrated with Supabase!');
+            console.log('✅ Connected to:', SUPABASE_URL);
+            console.log('✅ Games will appear in history.html');
+            console.log('✅ All bet buttons are working!');
+        });
+
+        // Make functions global
+        window.adjustBet = adjustBet;
+        window.selectNumber = selectNumber;
+        window.playQuickPick = playQuickPick;
+        window.clearHistory = clearHistory;
+    </script>
+
+</body>
+</html>

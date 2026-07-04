@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PHC Jackpot Predictor</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        /* ========================================================== */
+        /* SPORTYBET STYLE JACKPOT PAGE                               */
+        /* ========================================================== */
+        
+        body.dark {
+            background: #0f172a;
+            color: #e2e8f0;
+        }
+        body.dark .app {
+            background: #0f172a;
+        }
+        body.dark .topbar {
+            background: #1e293b;
+            border-bottom: 1px solid #334155;
+        }
+        body.dark .card {
+            background: #1e293b;
+            box-shadow: none;
+            border: 1px solid #334155;
+            color: #e2e8f0;
+        }
+        body.dark .welcome h1 {
+            color: #f8fafc;
+        }
+        body.dark .welcome p {
+            color: #94a3b8;
+        }
+
+        .bet-page {
+            padding: 0 20px 50px 20px;
+            max-width: 500px;
+            margin: auto;
+        }
+
+        .jackpot-banner {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            padding: 30px 20px 20px;
+            text-align: center;
+            border-bottom: 2px solid #004b87;
+            position: relative;
+            overflow: hidden;
+            border-radius: 0 0 24px 24px;
+            margin: 0 -20px 15px -20px;
+        }
+        body:not(.dark) .jackpot-banner {
+            background: linear-gradient(135deg, #004b87, #002a55);
+        }
+        .jackpot-banner::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+            animation: pulseGlow 4s ease-in-out infinite;
+        }
+        @keyframes pulseGlow {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 1; }
+        }
+        .jackpot-banner h1 {
+            font-size: 22px;
+            font-weight: 800;
+            color: #f8fafc;
+            position: relative;
+            z-index: 1;
+        }
+        .jackpot-banner .prize {
+            font-size: 28px;
+            font-weight: 900;
+            color: #f5b342;
+            margin: 5px 0;
+            position: relative;
+            z-index: 1;
+        }
+        .jackpot-banner .sub {
+            font-size: 14px;
+            color: #94a3b8;
+            position: relative;
+            z-index: 1;
+        }
+
+        .countdown-row {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        .countdown-box {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 10px 5px;
+            min-width: 55px;
+            text-align: center;
+        }
+        body:not(.dark) .countdown-box {
+            background: rgba(0, 0, 0, 0.1);
+        }
+        .countdown-box .num {
+            font-size: 24px;
+            font-weight: 800;
+            color: #f8fafc;
+            display: block;
+        }
+        .countdown-box .label {
+            font-size: 10px;
+            color: #94a3b8;
+            text-transform: uppercase;
+        }
+
+        .bet-tabs {
+            display: flex;
+            background: #1e293b;
+            border-radius: 16px;
+            padding: 4px;
+            margin-bottom: 15px;
+        }
+        body:not(.dark) .bet-tabs {
+            background: #f0f4f8;
+        }
+        .bet-tabs .tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            border-radius: 14px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            color: #94a3b8;
+            transition: 0.2s;
+        }
+        .bet-tabs .tab.active {
+            background: #004b87;
+            color: #f8fafc;
+        }
+        .bet-tabs .tab:hover:not(.active) {
+            color: #f8fafc;
+        }
+
+        .round-info {
+            text-align: center;
+            color: #64748b;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .match-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .match-item {
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 12px 14px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            transition: 0.3s;
+        }
+        body:not(.dark) .match-item {
+            background: #ffffff;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+            border: 1px solid #e8ecf1;
+        }
+
+        .match-item .match-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+
+        .match-item .match-header .match-number {
+            font-size: 11px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .match-item .match-header .match-status {
+            font-size: 9px;
+            font-weight: 700;
+            padding: 2px 10px;
+            border-radius: 10px;
+            text-transform: uppercase;
+        }
+
+        .match-item .match-header .match-status.live {
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+        }
+
+        .match-item .match-header .match-status.live .pulse {
+            display: inline-block;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: #ef4444;
+            margin-right: 4px;
+            animation: pulseDot 1s ease-in-out infinite;
+        }
+
+        .match-item .match-header .match-status.ended {
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .match-item .match-header .match-status.upcoming {
+            background: rgba(255, 215, 0, 0.08);
+            color: #ffd700;
+        }
+
+        .match-item .match-teams {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 2px 0;
+        }
+
+        .match-item .match-teams .team {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #f8fafc;
+        }
+        body:not(.dark) .match-item .match-teams .team {
+            color: #212529;
+        }
+
+        .match-item .match-teams .team .flag {
+            font-size: 18px;
+        }
+
+        .match-item .match-teams .team .team-name {
+            max-width: 80px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .match-item .match-teams .score {
+            font-size: 16px;
+            font-weight: 800;
+            color: #ffd700;
+            min-width: 36px;
+            text-align: center;
+        }
+
+        .match-item .match-teams .score.live {
+            color: #10b981;
+        }
+
+        .match-item .match-teams .score.ended {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .match-item .match-odds {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin-top: 6px;
+            padding-top: 6px;
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+        }
+        body:not(.dark) .match-item .match-odds {
+            border-top-color: #f0f2f5;
+        }
+
+        .match-item .match-odds .odd-btn {
+            padding: 4px 14px;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.03);
+            font-size: 14px;
+            font-weight: 700;
+            color: #f8fafc;
+            text-align: center;
+            min-width: 44px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: 0.2s;
+            position: relative;
+        }
+        body:not(.dark) .match-item .match-odds .odd-btn {
+            background: #f8fafc;
+            color: #212529;
+            border-color: #e8ecf1;
+        }
+
+        .match-item .match-odds .odd-btn .label {
+            font-size: 7px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.3);
+            display: block;
+            text-transform: uppercase;
+        }
+        body:not(.dark) .match-item .match-odds .odd-btn .label {
+            color: #6c757d;
+        }
+
+        .match-item .match-odds .odd-btn:hover:not(.locked):not(.selected) {
+            transform: translateY(-2px);
+            border-color: rgba(255, 215, 0, 0.3);
+        }
+
+        .match-item .match-odds .odd-btn.selected {
+            border-color: #f5b342;
+            background: #1a237e;
+            color: #ffffff;
+            box-shadow: 0 0 20px rgba(26, 35, 126, 0.2);
+        }
+        body:not(.dark) .match-item .match-odds .odd-btn.selected {
+            background: #1a237e;
+            color: #ffffff;
+            border-color: #f5b342;
+        }
+
+        .match-item .match-odds .odd-btn.locked {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .match-item .match-odds .odd-btn.locked:hover {
+            transform: none;
+            border-color: transparent;
+        }
+
+        .match-item .match-time {
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.2);
+            text-align: right;
+            margin-top: 4px;
+        }
+        body:not(.dark) .match-item .match-time {
+            color: #aabbcc;
+        }
+
+        @keyframes pulseDot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.8); }
+        }
+
+        .bottom-action-section {
+            margin-top: 20px;
+            padding: 16px 20px;
+            background: #1e293b;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        body:not(.dark) .bottom-action-section {
+            background: #ffffff;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+            border: 1px solid #e8ecf1;
+        }
+
+        .bottom-action-section .info small {
+            font-size: 11px;
+            color: #94a3b8;
+            display: block;
+        }
+        body:not(.dark) .bottom-action-section .info small {
+            color: #6c757d;
+        }
+
+        .bottom-action-section .info strong {
+            font-size: 22px;
+            font-weight: 800;
+            color: #f8fafc;
+            display: block;
+            margin: 4px 0 12px 0;
+        }
+        body:not(.dark) .bottom-action-section .info strong {
+            color: #212529;
+        }
+
+        .bottom-action-section .btn-play {
+            background: #10b981;
+            color: #ffffff;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 15px;
+            width: 100%;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .bottom-action-section .btn-play:hover:not(:disabled) {
+            background: #059669;
+            transform: scale(1.01);
+        }
+
+        .bottom-action-section .btn-play:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .bottom-action-section .btn-play.locked {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 90px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #0a1a2a;
+            color: #f8fafc;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 12px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 999;
+            max-width: 90%;
+            text-align: center;
+        }
+        .toast.show { opacity: 1; }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 480px;
+            background: #1a1a2e;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 8px 0 14px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            z-index: 200;
+        }
+        body:not(.dark) .bottom-nav {
+            background: #ffffff;
+            border-top: 1px solid #e8ecf1;
+        }
+
+        .nav-item {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 4px 12px;
+            transition: 0.2s;
+            border: none;
+            background: transparent;
+        }
+        body:not(.dark) .nav-item {
+            color: #6c757d;
+        }
+
+        .nav-item i {
+            display: block;
+            font-size: 20px;
+            margin-bottom: 2px;
+        }
+
+        .nav-item.active {
+            color: #ffd700;
+        }
+        body:not(.dark) .nav-item.active {
+            color: #1a237e;
+        }
+
+        .nav-item:hover:not(.active) {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        body:not(.dark) .nav-item:hover:not(.active) {
+            color: #1a237e;
+        }
+
+        @media (max-width: 480px) {
+            .match-item .match-teams .team .team-name {
+                max-width: 60px;
+                font-size: 12px;
+            }
+            .match-item .match-teams .score {
+                font-size: 14px;
+                min-width: 30px;
+            }
+            .match-item .match-teams .team .flag {
+                font-size: 14px;
+            }
+            .match-item .match-odds .odd-btn {
+                padding: 3px 10px;
+                font-size: 12px;
+                min-width: 36px;
+            }
+            .jackpot-banner .prize {
+                font-size: 22px;
+            }
+            .countdown-box .num {
+                font-size: 20px;
+            }
+            .bottom-action-section .info strong {
+                font-size: 20px;
+            }
+            .bet-tabs .tab {
+                font-size: 11px;
+                padding: 10px 4px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="app bet-page">
+
+        <!-- TOP BAR -->
+        <div class="topbar">
+            <div class="logo">
+                <i class="fas fa-arrow-left" onclick="history.back()"></i>
+                Predictor
+            </div>
+        </div>
+
+        <!-- JACKPOT BANNER -->
+        <div class="jackpot-banner">
+            <h1>Predict 12 GAMES to Win 🏆</h1>
+            <div class="prize" id="prizeDisplay">The Amount of your choosing card you pick</div>
+            <div class="sub">Prizes for 11 and 10 correct predictions too!</div>
+            
+            <div class="countdown-row">
+                <div class="countdown-box">
+                    <span class="num" id="days">00</span>
+                    <span class="label">Days</span>
+                </div>
+                <div class="countdown-box">
+                    <span class="num" id="hours">00</span>
+                    <span class="label">Hours</span>
+                </div>
+                <div class="countdown-box">
+                    <span class="num" id="minutes">00</span>
+                    <span class="label">Min</span>
+                </div>
+                <div class="countdown-box">
+                    <span class="num" id="seconds">00</span>
+                    <span class="label">Sec</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- TABS -->
+        <div class="bet-tabs">
+            <div class="tab active">Sporty 12</div>
+            <div class="tab" onclick="location.href='previous-results.html'">Previous Results</div>
+            <div class="tab" onclick="location.href='how-to-play.html'">How to play</div>
+        </div>
+
+        <!-- ROUND INFO -->
+        <div class="round-info">
+            Round No. <span id="roundNumber">20260705</span>
+        </div>
+
+        <!-- MATCH LIST -->
+        <div class="match-list" id="matchContainer">
+            <!-- Matches generated by JavaScript -->
+        </div>
+
+        <!-- BOTTOM ACTION -->
+        <div class="bottom-action-section">
+            <div class="info">
+                <small>Combination</small>
+                <strong id="combinationCount">0 / 12</strong>
+            </div>
+            <button class="btn-play" id="playToWinBtn" onclick="playToWin()">
+                Play to Win
+            </button>
+        </div>
+
+        <!-- BOTTOM NAV -->
+        <div class="bottom-nav">
+            <div class="nav-item" onclick="location.href='index.html'">
+                <i class="fas fa-home"></i> Home
+            </div>
+            <div class="nav-item active" onclick="location.href='bet.html'">
+                <i class="fas fa-gamepad"></i> Predictor
+            </div>
+            <div class="nav-item" onclick="location.href='history.html'">
+                <i class="fas fa-history"></i> History
+            </div>
+            <div class="nav-item" onclick="location.href='settings.html'">
+                <i class="fas fa-cog"></i> Settings
+            </div>
+        </div>
+
+    </div>
+
+    <div id="toast" class="toast">Message</div>
+
+    <script>
+        // ==========================================================
+        // SUPABASE CONFIG
+        // ==========================================================
+        const SUPABASE_URL = "https://gcesrhfyupmkrevaqpfr.supabase.co";
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdjZXNyaGZ5dXBta3JldmFxcGZyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI4MjQ0MjAsImV4cCI6MjA5ODQwMDQyMH0.LarBYjP0Eg4HfFV_x5GVS7K1d4AuRfBWOjo0D1kL2xM";
+
+        // ==========================================================
+        // MATCH DATA FROM SCREENSHOTS
+        // ==========================================================
+        var JACKPOT_MATCHES = [
+            { number: 1, home: "FF Jaro", away: "Tampereen Ilves", date: "2026-07-04", time: "10:00", odds: { home: 3.33, draw: 3.60, away: 2.05 } },
+            { number: 2, home: "Bryne FK", away: "Sandnes Ulf", date: "2026-07-04", time: "12:00", odds: { home: 1.93, draw: 3.80, away: 3.60 } },
+            { number: 3, home: "CA Defensores de Belgrano", away: "Deportivo Moron", date: "2026-07-04", time: "14:30", odds: { home: 2.75, draw: 2.65, away: 2.95 } },
+            { number: 4, home: "Gremio Novorizontino SP", away: "AC Goianiense GO", date: "2026-07-04", time: "15:00", odds: { home: 1.92, draw: 3.40, away: 4.00 } },
+            { number: 5, home: "Criciuma EC SC", away: "SC Recife PE", date: "2026-07-04", time: "15:00", odds: { home: 2.05, draw: 3.25, away: 3.90 } },
+            { number: 6, home: "Goias EC GO", away: "Ceara SC CE", date: "2026-07-04", time: "19:00", odds: { home: 2.20, draw: 3.00, away: 3.70 } },
+            { number: 7, home: "Shanghai Shenhua FC", away: "Zhejiang FC", date: "2026-07-05", time: "07:35", odds: { home: 1.70, draw: 4.40, away: 4.30 } },
+            { number: 8, home: "IFK Goteborg", away: "AIK", date: "2026-07-05", time: "08:00", odds: { home: 2.25, draw: 3.60, away: 3.10 } },
+            { number: 9, home: "IF Elfsborg", away: "Hammarby IF", date: "2026-07-05", time: "10:30", odds: { home: 3.70, draw: 3.75, away: 1.94 } },
+            { number: 10, home: "Odds BK", away: "FK Haugesund", date: "2026-07-05", time: "13:15", odds: { home: 2.25, draw: 3.90, away: 2.75 } },
+            { number: 11, home: "CA Estudiantes", away: "Racing de Cordoba", date: "2026-07-05", time: "14:00", odds: { home: 1.93, draw: 2.75, away: 4.80 } },
+            { number: 12, home: "Nautico PE", away: "EC Juventude RS", date: "2026-07-05", time: "18:00", odds: { home: 2.15, draw: 3.20, away: 3.60 } }
+        ];
+
+        // ==========================================================
+        // STATE
+        // ==========================================================
+        var allMatches = [];
+        var selectedCombinations = {};
+        var countdownInterval = null;
+        var isBettingLocked = false;
+        var firstMatchTime = null;
+
+        // ==========================================================
+        // HELPERS
+        // ==========================================================
+        function getCurrentUser() {
+            var localUser = JSON.parse(localStorage.getItem('phc_current_user'));
+            if (!localUser || !localUser.email) return null;
+            return localUser;
+        }
+
+        async function querySupabase(table, query = '') {
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/${table}${query}`, {
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                    }
+                });
+                if (!response.ok) return [];
+                return await response.json();
+            } catch (e) {
+                console.error("Supabase Error:", e);
+                return [];
+            }
+        }
+
+        async function saveToSupabase(table, data) {
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
+                    method: 'POST',
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                        'Content-Type': 'application/json',
+                        'Prefer': 'return=minimal'
+                    },
+                    body: JSON.stringify(data)
+                });
+                return response.ok;
+            } catch (e) {
+                console.error("Supabase Save Error:", e);
+                return false;
+            }
+        }
+
+        async function deleteFromSupabase(table, query) {
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/${table}${query}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                    }
+                });
+                return response.ok;
+            } catch (e) {
+                console.error("Supabase Delete Error:", e);
+                return false;
+            }
+        }
+
+        function showToast(msg, duration) {
+            duration = duration || 3000;
+            var toast = document.getElementById('toast');
+            if (!toast) return;
+            toast.textContent = msg;
+            toast.classList.add('show');
+            clearTimeout(toast._timer);
+            toast._timer = setTimeout(function() {
+                toast.classList.remove('show');
+            }, duration);
+        }
+
+        function getRoundNumber() {
+            var now = new Date();
+            var year = now.getFullYear();
+            var month = String(now.getMonth() + 1).padStart(2, '0');
+            var day = String(now.getDate()).padStart(2, '0');
+            return year + month + day;
+        }
+
+        // ==========================================================
+        // GENERATE MATCHES
+        // ==========================================================
+        function generateMatches() {
+            var now = new Date();
+            allMatches = [];
+            
+            JACKPOT_MATCHES.forEach(function(data, index) {
+                var matchDate = new Date(data.date + 'T' + data.time + ':00');
+                
+                if (matchDate.getTime() < now.getTime()) {
+                    matchDate.setDate(matchDate.getDate() + 7);
+                }
+                
+                var flags = {
+                    'FF Jaro': '🇫🇮', 'Tampereen Ilves': '🇫🇮',
+                    'Bryne FK': '🇳🇴', 'Sandnes Ulf': '🇳🇴',
+                    'CA Defensores de Belgrano': '🇦🇷', 'Deportivo Moron': '🇦🇷',
+                    'Gremio Novorizontino SP': '🇧🇷', 'AC Goianiense GO': '🇧🇷',
+                    'Criciuma EC SC': '🇧🇷', 'SC Recife PE': '🇧🇷',
+                    'Goias EC GO': '🇧🇷', 'Ceara SC CE': '🇧🇷',
+                    'Shanghai Shenhua FC': '🇨🇳', 'Zhejiang FC': '🇨🇳',
+                    'IFK Goteborg': '🇸🇪', 'AIK': '🇸🇪',
+                    'IF Elfsborg': '🇸🇪', 'Hammarby IF': '🇸🇪',
+                    'Odds BK': '🇳🇴', 'FK Haugesund': '🇳🇴',
+                    'CA Estudiantes': '🇦🇷', 'Racing de Cordoba': '🇦🇷',
+                    'Nautico PE': '🇧🇷', 'EC Juventude RS': '🇧🇷'
+                };
+                
+                allMatches.push({
+                    id: index + 1,
+                    number: data.number,
+                    home: data.home,
+                    away: data.away,
+                    homeFlag: flags[data.home] || '🏳️',
+                    awayFlag: flags[data.away] || '🏳️',
+                    homeScore: 0,
+                    awayScore: 0,
+                    status: 'upcoming',
+                    minute: 0,
+                    odds: data.odds,
+                    matchTime: matchDate,
+                    locked: false,
+                    date: data.date,
+                    time: data.time
+                });
+            });
+
+            localStorage.setItem('phc_round_matches_' + getRoundNumber(), JSON.stringify(allMatches));
+            
+            renderMatches();
+            setupCountdown();
+            saveMatchesToSupabase();
+            
+            showToast('✅ Round loaded! Pick 12 games to play.');
+        }
+
+        // ==========================================================
+        // SAVE MATCHES TO SUPABASE
+        // ==========================================================
+        async function saveMatchesToSupabase() {
+            var user = getCurrentUser();
+            if (!user) return;
+
+            var roundNumber = getRoundNumber();
+            
+            await deleteFromSupabase('jackpot_entries', `?user_email=eq.${user.email}&round_number=eq.${roundNumber}`);
+
+            for (var i = 0; i < allMatches.length; i++) {
+                var match = allMatches[i];
+                await saveToSupabase('jackpot_entries', {
+                    user_email: user.email,
+                    user_name: user.firstName + ' ' + user.lastName,
+                    match_id: match.id,
+                    match_number: match.number,
+                    home_team: match.home,
+                    away_team: match.away,
+                    home_flag: match.homeFlag,
+                    away_flag: match.awayFlag,
+                    match_date: match.date + ' ' + match.time,
+                    match_time: match.matchTime.toISOString(),
+                    home_score: match.homeScore,
+                    away_score: match.awayScore,
+                    status: match.status,
+                    minute: match.minute,
+                    odds_home: match.odds.home,
+                    odds_draw: match.odds.draw,
+                    odds_away: match.odds.away,
+                    round_number: roundNumber,
+                    entry_status: 'active'
+                });
+            }
+        }
+
+        // ==========================================================
+        // RENDER MATCHES
+        // ==========================================================
+        function renderMatches() {
+            var container = document.getElementById('matchContainer');
+            var html = '';
+            var now = new Date();
+
+            document.getElementById('roundNumber').textContent = getRoundNumber();
+
+            allMatches.forEach(function(match) {
+                var matchTime = new Date(match.matchTime);
+                var matchEnd = new Date(matchTime);
+                matchEnd.setHours(matchEnd.getHours() + 2);
+
+                if (now >= matchTime && now <= matchEnd) {
+                    match.status = 'running';
+                    match.locked = true;
+                    if (match.homeScore === 0 && match.awayScore === 0) {
+                        match.homeScore = Math.floor(Math.random() * 3);
+                        match.awayScore = Math.floor(Math.random() * 2);
+                    }
+                } else if (now > matchEnd) {
+                    match.status = 'ended';
+                    match.locked = true;
+                } else {
+                    match.status = 'upcoming';
+                    if (now >= new Date(matchTime.getTime() - 30 * 60000)) {
+                        match.locked = true;
+                    } else {
+                        match.locked = false;
+                    }
+                }
+
+                var isLive = match.status === 'running';
+                var isEnded = match.status === 'ended';
+                var statusClass = isLive ? 'live' : (isEnded ? 'ended' : 'upcoming');
+                var statusLabel = isLive ? match.minute + "'" : (isEnded ? 'FT' : 'Upcoming');
+                var scoreClass = isLive ? 'live' : (isEnded ? 'ended' : '');
+                var timeDisplay = match.date + ' ' + match.time;
+
+                var selectedHome = selectedCombinations[match.id] && selectedCombinations[match.id].selection === 'home';
+                var selectedDraw = selectedCombinations[match.id] && selectedCombinations[match.id].selection === 'draw';
+                var selectedAway = selectedCombinations[match.id] && selectedCombinations[match.id].selection === 'away';
+
+                html += `
+                    <div class="match-item">
+                        <div class="match-header">
+                            <span class="match-number">${match.number}</span>
+                            <span class="match-status ${statusClass}">
+                                ${isLive ? '<span class="pulse"></span>' : ''}
+                                ${statusLabel}
+                            </span>
+                        </div>
+                        <div class="match-teams">
+                            <div class="team">
+                                <span class="flag">${match.homeFlag}</span>
+                                <span class="team-name">${match.home}</span>
+                            </div>
+                            <div class="score ${scoreClass}">${match.homeScore} - ${match.awayScore}</div>
+                            <div class="team">
+                                <span class="team-name">${match.away}</span>
+                                <span class="flag">${match.awayFlag}</span>
+                            </div>
+                        </div>
+                        <div class="match-odds">
+                            <div class="odd-btn ${match.locked ? 'locked' : ''} ${selectedHome ? 'selected' : ''}" 
+                                 onclick="selectOdd(${match.id}, 'home', ${match.odds.home.toFixed(2)})">
+                                <span class="label">1</span>
+                                ${match.odds.home.toFixed(2)}
+                            </div>
+                            <div class="odd-btn ${match.locked ? 'locked' : ''} ${selectedDraw ? 'selected' : ''}" 
+                                 onclick="selectOdd(${match.id}, 'draw', ${match.odds.draw.toFixed(2)})">
+                                <span class="label">X</span>
+                                ${match.odds.draw.toFixed(2)}
+                            </div>
+                            <div class="odd-btn ${match.locked ? 'locked' : ''} ${selectedAway ? 'selected' : ''}" 
+                                 onclick="selectOdd(${match.id}, 'away', ${match.odds.away.toFixed(2)})">
+                                <span class="label">2</span>
+                                ${match.odds.away.toFixed(2)}
+                            </div>
+                        </div>
+                        <div class="match-time">${timeDisplay}</div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+            updateBetBar();
+            updateLiveMatches();
+        }
+
+        // ==========================================================
+        // UPDATE LIVE MATCHES
+        // ==========================================================
+        function updateLiveMatches() {
+            localStorage.setItem('phc_live_matches', JSON.stringify(allMatches));
+            localStorage.setItem('phc_live_matches_updated', Date.now().toString());
+            
+            allMatches.forEach(function(match) {
+                if (match.status === 'running' || match.status === 'ended') {
+                    var user = getCurrentUser();
+                    if (user) {
+                        var query = `?match_id=eq.${match.id}&user_email=eq.${user.email}`;
+                        fetch(`${SUPABASE_URL}/rest/v1/jackpot_entries${query}`, {
+                            method: 'PATCH',
+                            headers: {
+                                'apikey': SUPABASE_ANON_KEY,
+                                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                home_score: match.homeScore,
+                                away_score: match.awayScore,
+                                status: match.status,
+                                minute: match.minute || 0
+                            })
+                        });
+                    }
+                }
+            });
+        }
+
+        // ==========================================================
+        // SELECT ODD
+        // ==========================================================
+        function selectOdd(matchId, selection, oddValue) {
+            var match = allMatches.find(function(m) { return m.id === matchId; });
+            if (!match || match.locked) {
+                showToast('⚠️ This match is locked or already started!');
+                return;
+            }
+
+            if (selectedCombinations[matchId] && selectedCombinations[matchId].selection === selection) {
+                delete selectedCombinations[matchId];
+            } else {
+                selectedCombinations[matchId] = { selection: selection, odd: oddValue };
+            }
+
+            localStorage.setItem('phc_jackpot_selections', JSON.stringify(selectedCombinations));
+            renderMatches();
+            updateBetBar();
+        }
+
+        // ==========================================================
+        // UPDATE BET BAR
+        // ==========================================================
+        function updateBetBar() {
+            var count = Object.keys(selectedCombinations).length;
+            document.getElementById('combinationCount').textContent = count + ' / 12';
+            
+            var btn = document.getElementById('playToWinBtn');
+            if (count === 12 && !isBettingLocked) {
+                btn.disabled = false;
+                btn.textContent = '🎯 Play to Win';
+                btn.className = 'btn-play';
+            } else if (isBettingLocked) {
+                btn.disabled = true;
+                btn.className = 'btn-play locked';
+                btn.textContent = '⏳ Betting Closed';
+            } else {
+                btn.disabled = true;
+                btn.textContent = count + ' / 12 selected';
+                btn.className = 'btn-play';
+            }
+        }
+
+        // ==========================================================
+        // PLAY TO WIN
+        // ==========================================================
+        async function playToWin() {
+            var user = getCurrentUser();
+            if (!user) {
+                showToast('⚠️ Please login first.');
+                setTimeout(function() { window.location.href = 'login.html'; }, 800);
+                return;
+            }
+
+            var count = Object.keys(selectedCombinations).length;
+            if (count < 12) {
+                showToast('⚠️ You must predict all 12 games to play.');
+                return;
+            }
+
+            if (isBettingLocked) {
+                showToast('⚠️ Betting is closed for this round.');
+                return;
+            }
+
+            var selections = [];
+            allMatches.forEach(function(match) {
+                if (selectedCombinations[match.id]) {
+                    selections.push({
+                        matchId: match.id,
+                        matchNumber: match.number,
+                        home: match.home,
+                        away: match.away,
+                        selection: selectedCombinations[match.id].selection,
+                        odd: selectedCombinations[match.id].odd
+                    });
+                }
+            });
+
+            localStorage.setItem('phc_jackpot_selections', JSON.stringify(selections));
+
+            var roundNumber = getRoundNumber();
+            
+            await deleteFromSupabase('jackpot_entries', `?user_email=eq.${user.email}&round_number=eq.${roundNumber}`);
+
+            await saveToSupabase('jackpot_entries', {
+                user_email: user.email,
+                user_name: user.firstName + ' ' + user.lastName,
+                predictions: JSON.stringify(selections),
+                status: 'active',
+                round_number: roundNumber,
+                created_at: new Date().toISOString(),
+                entry_status: 'submitted'
+            });
+
+            await saveToSupabase('game_history', {
+                user_email: user.email,
+                game_name: 'Sporty 12 Jackpot',
+                game_type: 'jackpot',
+                bet_amount: 0,
+                win_amount: 0,
+                result: 'pending',
+                details: '12 games predicted'
+            });
+
+            showToast('✅ Predictions saved! Now pick your card.');
+            setTimeout(function() {
+                window.location.href = 'games.html';
+            }, 800);
+        }
+
+        // ==========================================================
+        // COUNTDOWN - SIMPLE AND WORKING
+        // ==========================================================
+        function setupCountdown() {
+            if (countdownInterval) clearInterval(countdownInterval);
+
+            // Target: Tomorrow at 10:00 AM (local time)
+            var now = new Date();
+            var targetDate = new Date(now);
+            targetDate.setDate(now.getDate() + 1);
+            targetDate.setHours(10, 0, 0, 0);
+
+            // If it's past 10 AM today, add another day
+            if (now.getHours() >= 10) {
+                targetDate.setDate(now.getDate() + 2);
+            }
+
+            // Check if we have a match on July 4th
+            var july4 = new Date(2026, 6, 4, 10, 0, 0);
+            if (july4.getTime() > now.getTime()) {
+                targetDate = july4;
+            }
+
+            firstMatchTime = targetDate.getTime();
+
+            console.log('⏰ Countdown target: ' + targetDate.toLocaleString());
+            console.log('⏰ Current time: ' + now.toLocaleString());
+
+            countdownInterval = setInterval(function() {
+                var nowTime = new Date().getTime();
+                var distance = firstMatchTime - nowTime;
+
+                if (distance < 0) {
+                    isBettingLocked = true;
+                    document.getElementById('playToWinBtn').className = 'btn-play locked';
+                    document.getElementById('playToWinBtn').textContent = '⏳ Betting Closed';
+                    updateBetBar();
+                    
+                    document.getElementById('days').textContent = '00';
+                    document.getElementById('hours').textContent = '00';
+                    document.getElementById('minutes').textContent = '00';
+                    document.getElementById('seconds').textContent = '00';
+                    return;
+                }
+
+                var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                document.getElementById("days").textContent = String(days).padStart(2, '0');
+                document.getElementById("hours").textContent = String(hours).padStart(2, '0');
+                document.getElementById("minutes").textContent = String(minutes).padStart(2, '0');
+                document.getElementById("seconds").textContent = String(seconds).padStart(2, '0');
+            }, 1000);
+        }
+
+        // ==========================================================
+        // INIT
+        // ==========================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            var now = new Date();
+            var roundNum = now.getFullYear() + 
+                          String(now.getMonth() + 1).padStart(2, '0') + 
+                          String(now.getDate()).padStart(2, '0');
+            document.getElementById('roundNumber').textContent = roundNum;
+
+            var savedSelections = localStorage.getItem('phc_jackpot_selections');
+            if (savedSelections) {
+                try {
+                    var selections = JSON.parse(savedSelections);
+                    selections.forEach(function(sel) {
+                        selectedCombinations[sel.matchId] = { 
+                            selection: sel.selection, 
+                            odd: sel.odd 
+                        };
+                    });
+                } catch (e) {}
+            }
+
+            generateMatches();
+
+            setInterval(function() {
+                updateLiveMatches();
+            }, 5000);
+
+            console.log('⚽ PHC Jackpot Predictor loaded!');
+            console.log('⏰ Countdown will start working!');
+        });
+
+        window.selectOdd = selectOdd;
+        window.playToWin = playToWin;
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PHC Jackpot Active</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        .jackpot-card {
+            background: #004b87;
+            border-radius: 25px;
+            padding: 25px;
+            margin: 0 18px 18px;
+            color: white;
+            text-align: center;
+            box-shadow: 0 15px 40px rgba(0, 75, 135, 0.25);
+        }
+        .jackpot-card h2 {
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+        .jackpot-card .countdown {
+            font-size: 32px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            margin: 10px 0 15px;
+        }
+        .jackpot-card p {
+            opacity: 0.8;
+            font-size: 14px;
+        }
+        .review-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .review-row:last-child {
+            border-bottom: none;
+        }
+        .review-row span {
+            color: #7a8a9a;
+        }
+        .review-row b {
+            color: #0a1a2a;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="app">
+
+        <div class="topbar">
+            <div class="logo">
+                PHC Jackpot
+            </div>
+            <i class="fas fa-trophy"></i>
+        </div>
+
+        <div class="welcome">
+            <h1>🎉 Jackpot Active</h1>
+            <p>Your game is running</p>
+        </div>
+
+        <div class="jackpot-card">
+            <h2>Countdown</h2>
+            <div id="countdown" class="countdown">
+                Loading...
+            </div>
+            <p>Your jackpot result will be processed after countdown.</p>
+        </div>
+
+        <div class="card">
+            <h2>Game Details</h2>
+
+            <div class="review-row">
+                <span>Card</span>
+                <b id="cardName">Loading...</b>
+            </div>
+
+            <div class="review-row">
+                <span>Amount</span>
+                <b id="cardAmount">Loading...</b>
+            </div>
+
+            <div class="review-row">
+                <span>Winning</span>
+                <b id="winAmount">Loading...</b>
+            </div>
+        </div>
+
+        <div class="actions">
+            <div class="action" onclick="location.href='winners.html'">
+                <i class="fas fa-users"></i>
+                <span>Previous Winners</span>
+            </div>
+
+            <div class="action" onclick="location.href='how-to-play.html'">
+                <i class="fas fa-circle-question"></i>
+                <span>How To Play</span>
+            </div>
+        </div>
+
+        <div class="chat-bubble">
+            <i class="fas fa-comment"></i>
+        </div>
+
+        <div class="bottom-nav">
+            <div class="nav-item" onclick="location.href='index.html'">
+                <i class="fas fa-home"></i> Home
+            </div>
+            <div class="nav-item active">
+                <i class="fas fa-trophy"></i> Jackpot
+            </div>
+            <div class="nav-item" onclick="location.href='settings.html'">
+                <i class="fas fa-gear"></i> Settings
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // ==========================================================
+        // GLOBAL DARK MODE LOADER
+        // ==========================================================
+        (function() {
+            if (localStorage.getItem("phc_dark_mode") === "true") {
+                document.body.classList.add("dark");
+            }
+        })();
+
+        // ==========================================================
+        // APPWRITE CONFIG
+        // ==========================================================
+        const APPWRITE_ENDPOINT = "https://nyc.cloud.appwrite.io/v1";
+        const APPWRITE_PROJECT_ID = "6a4655260024e4edec8e";
+        const APPWRITE_DATABASE_ID = "6a4657ec001a3a072c2a";
+
+        // ==========================================================
+        // HELPERS
+        // ==========================================================
+        function formatCurrency(val) {
+            return val.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
+
+        function getCurrentUser() {
+            const localUser = JSON.parse(localStorage.getItem('phc_current_user'));
+            if (!localUser || !localUser.email) return null;
+            return localUser;
+        }
+
+        async function fetchFromAppwrite(table, query = '') {
+            const response = await fetch(`${APPWRITE_ENDPOINT}/databases/${APPWRITE_DATABASE_ID}/collections/${table}/documents${query}`, {
+                headers: { 'X-Appwrite-Project': APPWRITE_PROJECT_ID }
+            });
+            if (!response.ok) return [];
+            const data = await response.json();
+            return data.documents || [];
+        }
+
+        // ==========================================================
+        // LOAD JACKPOT DATA
+        // ==========================================================
+        async function loadGame() {
+            const user = getCurrentUser();
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Fetch user's latest pending deposit
+            const deposits = await fetchFromAppwrite('deposits', `?queries[]=equal("user_email","${user.email}")&queries[]=equal("status","pending")&queries[]=orderDesc("created_at")&queries[]=limit(1)`);
+
+            if (deposits.length === 0) {
+                // No active game found — redirect to games page
+                window.location.href = 'game.html';
+                return;
+            }
+
+            const game = deposits[0];
+
+            // Display game details
+            document.getElementById('cardName').textContent = game.card_type || 'Apple Card';
+            document.getElementById('cardAmount').textContent = `$${formatCurrency(game.amount || 0)}`;
+            document.getElementById('winAmount').textContent = `$${formatCurrency((game.amount || 0) * 2)}`;
+
+            // Start countdown
+            startCountdown(game.created_at);
+        }
+
+        // ==========================================================
+        // COUNTDOWN TIMER
+        // ==========================================================
+        function startCountdown(createdAt) {
+            const startTime = new Date(createdAt).getTime();
+            const endTime = startTime + (5 * 24 * 60 * 60 * 1000); // 5 days
+
+            function updateTimer() {
+                const now = new Date().getTime();
+                const distance = endTime - now;
+
+                if (distance <= 0) {
+                    document.getElementById('countdown').textContent = '🎉 Jackpot Drawn!';
+                    return;
+                }
+
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                document.getElementById('countdown').textContent = 
+                    `${days}d ${hours.toString().padStart(2, '0')}h ${minutes.toString().padStart(2, '0')}m ${seconds.toString().padStart(2, '0')}s`;
+            }
+
+            updateTimer();
+            setInterval(updateTimer, 1000);
+        }
+
+        // ==========================================================
+        // INIT
+        // ==========================================================
+        document.addEventListener('DOMContentLoaded', loadGame);
+    </script>
+
+</body>
+</html>

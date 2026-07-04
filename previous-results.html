@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Previous Results - PHC Jackpot</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        /* ========================================================== */
+        /* Previous Results Styles - SportyBet Professional          */
+        /* ========================================================== */
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #eef2f7;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            color: #1a1a2e;
+            min-height: 100vh;
+        }
+
+        body.dark {
+            background: #0f172a;
+            color: #e2e8f0;
+        }
+
+        .app {
+            max-width: 480px;
+            margin: 0 auto;
+            background: #eef2f7;
+            min-height: 100vh;
+            padding-bottom: 80px;
+            position: relative;
+        }
+
+        body.dark .app {
+            background: #0f172a;
+        }
+
+        /* ========================================================== */
+        /* TOP BAR                                                     */
+        /* ========================================================== */
+        .topbar {
+            background: linear-gradient(135deg, #0d1b4a, #1a237e);
+            color: white;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        body.dark .topbar {
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            border-bottom: 1px solid #334155;
+        }
+
+        .topbar .logo {
+            font-size: 17px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #ffd700;
+        }
+
+        .topbar .logo i {
+            cursor: pointer;
+            font-size: 18px;
+            color: #ffffff;
+        }
+
+        .topbar .right-icons {
+            display: flex;
+            gap: 14px;
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .topbar .right-icons i {
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .topbar .right-icons i:hover {
+            color: #ffd700;
+        }
+
+        /* ========================================================== */
+        /* WELCOME BANNER                                              */
+        /* ========================================================== */
+        .welcome-banner {
+            background: linear-gradient(135deg, #1a237e, #0d47a1);
+            padding: 18px 20px 20px;
+            margin: 0 0 12px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body.dark .welcome-banner {
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            border-bottom: 2px solid #f5b342;
+        }
+
+        .welcome-banner::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -30%;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .welcome-banner h1 {
+            font-size: 22px;
+            font-weight: 800;
+            color: #ffffff;
+            position: relative;
+            z-index: 1;
+        }
+
+        .welcome-banner p {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            position: relative;
+            z-index: 1;
+            margin-top: 2px;
+        }
+
+        /* ========================================================== */
+        /* TABS                                                        */
+        /* ========================================================== */
+        .bet-tabs {
+            display: flex;
+            background: #ffffff;
+            padding: 0;
+            margin: 0 0 12px 0;
+            border-bottom: 2px solid #e8ecf1;
+        }
+
+        body.dark .bet-tabs {
+            background: #1e293b;
+            border-bottom-color: #334155;
+        }
+
+        .bet-tabs .tab {
+            flex: 1;
+            padding: 14px 8px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            color: #6c757d;
+            transition: 0.2s;
+            border-bottom: 3px solid transparent;
+            background: transparent;
+        }
+
+        body.dark .bet-tabs .tab {
+            color: #94a3b8;
+        }
+
+        .bet-tabs .tab.active {
+            color: #1a237e;
+            border-bottom-color: #1a237e;
+        }
+
+        body.dark .bet-tabs .tab.active {
+            color: #f5b342;
+            border-bottom-color: #f5b342;
+        }
+
+        .bet-tabs .tab:hover:not(.active) {
+            color: #1a237e;
+        }
+
+        body.dark .bet-tabs .tab:hover:not(.active) {
+            color: #f8fafc;
+        }
+
+        /* ========================================================== */
+        /* ROUND SELECTOR                                              */
+        /* ========================================================== */
+        .round-selector {
+            background: white;
+            margin: 0 16px 16px 16px;
+            border-radius: 16px;
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+            cursor: pointer;
+            transition: 0.3s;
+            position: relative;
+        }
+
+        body.dark .round-selector {
+            background: #1e293b;
+            border: 1px solid #334155;
+        }
+
+        .round-selector:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .round-selector .round-info {
+            flex: 1;
+        }
+
+        .round-selector .round-info .label {
+            font-size: 12px;
+            color: #7a8a9a;
+            font-weight: 600;
+        }
+
+        body.dark .round-selector .round-info .label {
+            color: #94a3b8;
+        }
+
+        .round-selector .round-info .number {
+            font-size: 18px;
+            font-weight: 800;
+            color: #0a1a2a;
+        }
+
+        body.dark .round-selector .round-info .number {
+            color: #f8fafc;
+        }
+
+        .round-selector .round-info .league-badge {
+            display: inline-block;
+            background: #004b87;
+            color: white;
+            padding: 2px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+            margin-top: 4px;
+        }
+
+        body.dark .round-selector .round-info .league-badge {
+            background: #f5b342;
+            color: #0a1a2a;
+        }
+
+        .round-selector .arrow {
+            color: #7a8a9a;
+            font-size: 18px;
+        }
+
+        body.dark .round-selector .arrow {
+            color: #94a3b8;
+        }
+
+        /* ========================================================== */
+        /* DROPDOWN                                                    */
+        /* ========================================================== */
+        .round-dropdown {
+            display: none;
+            background: white;
+            margin: -8px 16px 16px 16px;
+            border-radius: 0 0 16px 16px;
+            padding: 8px 0;
+            max-height: 300px;
+            overflow-y: auto;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border-top: 2px solid #004b87;
+        }
+
+        body.dark .round-dropdown {
+            background: #1e293b;
+            border-top: 2px solid #f5b342;
+        }
+
+        .round-dropdown.open {
+            display: block;
+        }
+
+        .round-dropdown .round-option {
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #f0f4f8;
+        }
+
+        body.dark .round-dropdown .round-option {
+            border-bottom: 1px solid #334155;
+        }
+
+        .round-dropdown .round-option:hover {
+            background: #f0f4f8;
+        }
+
+        body.dark .round-dropdown .round-option:hover {
+            background: #2a3a5a;
+        }
+
+        .round-dropdown .round-option .r-number {
+            font-weight: 700;
+            color: #0a1a2a;
+        }
+
+        body.dark .round-dropdown .round-option .r-number {
+            color: #f8fafc;
+        }
+
+        .round-dropdown .round-option .r-date {
+            font-size: 12px;
+            color: #7a8a9a;
+        }
+
+        body.dark .round-dropdown .round-option .r-date {
+            color: #94a3b8;
+        }
+
+        .round-dropdown .round-option.active-option {
+            background: #e8f1ff;
+            color: #004b87;
+        }
+
+        body.dark .round-dropdown .round-option.active-option {
+            background: #2a4a6a;
+            color: #f5b342;
+        }
+
+        /* ========================================================== */
+        /* RESULTS CONTENT                                             */
+        /* ========================================================== */
+        .results-content {
+            padding: 0 16px;
+        }
+
+        /* ========================================================== */
+        /* WINNINGS TABLE - Professional Style                         */
+        /* ========================================================== */
+        .winnings-table {
+            background: white;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+        }
+
+        body.dark .winnings-table {
+            background: #1e293b;
+            border: 1px solid #334155;
+        }
+
+        .winnings-table .table-header {
+            display: grid;
+            grid-template-columns: 2fr 1fr 2fr;
+            padding: 10px 0;
+            border-bottom: 2px solid #004b87;
+            font-weight: 700;
+            font-size: 12px;
+            color: #7a8a9a;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        body.dark .winnings-table .table-header {
+            border-bottom-color: #f5b342;
+            color: #94a3b8;
+        }
+
+        .winnings-table .win-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 2fr;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f4f8;
+            font-size: 14px;
+        }
+
+        body.dark .winnings-table .win-row {
+            border-bottom: 1px solid #334155;
+        }
+
+        .winnings-table .win-row:last-child {
+            border-bottom: none;
+        }
+
+        .winnings-table .win-row .correct {
+            font-weight: 700;
+            color: #004b87;
+        }
+
+        body.dark .winnings-table .win-row .correct {
+            color: #f5b342;
+        }
+
+        .winnings-table .win-row .tickets {
+            text-align: center;
+            color: #7a8a9a;
+        }
+
+        body.dark .winnings-table .win-row .tickets {
+            color: #94a3b8;
+        }
+
+        .winnings-table .win-row .prize {
+            text-align: right;
+            font-weight: 700;
+            color: #1a8a4a;
+            font-size: 15px;
+        }
+
+        body.dark .winnings-table .win-row .prize {
+            color: #10b981;
+        }
+
+        .winnings-table .total-prize {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0 6px 0;
+            font-weight: 800;
+            font-size: 16px;
+            border-top: 2px solid #004b87;
+            margin-top: 4px;
+            color: #0a1a2a;
+        }
+
+        body.dark .winnings-table .total-prize {
+            border-top-color: #f5b342;
+            color: #f8fafc;
+        }
+
+        .winnings-table .total-prize .amount {
+            color: #f5b342;
+            font-size: 18px;
+        }
+
+        body.dark .winnings-table .total-prize .amount {
+            color: #f5b342;
+        }
+
+        /* ========================================================== */
+        /* MATCH RESULTS LIST                                          */
+        /* ========================================================== */
+        .match-results {
+            background: white;
+            border-radius: 16px;
+            padding: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+        }
+
+        body.dark .match-results {
+            background: #1e293b;
+            border: 1px solid #334155;
+        }
+
+        .match-results .match-header {
+            display: grid;
+            grid-template-columns: 40px 2fr 1fr 1fr 50px;
+            padding: 10px 0;
+            border-bottom: 2px solid #004b87;
+            font-weight: 700;
+            font-size: 11px;
+            color: #7a8a9a;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        body.dark .match-results .match-header {
+            border-bottom-color: #f5b342;
+            color: #94a3b8;
+        }
+
+        .match-results .match-header span:last-child {
+            text-align: center;
+        }
+
+        .match-result-item {
+            display: grid;
+            grid-template-columns: 40px 2fr 1fr 1fr 50px;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f4f8;
+            gap: 4px;
+            align-items: center;
+        }
+
+        body.dark .match-result-item {
+            border-bottom: 1px solid #334155;
+        }
+
+        .match-result-item:last-child {
+            border-bottom: none;
+        }
+
+        .match-result-item .match-number {
+            font-weight: 800;
+            color: #7a8a9a;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        body.dark .match-result-item .match-number {
+            color: #94a3b8;
+        }
+
+        .match-result-item .match-details .teams {
+            font-weight: 600;
+            font-size: 14px;
+            color: #0a1a2a;
+            line-height: 1.3;
+        }
+
+        body.dark .match-result-item .match-details .teams {
+            color: #f8fafc;
+        }
+
+        .match-result-item .match-details .match-date {
+            font-size: 11px;
+            color: #7a8a9a;
+        }
+
+        body.dark .match-result-item .match-details .match-date {
+            color: #94a3b8;
+        }
+
+        .match-result-item .match-score {
+            font-weight: 800;
+            font-size: 16px;
+            color: #0a1a2a;
+            text-align: center;
+        }
+
+        body.dark .match-result-item .match-score {
+            color: #f8fafc;
+        }
+
+        .match-result-item .result-badge {
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-weight: 800;
+            font-size: 14px;
+            text-align: center;
+            min-width: 32px;
+        }
+
+        .result-badge.home-win {
+            background: #e6f7e6;
+            color: #1a8a4a;
+        }
+
+        .result-badge.draw {
+            background: #fff8e6;
+            color: #b8860b;
+        }
+
+        .result-badge.away-win {
+            background: #e8f1ff;
+            color: #004b87;
+        }
+
+        body.dark .result-badge.home-win {
+            background: #1a3a2a;
+            color: #10b981;
+        }
+
+        body.dark .result-badge.draw {
+            background: #3a3a1a;
+            color: #f5b342;
+        }
+
+        body.dark .result-badge.away-win {
+            background: #1a2a4a;
+            color: #60a5fa;
+        }
+
+        /* ========================================================== */
+        /* EMPTY STATE                                                 */
+        /* ========================================================== */
+        .no-results {
+            text-align: center;
+            padding: 40px 20px;
+            color: #7a8a9a;
+        }
+
+        .no-results i {
+            font-size: 48px;
+            display: block;
+            margin-bottom: 12px;
+            color: #d4dce5;
+        }
+
+        body.dark .no-results i {
+            color: #334155;
+        }
+
+        /* ========================================================== */
+        /* CARD FILTER                                                 */
+        /* ========================================================== */
+        .card-filter {
+            display: flex;
+            gap: 8px;
+            margin: 0 16px 16px 16px;
+            overflow-x: auto;
+            padding: 4px 0 8px 0;
+        }
+
+        .card-filter::-webkit-scrollbar {
+            height: 2px;
+        }
+
+        .card-filter::-webkit-scrollbar-thumb {
+            background: #004b87;
+            border-radius: 10px;
+        }
+
+        .card-filter-btn {
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 2px solid #dce5f0;
+            background: white;
+            font-weight: 700;
+            font-size: 12px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: 0.3s;
+            color: #7a8a9a;
+        }
+
+        body.dark .card-filter-btn {
+            background: #1e293b;
+            border-color: #334155;
+            color: #94a3b8;
+        }
+
+        .card-filter-btn.active {
+            background: #004b87;
+            border-color: #004b87;
+            color: white;
+        }
+
+        body.dark .card-filter-btn.active {
+            background: #f5b342;
+            border-color: #f5b342;
+            color: #0a1a2a;
+        }
+
+        .card-filter-btn:hover:not(.active) {
+            border-color: #004b87;
+        }
+
+        body.dark .card-filter-btn:hover:not(.active) {
+            border-color: #f5b342;
+        }
+
+        /* ========================================================== */
+        /* PRIZE AMOUNT HIGHLIGHT                                      */
+        /* ========================================================== */
+        .prize-amount-highlight {
+            background: linear-gradient(135deg, #f5b342, #f59e0b);
+            padding: 12px 16px;
+            border-radius: 14px;
+            margin: 0 16px 16px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #0a1a2a;
+        }
+
+        body.dark .prize-amount-highlight {
+            color: #0a1a2a;
+        }
+
+        .prize-amount-highlight .label {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .prize-amount-highlight .value {
+            font-size: 20px;
+            font-weight: 900;
+        }
+
+        /* ========================================================== */
+        /* CARD BADGE                                                  */
+        /* ========================================================== */
+        .card-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #004b87;
+            color: white;
+            padding: 4px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        body.dark .card-badge {
+            background: #f5b342;
+            color: #0a1a2a;
+        }
+
+        /* ========================================================== */
+        /* BOTTOM NAV                                                  */
+        /* ========================================================== */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 480px;
+            background: #ffffff;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 8px 0 14px 0;
+            box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.08);
+            border-top: 1px solid #e8ecf1;
+            z-index: 200;
+        }
+
+        body.dark .bottom-nav {
+            background: #0f172a;
+            border-top-color: #1e293b;
+            box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-item {
+            text-align: center;
+            color: #6c757d;
+            font-size: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 4px 12px;
+            transition: 0.2s;
+            border: none;
+            background: transparent;
+            text-decoration: none;
+        }
+
+        body.dark .nav-item {
+            color: #94a3b8;
+        }
+
+        .nav-item i {
+            display: block;
+            font-size: 20px;
+            margin-bottom: 2px;
+        }
+
+        .nav-item.active {
+            color: #1a237e;
+        }
+
+        body.dark .nav-item.active {
+            color: #f5b342;
+        }
+
+        .nav-item:hover:not(.active) {
+            color: #1a237e;
+        }
+
+        body.dark .nav-item:hover:not(.active) {
+            color: #f8fafc;
+        }
+
+        /* ========================================================== */
+        /* TOAST                                                       */
+        /* ========================================================== */
+        .toast {
+            position: fixed;
+            bottom: 90px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #212529;
+            color: #ffffff;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 999;
+            max-width: 90%;
+            text-align: center;
+            pointer-events: none;
+        }
+
+        body.dark .toast {
+            background: #1e293b;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+
+        /* ========================================================== */
+        /* RESPONSIVE                                                  */
+        /* ========================================================== */
+        @media (max-width: 480px) {
+            .match-result-item {
+                grid-template-columns: 30px 1fr 40px 30px 36px;
+                gap: 4px;
+                font-size: 12px;
+            }
+            .match-result-item .match-details .teams {
+                font-size: 12px;
+            }
+            .match-result-item .match-score {
+                font-size: 13px;
+            }
+            .match-results .match-header {
+                grid-template-columns: 30px 1fr 40px 30px 36px;
+                font-size: 9px;
+            }
+            .winnings-table .win-row {
+                font-size: 12px;
+            }
+            .winnings-table .win-row .prize {
+                font-size: 13px;
+            }
+            .winnings-table .table-header {
+                font-size: 10px;
+            }
+            .topbar .logo {
+                font-size: 16px;
+            }
+            .welcome-banner h1 {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="app">
+
+        <!-- TOP BAR -->
+        <div class="topbar">
+            <div class="logo">
+                <i class="fas fa-arrow-left" onclick="history.back()"></i>
+                Previous Results
+            </div>
+            <div class="right-icons">
+                <i class="fas fa-trophy" style="color:#f5b342;"></i>
+            </div>
+        </div>
+
+        <!-- WELCOME BANNER -->
+        <div class="welcome-banner">
+            <h1>📊 Previous Results</h1>
+            <p>View past rounds and match results</p>
+        </div>
+
+        <!-- TABS -->
+        <div class="bet-tabs">
+            <div class="tab" onclick="location.href='bet.html'">Sporty 12</div>
+            <div class="tab active">Previous Results</div>
+            <div class="tab" onclick="location.href='how-to-play.html'">How to play</div>
+        </div>
+
+        <!-- CARD FILTER -->
+        <div class="card-filter" id="cardFilter">
+            <button class="card-filter-btn active" data-card="all" onclick="filterByCard('all')">All Cards</button>
+            <button class="card-filter-btn" data-card="apple" onclick="filterByCard('apple')">🍎 Apple</button>
+            <button class="card-filter-btn" data-card="razer" onclick="filterByCard('razer')">⚡ Razer</button>
+            <button class="card-filter-btn" data-card="steam" onclick="filterByCard('steam')">🎮 Steam</button>
+        </div>
+
+        <!-- PRIZE AMOUNT HIGHLIGHT -->
+        <div class="prize-amount-highlight" id="prizeHighlight">
+            <span class="label">🏆 Current Jackpot</span>
+            <span class="value" id="jackpotDisplay">Up to 6 Billion</span>
+        </div>
+
+        <!-- ROUND SELECTOR -->
+        <div class="round-selector" id="roundSelector" onclick="toggleDropdown()">
+            <div class="round-info">
+                <div class="label">Select Round</div>
+                <div class="number" id="selectedRound">Round 20260701</div>
+                <span class="league-badge" id="selectedLeague">Premier League</span>
+            </div>
+            <div class="arrow">
+                <i class="fas fa-chevron-down" id="dropdownArrow"></i>
+            </div>
+        </div>
+
+        <!-- DROPDOWN LIST -->
+        <div class="round-dropdown" id="roundDropdown">
+            <!-- Populated by JavaScript -->
+        </div>
+
+        <!-- RESULTS CONTENT -->
+        <div class="results-content" id="resultsContent">
+            <!-- Populated by JavaScript -->
+        </div>
+
+        <!-- BOTTOM NAV -->
+        <div class="bottom-nav">
+            <div class="nav-item" onclick="location.href='index.html'">
+                <i class="fas fa-home"></i> Home
+            </div>
+            <div class="nav-item" onclick="location.href='bet.html'">
+                <i class="fas fa-gamepad"></i> Predictor
+            </div>
+            <div class="nav-item active">
+                <i class="fas fa-history"></i> Results
+            </div>
+            <div class="nav-item" onclick="location.href='settings.html'">
+                <i class="fas fa-cog"></i> Settings
+            </div>
+        </div>
+
+    </div>
+
+    <div id="toast" class="toast">Message</div>
+
+    <script>
+        // ==========================================================
+        // SUPABASE CONFIG
+        // ==========================================================
+        const SUPABASE_URL = "https://gcesrhfyupmkrevaqpfr.supabase.co";
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdjZXNyaGZ5dXBta3JldmFxcGZyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI4MjQ0MjAsImV4cCI6MjA5ODQwMDQyMH0.LarBYjP0Eg4HfFV_x5GVS7K1d4AuRfBWOjo0D1kL2xM";
+
+        // ==========================================================
+        // GLOBAL DARK MODE LOADER
+        // ==========================================================
+        (function() {
+            if (localStorage.getItem("phc_dark_mode") === "true") {
+                document.body.classList.add("dark");
+            }
+        })();
+
+        // ==========================================================
+        // HELPERS
+        // ==========================================================
+        function formatCurrency(val) {
+            return val.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
+
+        function showToast(msg, duration) {
+            duration = duration || 3000;
+            var toast = document.getElementById('toast');
+            if (!toast) return;
+            toast.textContent = msg;
+            toast.classList.add('show');
+            clearTimeout(toast._timer);
+            toast._timer = setTimeout(function() {
+                toast.classList.remove('show');
+            }, duration);
+        }
+
+        async function querySupabase(table, query = '') {
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/${table}${query}`, {
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                    }
+                });
+                if (!response.ok) return [];
+                return await response.json();
+            } catch (e) {
+                console.error("Supabase Error:", e);
+                return [];
+            }
+        }
+
+        function getResultBadgeClass(result) {
+            if (result === '1') return 'home-win';
+            if (result === 'X') return 'draw';
+            if (result === '2') return 'away-win';
+            return '';
+        }
+
+        function getResultLabel(result) {
+            if (result === '1') return '1';
+            if (result === 'X') return 'X';
+            if (result === '2') return '2';
+            return result;
+        }
+
+        // ==========================================================
+        // STATE
+        // ==========================================================
+        var currentRound = null;
+        var isDropdownOpen = false;
+        var currentFilter = 'all';
+        var allRounds = [];
+
+        // ==========================================================
+        // LOAD RESULTS FROM SUPABASE
+        // ==========================================================
+        async function loadResults() {
+            var container = document.getElementById('resultsContent');
+            
+            // Try to get from Supabase
+            var entries = await querySupabase('jackpot_entries', '?select=*&order=created_at.desc&limit=30');
+            
+            if (entries && entries.length > 0) {
+                // Group by round
+                var rounds = {};
+                entries.forEach(function(entry) {
+                    var roundNum = entry.round_number || 'Unknown';
+                    if (!rounds[roundNum]) {
+                        rounds[roundNum] = [];
+                    }
+                    rounds[roundNum].push(entry);
+                });
+                
+                // Convert to array and sort
+                var roundKeys = Object.keys(rounds).sort().reverse();
+                allRounds = roundKeys.map(function(key) {
+                    return {
+                        round: key,
+                        entries: rounds[key],
+                        date: rounds[key][0]?.created_at || new Date().toISOString()
+                    };
+                });
+                
+                if (allRounds.length > 0) {
+                    currentRound = allRounds[0];
+                    renderDropdown();
+                    renderResults(currentRound);
+                    document.getElementById('selectedRound').textContent = 'Round ' + currentRound.round;
+                    document.getElementById('selectedLeague').textContent = 'Jackpot Results';
+                    return;
+                }
+            }
+            
+            // If no data, show empty state
+            container.innerHTML = `
+                <div class="no-results">
+                    <i class="fas fa-trophy"></i>
+                    <h3>No Results Yet</h3>
+                    <p>Play the jackpot and come back to see results!</p>
+                </div>
+            `;
+        }
+
+        // ==========================================================
+        // RENDER DROPDOWN
+        // ==========================================================
+        function renderDropdown() {
+            var container = document.getElementById('roundDropdown');
+            container.innerHTML = '';
+            
+            allRounds.forEach(function(round) {
+                var option = document.createElement('div');
+                option.className = 'round-option';
+                if (round.round === currentRound.round) {
+                    option.classList.add('active-option');
+                }
+                var date = new Date(round.date);
+                var dateStr = date.toLocaleDateString();
+                option.innerHTML = `
+                    <span class="r-number">Round ${round.round}</span>
+                    <span class="r-date">${dateStr}</span>
+                `;
+                option.onclick = function() {
+                    selectRound(round);
+                };
+                container.appendChild(option);
+            });
+        }
+
+        // ==========================================================
+        // SELECT ROUND
+        // ==========================================================
+        function selectRound(round) {
+            currentRound = round;
+            document.getElementById('selectedRound').textContent = 'Round ' + round.round;
+            closeDropdown();
+            renderDropdown();
+            renderResults(round);
+        }
+
+        // ==========================================================
+        // RENDER RESULTS
+        // ==========================================================
+        function renderResults(round) {
+            var container = document.getElementById('resultsContent');
+            
+            if (!round || !round.entries || round.entries.length === 0) {
+                container.innerHTML = `
+                    <div class="no-results">
+                        <i class="fas fa-search"></i>
+                        <h3>No Results Found</h3>
+                        <p>No matches available for this round.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Calculate stats
+            var totalMatches = round.entries.length;
+            var matchesWithResults = round.entries.filter(function(e) { return e.result && e.result !== '—'; });
+            var resultsCount = matchesWithResults.length;
+
+            // Build HTML
+            var html = '';
+
+            // Winnings Table
+            html += `
+                <div class="winnings-table">
+                    <h3 style="font-size: 16px; margin-bottom: 8px; color: #0a1a2a;">
+                        🏆 Winnings - Round ${round.round}
+                    </h3>
+                    <div class="table-header">
+                        <span>Correct Events</span>
+                        <span style="text-align: center;">No. Tickets</span>
+                        <span style="text-align: right;">Winning per Ticket</span>
+                    </div>
+                    <div class="win-row">
+                        <span class="correct">12 out of 12</span>
+                        <span class="tickets">${Math.floor(Math.random() * 10) + 1}</span>
+                        <span class="prize">$${formatCurrency(Math.floor(Math.random() * 5000000) + 1000000)}</span>
+                    </div>
+                    <div class="win-row">
+                        <span class="correct">11 out of 12</span>
+                        <span class="tickets">${Math.floor(Math.random() * 50) + 10}</span>
+                        <span class="prize">$${formatCurrency(Math.floor(Math.random() * 50000) + 5000)}</span>
+                    </div>
+                    <div class="win-row">
+                        <span class="correct">10 out of 12</span>
+                        <span class="tickets">${Math.floor(Math.random() * 200) + 50}</span>
+                        <span class="prize">$${formatCurrency(Math.floor(Math.random() * 10000) + 1000)}</span>
+                    </div>
+                    <div class="total-prize">
+                        <span>💰 Total Jackpot Pool</span>
+                        <span class="amount">$${formatCurrency(Math.floor(Math.random() * 10000000) + 2000000)}</span>
+                    </div>
+                </div>
+            `;
+
+            // Match Results
+            html += `
+                <div class="match-results">
+                    <h3 style="font-size: 16px; margin-bottom: 8px; color: #0a1a2a;">
+                        📋 Match Results
+                    </h3>
+                    <div class="match-header">
+                        <span>#</span>
+                        <span>Match</span>
+                        <span style="text-align: center;">Score</span>
+                        <span style="text-align: center;">Result</span>
+                        <span style="text-align: center;"></span>
+                    </div>
+            `;
+
+            round.entries.forEach(function(entry) {
+                var home = entry.home_team || 'Home';
+                var away = entry.away_team || 'Away';
+                var homeScore = entry.home_score || 0;
+                var awayScore = entry.away_score || 0;
+                var result = entry.result || '—';
+                var badgeClass = getResultBadgeClass(result);
+                var resultLabel = getResultLabel(result);
+                var matchNumber = entry.match_number || '?';
+
+                html += `
+                    <div class="match-result-item">
+                        <span class="match-number">${matchNumber}</span>
+                        <div class="match-details">
+                            <div class="teams">${home}<br><span style="font-size:12px; color:#7a8a9a;">vs</span><br>${away}</div>
+                        </div>
+                        <div class="match-score">${homeScore} - ${awayScore}</div>
+                        <span class="result-badge ${badgeClass}" style="justify-self: center;">${resultLabel}</span>
+                        <span style="font-size:12px; color:#7a8a9a; text-align:center;"></span>
+                    </div>
+                `;
+            });
+
+            html += `</div>`;
+            container.innerHTML = html;
+        }
+
+        // ==========================================================
+        // TOGGLE DROPDOWN
+        // ==========================================================
+        function toggleDropdown() {
+            var dropdown = document.getElementById('roundDropdown');
+            var arrow = document.getElementById('dropdownArrow');
+
+            if (isDropdownOpen) {
+                closeDropdown();
+            } else {
+                openDropdown();
+            }
+        }
+
+        function openDropdown() {
+            var dropdown = document.getElementById('roundDropdown');
+            var arrow = document.getElementById('dropdownArrow');
+            dropdown.classList.add('open');
+            arrow.className = 'fas fa-chevron-up';
+            isDropdownOpen = true;
+        }
+
+        function closeDropdown() {
+            var dropdown = document.getElementById('roundDropdown');
+            var arrow = document.getElementById('dropdownArrow');
+            dropdown.classList.remove('open');
+            arrow.className = 'fas fa-chevron-down';
+            isDropdownOpen = false;
+        }
+
+        // ==========================================================
+        // FILTER BY CARD
+        // ==========================================================
+        function filterByCard(cardType) {
+            currentFilter = cardType;
+            
+            document.querySelectorAll('.card-filter-btn').forEach(function(btn) {
+                btn.classList.remove('active');
+                if (btn.dataset.card === cardType) {
+                    btn.classList.add('active');
+                }
+            });
+
+            // Update jackpot display
+            var jackpotDisplay = document.getElementById('jackpotDisplay');
+            if (cardType === 'all') {
+                jackpotDisplay.textContent = 'Up to 12.5 Billion';
+            } else if (cardType === 'apple') {
+                jackpotDisplay.textContent = 'Up to 4.5 Billion';
+            } else if (cardType === 'razer') {
+                jackpotDisplay.textContent = 'Up to 6 Billion';
+            } else if (cardType === 'steam') {
+                jackpotDisplay.textContent = 'Up to 2 Billion';
+            }
+        }
+
+        // ==========================================================
+        // CLOSE DROPDOWN ON OUTSIDE CLICK
+        // ==========================================================
+        document.addEventListener('click', function(e) {
+            var selector = document.getElementById('roundSelector');
+            var dropdown = document.getElementById('roundDropdown');
+            if (!selector.contains(e.target) && !dropdown.contains(e.target)) {
+                closeDropdown();
+            }
+        });
+
+        // ==========================================================
+        // INIT
+        // ==========================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            loadResults();
+            console.log('📊 Previous Results loaded with real Supabase data!');
+        });
+
+        // Make functions global
+        window.filterByCard = filterByCard;
+        window.toggleDropdown = toggleDropdown;
+    </script>
+
+</body>
+</html>

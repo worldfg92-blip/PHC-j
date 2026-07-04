@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PHC Security</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+    <div class="app">
+
+        <!-- Top Bar -->
+        <div class="topbar">
+            <div class="logo">
+                <i class="fas fa-arrow-left" onclick="history.back()"></i>
+                Security
+            </div>
+        </div>
+
+        <!-- Welcome -->
+        <div class="welcome">
+            <h1>🔒 Security Settings</h1>
+            <p>Protect your PHC account</p>
+        </div>
+
+        <!-- Security Options Card -->
+        <div class="card">
+
+            <!-- Two-Factor Authentication -->
+            <div class="transaction">
+                <div class="tx-left">
+                    <div class="tx-icon"><i class="fas fa-shield-alt"></i></div>
+                    <div>
+                        <b>Two-Factor Authentication (2FA)</b><br>
+                        <small>Add an extra layer of security</small>
+                    </div>
+                </div>
+                <button id="enable2fa" class="security-btn">Enable</button>
+            </div>
+
+            <!-- Biometric Login -->
+            <div class="transaction">
+                <div class="tx-left">
+                    <div class="tx-icon"><i class="fas fa-fingerprint"></i></div>
+                    <div>
+                        <b>Biometric Login</b><br>
+                        <small>Use Face ID / Fingerprint</small>
+                    </div>
+                </div>
+                <button id="enableBio" class="security-btn">Set Up</button>
+            </div>
+
+            <!-- Active Sessions -->
+            <div class="transaction" style="border-bottom:none;">
+                <div class="tx-left">
+                    <div class="tx-icon"><i class="fas fa-laptop"></i></div>
+                    <div>
+                        <b>Active Sessions</b><br>
+                        <small id="sessionCount">Currently logged in on 1 device</small>
+                    </div>
+                </div>
+                <button id="logoutSessions" class="security-btn logout-btn">Logout All</button>
+            </div>
+
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <div class="nav-item" onclick="location.href='index.html'">
+                <i class="fas fa-home"></i> Home
+            </div>
+            <div class="nav-item" onclick="location.href='bet.html'">
+                <i class="fas fa-gamepad"></i> Games
+            </div>
+            <div class="nav-item" onclick="location.href='history.html'">
+                <i class="fas fa-history"></i> History
+            </div>
+            <div class="nav-item active">
+                <i class="fas fa-cog"></i> Settings
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">Message</div>
+
+    <script>
+        // ==========================================================
+        // GLOBAL DARK MODE LOADER
+        // ==========================================================
+        (function() {
+            if (localStorage.getItem("phc_dark_mode") === "true") {
+                document.body.classList.add("dark");
+            }
+        })();
+
+        // 🔒 GUARD: If not logged in, kick to login
+        if (!localStorage.getItem('phc_current_user')) {
+            window.location.href = 'login.html';
+        }
+
+        // ==========================================================
+        // ✅ SUPABASE CONFIG - MATCHES YOUR WORKING FILES
+        // ==========================================================
+        const SUPABASE_URL = "https://gcesrhfyupmkrevaqpfr.supabase.co";
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdjZXNyaGZ5dXBta3JldmFxcGZyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI4MjQ0MjAsImV4cCI6MjA5ODQwMDQyMH0.LarBYjP0Eg4HfFV_x5GVS7K1d4AuRfBWOjo0D1kL2xM";
+
+        // ==========================================================
+        // HELPERS - MATCHES YOUR WORKING FILES
+        // ==========================================================
+        function showToast(msg, duration = 3000) {
+            const toast = document.getElementById('toast');
+            if (!toast) return;
+            toast.textContent = msg;
+            toast.classList.add('show');
+            clearTimeout(toast._timer);
+            toast._timer = setTimeout(() => toast.classList.remove('show'), duration);
+        }
+
+        function getCurrentUser() {
+            const localUser = JSON.parse(localStorage.getItem('phc_current_user'));
+            if (!localUser || !localUser.email) return null;
+            return localUser;
+        }
+
+        // ==========================================================
+        // ✅ SUPABASE FUNCTIONS - MATCHES YOUR WORKING FILES
+        // ==========================================================
+        async function querySupabase(table, query = '') {
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/${table}${query}`, {
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                    }
+                });
+                if (!response.ok) return [];
+                return await response.json();
+            } catch (e) {
+                console.error("Supabase Error:", e);
+                return [];
+            }
+        }
+
+        async function patchSupabase(table, query, data) {
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/${table}${query}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                return response.ok;
+            } catch (e) {
+                console.error("Patch Error:", e);
+                return false;
+            }
+        }
+
+        // ==========================================================
+        // SECURITY BUTTON ACTIONS (UPDATES SUPABASE)
+        // ==========================================================
+
+        // 1. TWO-FACTOR AUTHENTICATION (2FA)
+        document.getElementById('enable2fa').addEventListener('click', async function() {
+            const user = getCurrentUser();
+            if (!user) {
+                showToast('⚠️ Please login first.');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Get current user data from Supabase
+            const users = await querySupabase('users', `?email=eq.${user.email}`);
+            if (!users || users.length === 0) {
+                showToast('⚠️ User not found.');
+                return;
+            }
+            const userData = users[0];
+
+            // Toggle 2FA
+            const newStatus = !userData.two_factor_auth;
+
+            const success = await patchSupabase('users', `?email=eq.${user.email}`, {
+                two_factor_auth: newStatus
+            });
+
+            if (success) {
+                // Update local storage
+                const localUser = JSON.parse(localStorage.getItem('phc_current_user'));
+                if (localUser) {
+                    localUser.two_factor_auth = newStatus;
+                    localStorage.setItem('phc_current_user', JSON.stringify(localUser));
+                }
+
+                if (newStatus) {
+                    this.textContent = 'Disable';
+                    this.style.background = '#b33a4a';
+                    showToast('🔐 2FA enabled successfully!');
+                } else {
+                    this.textContent = 'Enable';
+                    this.style.background = '#004b87';
+                    showToast('🔓 2FA disabled.');
+                }
+            } else {
+                showToast('❌ Error updating 2FA settings.');
+            }
+        });
+
+        // 2. BIOMETRIC LOGIN
+        document.getElementById('enableBio').addEventListener('click', async function() {
+            const user = getCurrentUser();
+            if (!user) {
+                showToast('⚠️ Please login first.');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Get current user data from Supabase
+            const users = await querySupabase('users', `?email=eq.${user.email}`);
+            if (!users || users.length === 0) {
+                showToast('⚠️ User not found.');
+                return;
+            }
+            const userData = users[0];
+
+            // Toggle Biometric
+            const newStatus = !userData.biometric_enabled;
+
+            const success = await patchSupabase('users', `?email=eq.${user.email}`, {
+                biometric_enabled: newStatus
+            });
+
+            if (success) {
+                // Update local storage
+                const localUser = JSON.parse(localStorage.getItem('phc_current_user'));
+                if (localUser) {
+                    localUser.biometric_enabled = newStatus;
+                    localStorage.setItem('phc_current_user', JSON.stringify(localUser));
+                }
+
+                if (newStatus) {
+                    this.textContent = 'Disable';
+                    this.style.background = '#b33a4a';
+                    showToast('✅ Biometric setup completed!');
+                } else {
+                    this.textContent = 'Set Up';
+                    this.style.background = '#004b87';
+                    showToast('❌ Biometric disabled.');
+                }
+            } else {
+                showToast('❌ Error updating biometric settings.');
+            }
+        });
+
+        // 3. LOGOUT ALL SESSIONS
+        document.getElementById('logoutSessions').addEventListener('click', async function() {
+            const user = getCurrentUser();
+            if (!user) {
+                showToast('⚠️ Please login first.');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            if (confirm('Logout all other devices? You will stay logged in here.')) {
+                const success = await patchSupabase('users', `?email=eq.${user.email}`, {
+                    session_count: 1
+                });
+
+                if (success) {
+                    // Update local storage
+                    const localUser = JSON.parse(localStorage.getItem('phc_current_user'));
+                    if (localUser) {
+                        localUser.session_count = 1;
+                        localStorage.setItem('phc_current_user', JSON.stringify(localUser));
+                    }
+
+                    showToast('🔒 All other sessions terminated.');
+                    loadSecurityState();
+                } else {
+                    showToast('❌ Error updating session settings.');
+                }
+            }
+        });
+
+        // ==========================================================
+        // LOAD USER STATE ON PAGE LOAD
+        // ==========================================================
+        async function loadSecurityState() {
+            const user = getCurrentUser();
+            if (!user) {
+                showToast('⚠️ Please login first.');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Get fresh user data from Supabase
+            const users = await querySupabase('users', `?email=eq.${user.email}`);
+            if (!users || users.length === 0) return;
+            const userData = users[0];
+
+            // Set 2FA button state
+            const twoFaBtn = document.getElementById('enable2fa');
+            if (userData.two_factor_auth) {
+                twoFaBtn.textContent = 'Disable';
+                twoFaBtn.style.background = '#b33a4a';
+            } else {
+                twoFaBtn.textContent = 'Enable';
+                twoFaBtn.style.background = '#004b87';
+            }
+
+            // Set Biometric button state
+            const bioBtn = document.getElementById('enableBio');
+            if (userData.biometric_enabled) {
+                bioBtn.textContent = 'Disable';
+                bioBtn.style.background = '#b33a4a';
+            } else {
+                bioBtn.textContent = 'Set Up';
+                bioBtn.style.background = '#004b87';
+            }
+
+            // Update session count
+            const sessionText = document.getElementById('sessionCount');
+            const count = userData.session_count || 1;
+            sessionText.textContent = `Currently logged in on ${count} device${count > 1 ? 's' : ''}`;
+
+            // Update local storage with fresh data
+            const localUser = JSON.parse(localStorage.getItem('phc_current_user'));
+            if (localUser) {
+                localUser.two_factor_auth = userData.two_factor_auth;
+                localUser.biometric_enabled = userData.biometric_enabled;
+                localUser.session_count = userData.session_count || 1;
+                localStorage.setItem('phc_current_user', JSON.stringify(localUser));
+            }
+        }
+
+        // ==========================================================
+        // INIT
+        // ==========================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSecurityState();
+            console.log('🔒 PHC Security page loaded with real Supabase!');
+            console.log('✅ Connected to:', SUPABASE_URL);
+        });
+    </script>
+
+    <style>
+        /* Additional styling for security buttons */
+        .security-btn {
+            background: #004b87;
+            color: #fff;
+            border: none;
+            border-radius: 30px;
+            padding: 6px 16px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+        .security-btn:hover {
+            opacity: 0.8;
+            transform: scale(1.02);
+        }
+        .security-btn.logout-btn {
+            background: #b33a4a;
+            color: #fff;
+        }
+        .security-btn.logout-btn:hover {
+            background: #8a2a3a;
+        }
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1a2a3a;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 14px;
+            font-weight: 600;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 999;
+            max-width: 90%;
+            text-align: center;
+            pointer-events: none;
+        }
+        .toast.show {
+            opacity: 1;
+        }
+
+        /* Dark mode support */
+        body.dark .security-btn {
+            background: #f5b342;
+            color: #0f172a;
+        }
+        body.dark .security-btn.logout-btn {
+            background: #ef4444;
+            color: #fff;
+        }
+        body.dark .security-btn.logout-btn:hover {
+            background: #dc2626;
+        }
+        body.dark .toast {
+            background: #1e293b;
+        }
+    </style>
+
+</body>
+</html>

@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>How to Play - PHC Jackpot</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        /* ========================================================== */
+        /* How to Play - SportyBet Style                               */
+        /* ========================================================== */
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: #eef2f7;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            color: #1a1a2e;
+            min-height: 100vh;
+        }
+
+        body.dark {
+            background: #0f172a;
+            color: #e2e8f0;
+        }
+
+        .app {
+            max-width: 480px;
+            margin: 0 auto;
+            background: #eef2f7;
+            min-height: 100vh;
+            padding-bottom: 80px;
+            position: relative;
+        }
+
+        body.dark .app {
+            background: #0f172a;
+        }
+
+        /* ========================================================== */
+        /* TOP BAR                                                     */
+        /* ========================================================== */
+        .topbar {
+            background: linear-gradient(135deg, #0d1b4a, #1a237e);
+            color: white;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        body.dark .topbar {
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            border-bottom: 1px solid #334155;
+        }
+
+        .topbar .logo {
+            font-size: 18px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #ffd700;
+        }
+
+        .topbar .logo i {
+            cursor: pointer;
+            font-size: 18px;
+            color: #ffffff;
+        }
+
+        .topbar .right-icons {
+            display: flex;
+            gap: 14px;
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .topbar .right-icons i {
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .topbar .right-icons i:hover {
+            color: #ffd700;
+        }
+
+        /* ========================================================== */
+        /* WELCOME BANNER                                              */
+        /* ========================================================== */
+        .welcome-banner {
+            background: linear-gradient(135deg, #1a237e, #0d47a1);
+            padding: 18px 20px 20px;
+            margin: 0 0 12px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body.dark .welcome-banner {
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            border-bottom: 2px solid #f5b342;
+        }
+
+        .welcome-banner::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -30%;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .welcome-banner h1 {
+            font-size: 22px;
+            font-weight: 800;
+            color: #ffffff;
+            position: relative;
+            z-index: 1;
+        }
+
+        .welcome-banner p {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            position: relative;
+            z-index: 1;
+            margin-top: 2px;
+        }
+
+        /* ========================================================== */
+        /* TABS                                                        */
+        /* ========================================================== */
+        .bet-tabs {
+            display: flex;
+            background: #ffffff;
+            padding: 0;
+            margin: 0 0 12px 0;
+            border-bottom: 2px solid #e8ecf1;
+        }
+
+        body.dark .bet-tabs {
+            background: #1e293b;
+            border-bottom-color: #334155;
+        }
+
+        .bet-tabs .tab {
+            flex: 1;
+            padding: 14px 8px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            color: #6c757d;
+            transition: 0.2s;
+            border-bottom: 3px solid transparent;
+            background: transparent;
+        }
+
+        body.dark .bet-tabs .tab {
+            color: #94a3b8;
+        }
+
+        .bet-tabs .tab.active {
+            color: #1a237e;
+            border-bottom-color: #1a237e;
+        }
+
+        body.dark .bet-tabs .tab.active {
+            color: #f5b342;
+            border-bottom-color: #f5b342;
+        }
+
+        .bet-tabs .tab:hover:not(.active) {
+            color: #1a237e;
+        }
+
+        body.dark .bet-tabs .tab:hover:not(.active) {
+            color: #f8fafc;
+        }
+
+        /* ========================================================== */
+        /* CONTENT STYLES                                              */
+        /* ========================================================== */
+        .content-wrapper {
+            padding: 0 16px 20px 20px;
+        }
+
+        .how-to-card {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+            border: 1px solid #e8ecf1;
+        }
+
+        body.dark .how-to-card {
+            background: #1e293b;
+            border-color: #334155;
+            box-shadow: none;
+        }
+
+        .how-to-card .card-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .how-to-card h2 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #212529;
+            margin-bottom: 8px;
+        }
+
+        body.dark .how-to-card h2 {
+            color: #f8fafc;
+        }
+
+        .how-to-card p {
+            font-size: 14px;
+            line-height: 1.7;
+            color: #495057;
+            margin-bottom: 10px;
+        }
+
+        body.dark .how-to-card p {
+            color: #cbd5e1;
+        }
+
+        .how-to-card ul {
+            list-style: none;
+            padding: 0;
+            margin: 8px 0 4px 0;
+        }
+
+        .how-to-card ul li {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #495057;
+            padding: 8px 0 8px 36px;
+            position: relative;
+            border-bottom: 1px solid #f0f2f5;
+        }
+
+        body.dark .how-to-card ul li {
+            color: #cbd5e1;
+            border-bottom-color: #334155;
+        }
+
+        .how-to-card ul li:last-child {
+            border-bottom: none;
+        }
+
+        .how-to-card ul li .step-number {
+            position: absolute;
+            left: 0;
+            top: 8px;
+            width: 26px;
+            height: 26px;
+            background: #1a237e;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        body.dark .how-to-card ul li .step-number {
+            background: #f5b342;
+            color: #0f172a;
+        }
+
+        .how-to-card .highlight-box {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 14px 16px;
+            margin: 12px 0 8px 0;
+            border-left: 4px solid #1a237e;
+        }
+
+        body.dark .how-to-card .highlight-box {
+            background: #2a3a5a;
+            border-left-color: #f5b342;
+        }
+
+        .how-to-card .highlight-box p {
+            margin: 0;
+            font-size: 13px;
+            color: #495057;
+        }
+
+        body.dark .how-to-card .highlight-box p {
+            color: #cbd5e1;
+        }
+
+        .how-to-card .highlight-box strong {
+            color: #1a237e;
+        }
+
+        body.dark .how-to-card .highlight-box strong {
+            color: #f5b342;
+        }
+
+        .how-to-card .prize-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+            margin: 12px 0 8px 0;
+        }
+
+        .how-to-card .prize-info .prize-box {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 12px 8px;
+            text-align: center;
+            border: 1px solid #e8ecf1;
+        }
+
+        body.dark .how-to-card .prize-info .prize-box {
+            background: #2a3a5a;
+            border-color: #334155;
+        }
+
+        .how-to-card .prize-info .prize-box .p-label {
+            font-size: 10px;
+            font-weight: 700;
+            color: #6c757d;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: block;
+        }
+
+        body.dark .how-to-card .prize-info .prize-box .p-label {
+            color: #94a3b8;
+        }
+
+        .how-to-card .prize-info .prize-box .p-value {
+            font-size: 16px;
+            font-weight: 800;
+            color: #28a745;
+            display: block;
+            margin-top: 4px;
+        }
+
+        body.dark .how-to-card .prize-info .prize-box .p-value {
+            color: #10b981;
+        }
+
+        .how-to-card .prize-info .prize-box .p-value.draw-prize {
+            color: #ffc107;
+        }
+
+        body.dark .how-to-card .prize-info .prize-box .p-value.draw-prize {
+            color: #f5b342;
+        }
+
+        .how-to-card .prize-info .prize-box .p-value.away-prize {
+            color: #007bff;
+        }
+
+        body.dark .how-to-card .prize-info .prize-box .p-value.away-prize {
+            color: #60a5fa;
+        }
+
+        .divider {
+            height: 1px;
+            background: #e8ecf1;
+            margin: 16px 0;
+        }
+
+        body.dark .divider {
+            background: #334155;
+        }
+
+        /* ========================================================== */
+        /* BOTTOM NAV                                                  */
+        /* ========================================================== */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 480px;
+            background: #ffffff;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 8px 0 14px 0;
+            box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.08);
+            border-top: 1px solid #e8ecf1;
+            z-index: 200;
+        }
+
+        body.dark .bottom-nav {
+            background: #0f172a;
+            border-top-color: #1e293b;
+            box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-item {
+            text-align: center;
+            color: #6c757d;
+            font-size: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 4px 12px;
+            transition: 0.2s;
+            border: none;
+            background: transparent;
+            text-decoration: none;
+        }
+
+        body.dark .nav-item {
+            color: #94a3b8;
+        }
+
+        .nav-item i {
+            display: block;
+            font-size: 20px;
+            margin-bottom: 2px;
+        }
+
+        .nav-item.active {
+            color: #1a237e;
+        }
+
+        body.dark .nav-item.active {
+            color: #f5b342;
+        }
+
+        .nav-item:hover:not(.active) {
+            color: #1a237e;
+        }
+
+        body.dark .nav-item:hover:not(.active) {
+            color: #f8fafc;
+        }
+
+        /* ========================================================== */
+        /* TOAST                                                       */
+        /* ========================================================== */
+        .toast {
+            position: fixed;
+            bottom: 90px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #212529;
+            color: #ffffff;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 999;
+            max-width: 90%;
+            text-align: center;
+            pointer-events: none;
+        }
+
+        body.dark .toast {
+            background: #1e293b;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+
+        /* ========================================================== */
+        /* RESPONSIVE                                                  */
+        /* ========================================================== */
+        @media (max-width: 480px) {
+            .how-to-card {
+                padding: 16px;
+            }
+            .how-to-card h2 {
+                font-size: 16px;
+            }
+            .how-to-card p {
+                font-size: 13px;
+            }
+            .how-to-card ul li {
+                font-size: 13px;
+                padding: 6px 0 6px 32px;
+            }
+            .how-to-card ul li .step-number {
+                width: 22px;
+                height: 22px;
+                font-size: 10px;
+                top: 6px;
+            }
+            .how-to-card .prize-info {
+                grid-template-columns: 1fr 1fr 1fr;
+                gap: 6px;
+            }
+            .how-to-card .prize-info .prize-box .p-value {
+                font-size: 14px;
+            }
+            .topbar .logo {
+                font-size: 16px;
+            }
+            .bet-tabs .tab {
+                font-size: 12px;
+                padding: 12px 4px;
+            }
+            .welcome-banner h1 {
+                font-size: 18px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .how-to-card {
+                padding: 12px;
+            }
+            .how-to-card .prize-info .prize-box {
+                padding: 8px 4px;
+            }
+            .how-to-card .prize-info .prize-box .p-value {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="app">
+
+        <!-- TOP BAR -->
+        <div class="topbar">
+            <div class="logo">
+                <i class="fas fa-arrow-left" onclick="history.back()"></i>
+                How to Play
+            </div>
+            <div class="right-icons">
+                <i class="fas fa-question-circle" style="color:#60a5fa;"></i>
+            </div>
+        </div>
+
+        <!-- WELCOME BANNER -->
+        <div class="welcome-banner">
+            <h1>📖 How to Play</h1>
+            <p>Learn how to play and win the jackpot</p>
+        </div>
+
+        <!-- TABS -->
+        <div class="bet-tabs">
+            <div class="tab" onclick="location.href='bet.html'">Sporty 12</div>
+            <div class="tab" onclick="location.href='previous-results.html'">Previous Results</div>
+            <div class="tab active">How to play</div>
+        </div>
+
+        <!-- CONTENT -->
+        <div class="content-wrapper">
+
+            <!-- SECTION 1: HOW TO PLAY JACKPOT -->
+            <div class="how-to-card">
+                <span class="card-icon">🏆</span>
+                <h2>How to Play Jackpot</h2>
+                <p>
+                    The PHC Jackpot is a <strong>12-match prediction game</strong> where you predict the outcome of 
+                    12 selected football matches. Your goal is to correctly predict as many match results as possible 
+                    to win amazing cash prizes!
+                </p>
+
+                <div class="highlight-box">
+                    <p>
+                        <strong>🎯 The Goal:</strong> Predict the outcome of all 12 matches correctly 
+                        (Home Win, Draw, or Away Win) to win the <strong>JACKPOT PRIZE</strong>!
+                    </p>
+                </div>
+
+                <div class="divider"></div>
+
+                <h3 style="font-size: 15px; font-weight: 700; color: #212529; margin-bottom: 8px;">
+                    📊 How It Works
+                </h3>
+                <p>
+                    Each round features <strong>12 real football matches</strong> from top leagues around the world. 
+                    For each match, you must choose one of three possible outcomes:
+                </p>
+
+                <div class="prize-info">
+                    <div class="prize-box">
+                        <span class="p-label">Home Win</span>
+                        <span class="p-value">1</span>
+                        <span style="font-size: 10px; color: #6c757d; display: block;">Home team wins</span>
+                    </div>
+                    <div class="prize-box">
+                        <span class="p-label">Draw</span>
+                        <span class="p-value draw-prize">X</span>
+                        <span style="font-size: 10px; color: #6c757d; display: block;">Match ends in draw</span>
+                    </div>
+                    <div class="prize-box">
+                        <span class="p-label">Away Win</span>
+                        <span class="p-value away-prize">2</span>
+                        <span style="font-size: 10px; color: #6c757d; display: block;">Away team wins</span>
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <h3 style="font-size: 15px; font-weight: 700; color: #212529; margin-bottom: 8px;">
+                    🏅 Prize Structure
+                </h3>
+                <p>
+                    The jackpot prize pool is distributed based on how many predictions you get correct:
+                </p>
+
+                <div class="prize-info">
+                    <div class="prize-box" style="border-color: #28a745;">
+                        <span class="p-label">🏆 12/12</span>
+                        <span class="p-value">Jackpot</span>
+                        <span style="font-size: 10px; color: #6c757d; display: block;">Win the Grand Prize!</span>
+                    </div>
+                    <div class="prize-box" style="border-color: #ffc107;">
+                        <span class="p-label">🥈 11/12</span>
+                        <span class="p-value draw-prize">2nd Prize</span>
+                        <span style="font-size: 10px; color: #6c757d; display: block;">11 correct predictions</span>
+                    </div>
+                    <div class="prize-box" style="border-color: #007bff;">
+                        <span class="p-label">🥉 10/12</span>
+                        <span class="p-value away-prize">3rd Prize</span>
+                        <span style="font-size: 10px; color: #6c757d; display: block;">10 correct predictions</span>
+                    </div>
+                </div>
+
+                <div class="highlight-box" style="border-left-color: #28a745;">
+                    <p>
+                        <strong>💡 Tip:</strong> The more matches you predict correctly, the bigger your prize! 
+                        Even if you don't get all 12, you can still win with 10 or 11 correct predictions.
+                    </p>
+                </div>
+            </div>
+
+            <!-- SECTION 2: HOW TO TAKE PART -->
+            <div class="how-to-card">
+                <span class="card-icon">🎮</span>
+                <h2>How to Take Part</h2>
+                <p>
+                    Follow these simple steps to enter the PHC Jackpot and start winning:
+                </p>
+
+                <ul>
+                    <li>
+                        <span class="step-number">1</span>
+                        <strong>Login or Create an Account</strong><br>
+                        Sign in to your PHC Jackpot account. If you're new, create a free account in seconds.
+                    </li>
+                    <li>
+                        <span class="step-number">2</span>
+                        <strong>Select Your Card Type</strong><br>
+                        Choose from <strong>Apple Card, Razer Gold, or Steam Card</strong>. Each card has different 
+                        entry fees and prize levels.
+                    </li>
+                    <li>
+                        <span class="step-number">3</span>
+                        <strong>Choose Your Entry Level</strong><br>
+                        Select your entry amount ($500, $1,500, $2,000, or $3,500). Higher entries offer bigger 
+                        jackpot prizes!
+                    </li>
+                    <li>
+                        <span class="step-number">4</span>
+                        <strong>Upload Card Photo</strong><br>
+                        Take a clear photo of your chosen card and upload it for verification. This is required 
+                        to validate your entry.
+                    </li>
+                    <li>
+                        <span class="step-number">5</span>
+                        <strong>Predict 12 Matches</strong><br>
+                        Go to the <strong>Predictor</strong> tab and select your prediction (1, X, or 2) for each 
+                        of the 12 matches.
+                    </li>
+                    <li>
+                        <span class="step-number">6</span>
+                        <strong>Submit & Play</strong><br>
+                        Click <strong>"Play to Win"</strong> to submit your predictions. Your entry will be 
+                        validated and you'll be in the running for the jackpot!
+                    </li>
+                    <li>
+                        <span class="step-number">7</span>
+                        <strong>Wait for Results</strong><br>
+                        After the round ends (5-day countdown), winners are announced. Check the 
+                        <strong>Previous Results</strong> tab to see if you won!
+                    </li>
+                </ul>
+
+                <div class="highlight-box" style="border-left-color: #ffc107;">
+                    <p>
+                        <strong>⏰ Important:</strong> Each round lasts <strong>5 days</strong>. Make sure to submit 
+                        your predictions before the countdown ends to be eligible for the jackpot!
+                    </p>
+                </div>
+            </div>
+
+            <!-- SECTION 3: QUICK TIPS -->
+            <div class="how-to-card">
+                <span class="card-icon">💡</span>
+                <h2>Quick Tips & Rules</h2>
+
+                <ul>
+                    <li>
+                        <span class="step-number">✓</span>
+                        <strong>Research the Matches</strong><br>
+                        Check team form, injuries, and head-to-head records before making your predictions.
+                    </li>
+                    <li>
+                        <span class="step-number">✓</span>
+                        <strong>One Entry Per Round</strong><br>
+                        You can only submit one prediction per round. Make it count!
+                    </li>
+                    <li>
+                        <span class="step-number">✓</span>
+                        <strong>Valid Card Required</strong><br>
+                        Your uploaded card photo must be clear and valid. Fake or invalid entries will be rejected.
+                    </li>
+                    <li>
+                        <span class="step-number">✓</span>
+                        <strong>Winners Announced</strong><br>
+                        Winners are announced immediately after each round ends. Check the "Previous Results" tab.
+                    </li>
+                    <li>
+                        <span class="step-number">✓</span>
+                        <strong>Prizes Credited</strong><br>
+                        All winnings are credited directly to your PHC wallet. You can withdraw anytime!
+                    </li>
+                </ul>
+
+                <div class="highlight-box" style="border-left-color: #007bff;">
+                    <p>
+                        <strong>🔒 Fair Play:</strong> All entries are verified by our admin team. 
+                        Cheating or fraudulent entries will result in immediate disqualification.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- BOTTOM NAV -->
+        <div class="bottom-nav">
+            <div class="nav-item" onclick="location.href='index.html'">
+                <i class="fas fa-home"></i> Home
+            </div>
+            <div class="nav-item" onclick="location.href='bet.html'">
+                <i class="fas fa-gamepad"></i> Predictor
+            </div>
+            <div class="nav-item" onclick="location.href='previous-results.html'">
+                <i class="fas fa-history"></i> Results
+            </div>
+            <div class="nav-item active">
+                <i class="fas fa-circle-info"></i> Help
+            </div>
+        </div>
+
+    </div>
+
+    <div id="toast" class="toast">Message</div>
+
+    <script>
+        // ==========================================================
+        // GLOBAL DARK MODE LOADER
+        // ==========================================================
+        (function() {
+            if (localStorage.getItem("phc_dark_mode") === "true") {
+                document.body.classList.add("dark");
+            }
+        })();
+
+        console.log('📖 How to Play page loaded successfully!');
+    </script>
+
+</body>
+</html>

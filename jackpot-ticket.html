@@ -1,0 +1,1303 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Jackpot Ticket - PHC Casino</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        /* ========================================================== */
+        /* JACKPOT TICKET - SPORTYBET STYLE                           */
+        /* ========================================================== */
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0a0a;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            color: #ffffff;
+            min-height: 100vh;
+        }
+
+        .app {
+            max-width: 480px;
+            margin: 0 auto;
+            background: #0a0a0a;
+            min-height: 100vh;
+            padding-bottom: 80px;
+            background: radial-gradient(ellipse at center, #1a0a0a 0%, #0a0a0a 100%);
+        }
+
+        /* ========================================================== */
+        /* TOP BAR                                                     */
+        /* ========================================================== */
+        .topbar {
+            background: linear-gradient(135deg, #0d0d0d, #1a0a0a);
+            color: #ffd700;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 2px solid #ffd700;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .topbar .logo {
+            font-size: 17px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #ffd700;
+        }
+
+        .topbar .logo i {
+            cursor: pointer;
+            font-size: 18px;
+            color: #ffffff;
+        }
+
+        .topbar .ticket-id {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.3);
+            font-weight: 600;
+        }
+
+        /* ========================================================== */
+        /* TICKET HEADER                                               */
+        /* ========================================================== */
+        .ticket-header {
+            background: #1a1a2e;
+            padding: 16px 16px 12px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .ticket-header .ticket-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+
+        .ticket-header .ticket-row .label {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.3);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .ticket-header .ticket-row .value {
+            font-size: 14px;
+            font-weight: 700;
+            color: #f8fafc;
+        }
+
+        .ticket-header .ticket-row .value.gold {
+            color: #ffd700;
+        }
+
+        .ticket-header .ticket-row .value.running {
+            color: #10b981;
+        }
+
+        .ticket-header .ticket-status {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 12px;
+            border-radius: 12px;
+            text-transform: uppercase;
+            background: rgba(16, 185, 129, 0.15);
+            color: #10b981;
+            margin-top: 4px;
+        }
+
+        .ticket-header .ticket-status .pulse {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #10b981;
+            margin-right: 4px;
+            animation: pulseDot 1s ease-in-out infinite;
+        }
+
+        @keyframes pulseDot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.8); }
+        }
+
+        /* ========================================================== */
+        /* ROUND INFO                                                  */
+        /* ========================================================== */
+        .round-info {
+            padding: 10px 16px;
+            background: rgba(255, 255, 255, 0.02);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .round-info .round-number {
+            font-size: 13px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .round-info .round-number span {
+            color: #ffd700;
+        }
+
+        /* ========================================================== */
+        /* MATCH LIST - JACKPOT STYLE                                 */
+        /* ========================================================== */
+        .match-list {
+            padding: 0 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding-bottom: 12px;
+        }
+
+        .match-card {
+            background: #1a1a2e;
+            border-radius: 12px;
+            padding: 12px 14px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .match-card:hover {
+            border-color: rgba(255, 215, 0, 0.05);
+            background: #1e1e36;
+        }
+
+        .match-card .match-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+
+        .match-card .match-header .match-number {
+            font-size: 11px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .match-card .match-header .match-status {
+            font-size: 10px;
+            font-weight: 700;
+            padding: 1px 10px;
+            border-radius: 10px;
+            text-transform: uppercase;
+        }
+
+        .match-card .match-header .match-status.live {
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+        }
+
+        .match-card .match-header .match-status.live .pulse {
+            display: inline-block;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: #ef4444;
+            margin-right: 4px;
+            animation: pulseDot 1s ease-in-out infinite;
+        }
+
+        .match-card .match-header .match-status.ended {
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .match-card .match-header .match-status.upcoming {
+            background: rgba(255, 215, 0, 0.08);
+            color: #ffd700;
+        }
+
+        .match-card .match-teams {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 2px 0;
+        }
+
+        .match-card .match-teams .team {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #f8fafc;
+        }
+
+        .match-card .match-teams .team .badge {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8px;
+            font-weight: 900;
+            color: #ffffff;
+            border: 2px solid rgba(255, 255, 255, 0.06);
+            text-transform: uppercase;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            flex-shrink: 0;
+        }
+
+        .match-card .match-teams .team .team-name {
+            max-width: 100px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .match-card .match-teams .score-section {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .match-card .match-teams .score-section .score {
+            font-size: 18px;
+            font-weight: 800;
+            color: #ffd700;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .match-card .match-teams .score-section .score.live {
+            color: #10b981;
+        }
+
+        .match-card .match-teams .score-section .pick {
+            font-size: 14px;
+            font-weight: 900;
+            padding: 2px 10px;
+            border-radius: 6px;
+            background: rgba(255, 215, 0, 0.1);
+            color: #ffd700;
+            border: 1px solid rgba(255, 215, 0, 0.1);
+            min-width: 28px;
+            text-align: center;
+        }
+
+        .match-card .match-teams .score-section .pick.home-pick {
+            background: rgba(16, 185, 129, 0.15);
+            color: #10b981;
+            border-color: rgba(16, 185, 129, 0.15);
+        }
+
+        .match-card .match-teams .score-section .pick.draw-pick {
+            background: rgba(255, 215, 0, 0.1);
+            color: #ffd700;
+            border-color: rgba(255, 215, 0, 0.1);
+        }
+
+        .match-card .match-teams .score-section .pick.away-pick {
+            background: rgba(59, 130, 246, 0.15);
+            color: #60a5fa;
+            border-color: rgba(59, 130, 246, 0.15);
+        }
+
+        .match-card .match-teams .score-section .pick.correct {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+            border-color: #10b981;
+        }
+
+        .match-card .match-teams .score-section .pick.wrong {
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+            border-color: rgba(239, 68, 68, 0.15);
+        }
+
+        .match-card .match-time {
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.2);
+            margin-top: 2px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .match-card .match-progress {
+            margin-top: 6px;
+            padding-top: 6px;
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .match-card .match-progress .progress-bar {
+            flex: 1;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .match-card .match-progress .progress-bar .progress-fill {
+            height: 100%;
+            border-radius: 10px;
+            background: linear-gradient(to right, #10b981, #ffd700);
+            transition: width 1s ease;
+        }
+
+        .match-card .match-progress .progress-label {
+            font-size: 9px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.3);
+            min-width: 35px;
+        }
+
+        /* ========================================================== */
+        /* MATCH DETAIL MODAL                                          */
+        /* ========================================================== */
+        .match-detail-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+            animation: modalIn 0.3s ease;
+        }
+
+        .match-detail-modal.active {
+            display: flex;
+        }
+
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .match-detail-modal .modal-header {
+            background: linear-gradient(135deg, #0d0d0d, #1a0a0a);
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 2px solid #ffd700;
+        }
+
+        .match-detail-modal .modal-header .back-btn {
+            font-size: 20px;
+            color: #ffffff;
+            cursor: pointer;
+        }
+
+        .match-detail-modal .modal-header .title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #ffd700;
+        }
+
+        .match-detail-modal .modal-header .close-btn {
+            font-size: 22px;
+            color: rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+        }
+
+        .match-detail-modal .modal-body {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+        }
+
+        .match-detail-modal .modal-body .detail-league {
+            font-size: 11px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .match-detail-modal .modal-body .detail-teams {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .match-detail-modal .modal-body .detail-teams .d-team {
+            text-align: center;
+        }
+
+        .match-detail-modal .modal-body .detail-teams .d-team .badge {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 900;
+            color: #ffffff;
+            border: 2px solid rgba(255, 255, 255, 0.06);
+            text-transform: uppercase;
+            margin: 0 auto 6px;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+
+        .match-detail-modal .modal-body .detail-teams .d-team .name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #f8fafc;
+        }
+
+        .match-detail-modal .modal-body .detail-teams .d-score {
+            font-size: 30px;
+            font-weight: 900;
+            color: #ffd700;
+        }
+
+        .match-detail-modal .modal-body .detail-teams .d-score.live {
+            color: #10b981;
+        }
+
+        .match-detail-modal .modal-body .detail-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .match-detail-modal .modal-body .detail-info .info-item {
+            text-align: center;
+        }
+
+        .match-detail-modal .modal-body .detail-info .info-item .label {
+            font-size: 9px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.3);
+            text-transform: uppercase;
+        }
+
+        .match-detail-modal .modal-body .detail-info .info-item .value {
+            font-size: 14px;
+            font-weight: 700;
+            color: #f8fafc;
+            margin-top: 2px;
+        }
+
+        .match-detail-modal .modal-body .detail-odds {
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .match-detail-modal .modal-body .detail-odds .odds-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.3);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .match-detail-modal .modal-body .detail-odds .odds-row {
+            display: flex;
+            justify-content: space-around;
+            gap: 8px;
+        }
+
+        .match-detail-modal .modal-body .detail-odds .odds-row .odd-box {
+            flex: 1;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .match-detail-modal .modal-body .detail-odds .odds-row .odd-box .label {
+            font-size: 10px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .match-detail-modal .modal-body .detail-odds .odds-row .odd-box .value {
+            font-size: 18px;
+            font-weight: 800;
+            color: #ffd700;
+            margin-top: 4px;
+        }
+
+        .match-detail-modal .modal-body .detail-pick {
+            padding: 12px 0;
+            text-align: center;
+        }
+
+        .match-detail-modal .modal-body .detail-pick .pick-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.3);
+            text-transform: uppercase;
+        }
+
+        .match-detail-modal .modal-body .detail-pick .pick-value {
+            font-size: 24px;
+            font-weight: 900;
+            color: #ffd700;
+            margin-top: 4px;
+        }
+
+        .match-detail-modal .modal-body .detail-pick .pick-value.correct {
+            color: #10b981;
+        }
+
+        .match-detail-modal .modal-body .detail-pick .pick-value.wrong {
+            color: #ef4444;
+        }
+
+        .match-detail-modal .modal-footer {
+            padding: 12px 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            gap: 10px;
+        }
+
+        .match-detail-modal .modal-footer .btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.2s;
+            text-align: center;
+        }
+
+        .match-detail-modal .modal-footer .btn.primary {
+            background: #ffd700;
+            color: #0a0a0a;
+        }
+
+        .match-detail-modal .modal-footer .btn.primary:hover {
+            background: #f59e0b;
+        }
+
+        .match-detail-modal .modal-footer .btn.secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .match-detail-modal .modal-footer .btn.secondary:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        /* ========================================================== */
+        /* BOTTOM NAV                                                  */
+        /* ========================================================== */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 480px;
+            background: rgba(10, 10, 10, 0.98);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 8px 0 14px 0;
+            border-top: 1px solid rgba(255, 215, 0, 0.1);
+            z-index: 200;
+        }
+
+        .nav-item {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 4px 12px;
+            transition: 0.2s;
+            border: none;
+            background: transparent;
+        }
+
+        .nav-item i {
+            display: block;
+            font-size: 20px;
+            margin-bottom: 2px;
+        }
+
+        .nav-item.active {
+            color: #ffd700;
+        }
+
+        .nav-item:hover:not(.active) {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 90px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(10, 10, 10, 0.95);
+            color: #ffffff;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 12px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 999;
+            max-width: 90%;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .toast.show { opacity: 1; }
+
+        @media (max-width: 480px) {
+            .match-card .match-teams .team .badge {
+                width: 24px;
+                height: 24px;
+                font-size: 7px;
+            }
+            .match-card .match-teams .team .team-name {
+                font-size: 12px;
+                max-width: 70px;
+            }
+            .match-card .match-teams .score-section .score {
+                font-size: 16px;
+                min-width: 32px;
+            }
+            .match-card .match-teams .score-section .pick {
+                font-size: 12px;
+                padding: 1px 8px;
+                min-width: 22px;
+            }
+            .match-detail-modal .modal-body .detail-teams .d-team .badge {
+                width: 40px;
+                height: 40px;
+                font-size: 11px;
+            }
+            .match-detail-modal .modal-body .detail-teams .d-score {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="app">
+
+        <!-- TOP BAR -->
+        <div class="topbar">
+            <div class="logo">
+                <i class="fas fa-arrow-left" onclick="history.back()"></i>
+                🎫 Ticket
+            </div>
+            <span class="ticket-id">ID: 464688</span>
+        </div>
+
+        <!-- TICKET HEADER -->
+        <div class="ticket-header">
+            <div class="ticket-row">
+                <span class="label">Sporty 12</span>
+                <span class="value running">
+                    <span class="pulse"></span> Running
+                </span>
+            </div>
+            <div class="ticket-row">
+                <span class="label">Total Return</span>
+                <span class="value gold">--</span>
+            </div>
+            <div class="ticket-row">
+                <span class="label">Total Stake</span>
+                <span class="value">$100.00</span>
+            </div>
+            <div class="ticket-status">
+                <span class="pulse"></span> 3 Matches Live
+            </div>
+        </div>
+
+        <!-- ROUND INFO -->
+        <div class="round-info">
+            <span class="round-number">Round No. <span>20260628</span></span>
+            <span style="font-size:11px; color:rgba(255,255,255,0.2);">27/06 07:36</span>
+        </div>
+
+        <!-- MATCH LIST -->
+        <div class="match-list" id="matchList">
+            <!-- Matches rendered by JavaScript -->
+        </div>
+
+        <!-- BOTTOM NAV -->
+        <div class="bottom-nav">
+            <div class="nav-item" onclick="location.href='index.html'">
+                <i class="fas fa-home"></i> Home
+            </div>
+            <div class="nav-item" onclick="location.href='bet.html'">
+                <i class="fas fa-gamepad"></i> Predictor
+            </div>
+            <div class="nav-item active" onclick="location.href='jackpot-ticket.html'">
+                <i class="fas fa-ticket"></i> Ticket
+            </div>
+            <div class="nav-item" onclick="location.href='settings.html'">
+                <i class="fas fa-cog"></i> Settings
+            </div>
+        </div>
+
+    </div>
+
+    <!-- MATCH DETAIL MODAL -->
+    <div class="match-detail-modal" id="matchDetailModal">
+        <div class="modal-header">
+            <span class="back-btn" onclick="closeMatchDetail()">
+                <i class="fas fa-arrow-left"></i>
+            </span>
+            <span class="title">Match Details</span>
+            <span class="close-btn" onclick="closeMatchDetail()">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div class="modal-body" id="detailBody">
+            <!-- Dynamic content -->
+        </div>
+        <div class="modal-footer">
+            <button class="btn secondary" onclick="closeMatchDetail()">Close</button>
+            <button class="btn primary" onclick="goToLiveBetting()">Go to Live Betting</button>
+        </div>
+    </div>
+
+    <div id="toast" class="toast">Message</div>
+
+    <script>
+        // ==========================================================
+        // TEAM BADGE COLORS
+        // ==========================================================
+        var badgeColors = {
+            'Stroemmen IF': '#003399',
+            'Moss FK': '#da291c',
+            'HJK Helsinki': '#0057aa',
+            'Kuopion Palloseura': '#ffd700',
+            'GIF Sundsvall': '#0066ff',
+            'Ostersunds FK': '#e3120b',
+            'Sogndal Fotball': '#0066ff',
+            'Egersunds IK': '#ff6b00',
+            'AC Oulu': '#0057aa',
+            'FC Lahti': '#000000',
+            'Croatia': '#c8102e',
+            'Ghana': '#c8102e',
+            'Colombia': '#fcd116',
+            'Portugal': '#006600',
+            'Congo DR': '#007fff',
+            'Uzbekistan': '#0066ff',
+            'Algeria': '#006600',
+            'Austria': '#c8102e',
+            'Landskrona BolS': '#0057aa',
+            'IFK Varnamo': '#ff6b00',
+            'EC Juventude RS': '#006600',
+            'Ceara SC CE': '#000000',
+            'Fortaleza EC CE': '#0057aa',
+            'SC Recife PE': '#c8102e'
+        };
+
+        function getBadgeClass(team) {
+            var color = badgeColors[team] || '#333333';
+            return 'background:' + color + ';';
+        }
+
+        // ==========================================================
+        // JACKPOT MATCH DATA - FROM YOUR SCREENSHOTS
+        // ==========================================================
+        var jackpotMatches = [{
+            id: 1,
+            number: 1,
+            home: "Stroemmen IF",
+            away: "Moss FK",
+            homeScore: 2,
+            awayScore: 1,
+            status: "live",
+            time: "39' H1",
+            pick: "1",
+            result: "1",
+            minute: 39,
+            league: "Norway - 1st Division",
+            odds: { home: 1.45, draw: 4.25, away: 6.75 },
+            date: "27/06/2026 10:00"
+        }, {
+            id: 2,
+            number: 2,
+            home: "HJK Helsinki",
+            away: "Kuopion Palloseura",
+            homeScore: 0,
+            awayScore: 1,
+            status: "live",
+            time: "40' H1",
+            pick: "1",
+            result: "2",
+            minute: 40,
+            league: "Finland - Veikkausliiga",
+            odds: { home: 1.90, draw: 3.50, away: 4.20 },
+            date: "27/06/2026 10:00"
+        }, {
+            id: 3,
+            number: 3,
+            home: "GIF Sundsvall",
+            away: "Ostersunds FK",
+            homeScore: 0,
+            awayScore: 0,
+            status: "upcoming",
+            time: "27/06 11:00",
+            pick: "2",
+            result: null,
+            minute: 0,
+            league: "Sweden - Superettan",
+            odds: { home: 2.10, draw: 3.30, away: 3.50 },
+            date: "27/06/2026 11:00"
+        }, {
+            id: 4,
+            number: 4,
+            home: "Sogndal Fotball",
+            away: "Egersunds IK",
+            homeScore: 4,
+            awayScore: 1,
+            status: "ended",
+            time: "FT",
+            pick: "1",
+            result: "1",
+            minute: 90,
+            league: "Norway - 1st Division",
+            odds: { home: 1.60, draw: 4.00, away: 5.50 },
+            date: "27/06/2026 14:00"
+        }, {
+            id: 5,
+            number: 5,
+            home: "AC Oulu",
+            away: "FC Lahti",
+            homeScore: 1,
+            awayScore: 1,
+            status: "ended",
+            time: "FT",
+            pick: "X",
+            result: "X",
+            minute: 90,
+            league: "Finland - Veikkausliiga",
+            odds: { home: 2.30, draw: 3.20, away: 3.20 },
+            date: "27/06/2026 14:00"
+        }, {
+            id: 6,
+            number: 6,
+            home: "Croatia",
+            away: "Ghana",
+            homeScore: 2,
+            awayScore: 1,
+            status: "ended",
+            time: "FT",
+            pick: "1",
+            result: "1",
+            minute: 90,
+            league: "International - Friendly",
+            odds: { home: 1.80, draw: 3.40, away: 4.50 },
+            date: "27/06/2026 17:00"
+        }, {
+            id: 7,
+            number: 7,
+            home: "Colombia",
+            away: "Portugal",
+            homeScore: 0,
+            awayScore: 0,
+            status: "ended",
+            time: "FT",
+            pick: "X",
+            result: "X",
+            minute: 90,
+            league: "International - Friendly",
+            odds: { home: 2.60, draw: 3.10, away: 2.80 },
+            date: "27/06/2026 19:30"
+        }, {
+            id: 8,
+            number: 8,
+            home: "Congo DR",
+            away: "Uzbekistan",
+            homeScore: 3,
+            awayScore: 1,
+            status: "ended",
+            time: "FT",
+            pick: "1",
+            result: "1",
+            minute: 90,
+            league: "International - Friendly",
+            odds: { home: 1.70, draw: 3.60, away: 5.00 },
+            date: "27/06/2026 19:30"
+        }, {
+            id: 9,
+            number: 9,
+            home: "Algeria",
+            away: "Austria",
+            homeScore: 3,
+            awayScore: 3,
+            status: "ended",
+            time: "FT",
+            pick: "X",
+            result: "X",
+            minute: 90,
+            league: "International - Friendly",
+            odds: { home: 2.10, draw: 3.30, away: 3.60 },
+            date: "27/06/2026 22:00"
+        }, {
+            id: 10,
+            number: 10,
+            home: "Landskrona BolS",
+            away: "IFK Varnamo",
+            homeScore: 1,
+            awayScore: 0,
+            status: "ended",
+            time: "FT",
+            pick: "1",
+            result: "1",
+            minute: 90,
+            league: "Sweden - Superettan",
+            odds: { home: 2.20, draw: 3.30, away: 3.40 },
+            date: "28/06/2026 09:00"
+        }, {
+            id: 11,
+            number: 11,
+            home: "EC Juventude RS",
+            away: "Ceara SC CE",
+            homeScore: 2,
+            awayScore: 0,
+            status: "ended",
+            time: "FT",
+            pick: "1",
+            result: "1",
+            minute: 90,
+            league: "Brazil - Serie B",
+            odds: { home: 1.90, draw: 3.30, away: 4.20 },
+            date: "28/06/2026 10:00"
+        }, {
+            id: 12,
+            number: 12,
+            home: "Fortaleza EC CE",
+            away: "SC Recife PE",
+            homeScore: 2,
+            awayScore: 1,
+            status: "ended",
+            time: "FT",
+            pick: "1",
+            result: "1",
+            minute: 90,
+            league: "Brazil - Serie B",
+            odds: { home: 1.85, draw: 3.40, away: 4.50 },
+            date: "28/06/2026 17:30"
+        }];
+
+        // ==========================================================
+        // HELPERS
+        // ==========================================================
+        function showToast(msg, duration) {
+            duration = duration || 3000;
+            var toast = document.getElementById('toast');
+            if (!toast) return;
+            toast.textContent = msg;
+            toast.classList.add('show');
+            clearTimeout(toast._timer);
+            toast._timer = setTimeout(function() {
+                toast.classList.remove('show');
+            }, duration);
+        }
+
+        function getStatusClass(status) {
+            if (status === 'live') return 'live';
+            if (status === 'ended') return 'ended';
+            return 'upcoming';
+        }
+
+        function getPickClass(pick, result) {
+            if (!result) return '';
+            if (pick === result) return 'correct';
+            return 'wrong';
+        }
+
+        function getShortName(name) {
+            var short = {
+                'Stroemmen IF': 'STR',
+                'Moss FK': 'MOS',
+                'HJK Helsinki': 'HJK',
+                'Kuopion Palloseura': 'KPS',
+                'GIF Sundsvall': 'GIF',
+                'Ostersunds FK': 'OST',
+                'Sogndal Fotball': 'SOG',
+                'Egersunds IK': 'EGE',
+                'AC Oulu': 'ACO',
+                'FC Lahti': 'FCL',
+                'Croatia': 'CRO',
+                'Ghana': 'GHA',
+                'Colombia': 'COL',
+                'Portugal': 'POR',
+                'Congo DR': 'COD',
+                'Uzbekistan': 'UZB',
+                'Algeria': 'ALG',
+                'Austria': 'AUT',
+                'Landskrona BolS': 'LAN',
+                'IFK Varnamo': 'IFK',
+                'EC Juventude RS': 'JUV',
+                'Ceara SC CE': 'CEA',
+                'Fortaleza EC CE': 'FOR',
+                'SC Recife PE': 'REC'
+            };
+            return short[name] || name.substring(0, 3).toUpperCase();
+        }
+
+        // ==========================================================
+        // RENDER MATCHES
+        // ==========================================================
+        function renderMatches() {
+            var container = document.getElementById('matchList');
+            var html = '';
+            var liveCount = 0;
+
+            jackpotMatches.forEach(function(match) {
+                var statusClass = getStatusClass(match.status);
+                var isLive = match.status === 'live';
+                var scoreClass = isLive ? 'live' : '';
+                var pickClass = getPickClass(match.pick, match.result);
+                var progress = Math.min(100, (match.minute / 90) * 100);
+                var homeShort = getShortName(match.home);
+                var awayShort = getShortName(match.away);
+                var homeColor = badgeColors[match.home] || '#333333';
+                var awayColor = badgeColors[match.away] || '#333333';
+
+                if (isLive) liveCount++;
+
+                html += `
+                    <div class="match-card" onclick="openMatchDetail('${match.id}')">
+                        <div class="match-header">
+                            <span class="match-number">No.${match.number}</span>
+                            <span class="match-status ${statusClass}">
+                                ${isLive ? '<span class="pulse"></span>' : ''}
+                                ${match.time}
+                            </span>
+                        </div>
+                        <div class="match-teams">
+                            <div class="team">
+                                <span class="badge" style="${getBadgeClass(match.home)}">${homeShort}</span>
+                                <span class="team-name">${match.home}</span>
+                            </div>
+                            <div class="score-section">
+                                <span class="score ${scoreClass}">${match.homeScore} - ${match.awayScore}</span>
+                                <span class="pick ${pickClass}">${match.pick}</span>
+                            </div>
+                            <div class="team">
+                                <span class="team-name">${match.away}</span>
+                                <span class="badge" style="${getBadgeClass(match.away)}">${awayShort}</span>
+                            </div>
+                        </div>
+                        ${isLive ? `
+                        <div class="match-progress">
+                            <span class="progress-label">${match.minute}'</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${progress}%;"></div>
+                            </div>
+                            <span class="progress-label">Live</span>
+                        </div>
+                        ` : ''}
+                        <div class="match-time">${match.date}</div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+
+            // Update live count in header
+            var statusEl = document.querySelector('.ticket-status');
+            if (statusEl) {
+                statusEl.innerHTML = '<span class="pulse"></span> ' + liveCount + ' Matches Live';
+            }
+        }
+
+        // ==========================================================
+        // OPEN MATCH DETAIL
+        // ==========================================================
+        function openMatchDetail(id) {
+            var match = jackpotMatches.find(function(m) { return m.id == id; });
+            if (!match) return;
+
+            var modal = document.getElementById('matchDetailModal');
+            var body = document.getElementById('detailBody');
+
+            var isLive = match.status === 'live';
+            var scoreClass = isLive ? 'live' : '';
+            var pickClass = getPickClass(match.pick, match.result);
+            var homeShort = getShortName(match.home);
+            var awayShort = getShortName(match.away);
+
+            body.innerHTML = `
+                <div class="detail-league">${match.league}</div>
+
+                <div class="detail-teams">
+                    <div class="d-team">
+                        <div class="badge" style="${getBadgeClass(match.home)}">${homeShort}</div>
+                        <div class="name">${match.home}</div>
+                    </div>
+                    <div class="d-score ${scoreClass}">${match.homeScore} - ${match.awayScore}</div>
+                    <div class="d-team">
+                        <div class="badge" style="${getBadgeClass(match.away)}">${awayShort}</div>
+                        <div class="name">${match.away}</div>
+                    </div>
+                </div>
+
+                <div class="detail-info">
+                    <div class="info-item">
+                        <div class="label">Status</div>
+                        <div class="value">${match.status.toUpperCase()}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="label">Time</div>
+                        <div class="value">${match.time}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="label">Minute</div>
+                        <div class="value">${match.minute}'</div>
+                    </div>
+                </div>
+
+                <div class="detail-odds">
+                    <div class="odds-title">Odds</div>
+                    <div class="odds-row">
+                        <div class="odd-box">
+                            <div class="label">1 (Home)</div>
+                            <div class="value">${match.odds.home.toFixed(2)}</div>
+                        </div>
+                        <div class="odd-box">
+                            <div class="label">X (Draw)</div>
+                            <div class="value">${match.odds.draw.toFixed(2)}</div>
+                        </div>
+                        <div class="odd-box">
+                            <div class="label">2 (Away)</div>
+                            <div class="value">${match.odds.away.toFixed(2)}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-pick">
+                    <div class="pick-label">Your Pick</div>
+                    <div class="pick-value ${pickClass}">${match.pick}</div>
+                    ${match.result ? `<div style="font-size:12px; color:rgba(255,255,255,0.3); margin-top:4px;">Result: ${match.result}</div>` : ''}
+                </div>
+            `;
+
+            modal.classList.add('active');
+        }
+
+        // ==========================================================
+        // CLOSE MATCH DETAIL
+        // ==========================================================
+        function closeMatchDetail() {
+            document.getElementById('matchDetailModal').classList.remove('active');
+        }
+
+        // ==========================================================
+        // GO TO LIVE BETTING
+        // ==========================================================
+        function goToLiveBetting() {
+            showToast('📺 Opening live betting...');
+            // This would redirect to a live betting page
+        }
+
+        // ==========================================================
+        // SIMULATE LIVE UPDATES
+        // ==========================================================
+        function simulateLiveUpdates() {
+            setInterval(function() {
+                var liveMatches = jackpotMatches.filter(function(m) { return m.status === 'live'; });
+
+                liveMatches.forEach(function(match) {
+                    if (match.minute < 90) {
+                        match.minute += 1;
+                        // Update time display
+                        if (match.minute < 45) {
+                            match.time = match.minute + "' H1";
+                        } else if (match.minute < 90) {
+                            match.time = (match.minute - 45) + "' H2";
+                        }
+                    }
+
+                    if (Math.random() < 0.05 && match.minute < 90) {
+                        var isHomeGoal = Math.random() < 0.5;
+                        if (isHomeGoal) {
+                            match.homeScore += 1;
+                            showToast('⚽ GOAL! ' + match.home + ' scores! (' + match.homeScore + '-' +
+                                match.awayScore + ')');
+                        } else {
+                            match.awayScore += 1;
+                            showToast('⚽ GOAL! ' + match.away + ' scores! (' + match.homeScore + '-' +
+                                match.awayScore + ')');
+                        }
+                        renderMatches();
+                        // Update detail modal if open
+                        var modal = document.getElementById('matchDetailModal');
+                        if (modal.classList.contains('active')) {
+                            var body = document.getElementById('detailBody');
+                            if (body.innerHTML.includes(match.home)) {
+                                openMatchDetail(match.id);
+                            }
+                        }
+                        return;
+                    }
+
+                    if (match.minute >= 90) {
+                        match.status = 'ended';
+                        match.time = 'FT';
+                        showToast('⏱️ Full Time! ' + match.home + ' ' + match.homeScore + '-' + match
+                            .awayScore + ' ' + match.away);
+                    }
+                });
+
+                renderMatches();
+            }, 3000);
+        }
+
+        // ==========================================================
+        // INIT
+        // ==========================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            renderMatches();
+            simulateLiveUpdates();
+
+            console.log('🎫 Jackpot Ticket loaded!');
+            console.log('📋 ' + jackpotMatches.length + ' matches in your ticket!');
+            console.log('🔴 Live matches updating every 3 seconds!');
+        });
+
+        // Make functions global
+        window.openMatchDetail = openMatchDetail;
+        window.closeMatchDetail = closeMatchDetail;
+        window.goToLiveBetting = goToLiveBetting;
+    </script>
+
+</body>
+</html>

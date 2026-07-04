@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>World Cup Live - PHC Jackpot</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { background:#0a0a0a; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; color:#ffffff; min-height:100vh; }
+        .app { max-width:480px; margin:0 auto; background:#0a0a0a; min-height:100vh; padding-bottom:80px; background:radial-gradient(ellipse at center, #1a0a0a 0%, #0a0a0a 100%); }
+
+        .topbar { background:linear-gradient(135deg, #0d0d0d, #1a0a0a); color:#ffd700; padding:14px 16px; display:flex; align-items:center; justify-content:space-between; border-bottom:2px solid #ffd700; }
+        .topbar .logo { font-size:17px; font-weight:800; display:flex; align-items:center; gap:10px; color:#ffd700; }
+        .topbar .logo i { cursor:pointer; font-size:18px; color:#ffffff; }
+        .topbar .live-count { font-size:11px; font-weight:700; color:#10b981; display:flex; align-items:center; gap:6px; }
+        .topbar .live-count .dot { width:8px; height:8px; border-radius:50%; background:#10b981; animation:pulseDot 1.5s ease-in-out infinite; }
+        @keyframes pulseDot { 0%, 100% { opacity:1; transform:scale(1); } 50% { opacity:0.4; transform:scale(0.8); } }
+
+        .round-badge { background:#1a1a2e; padding:8px 16px; margin:10px 12px 6px 12px; border-radius:8px; display:flex; justify-content:space-between; align-items:center; border:1px solid rgba(255,215,0,0.1); }
+        .round-badge .label { font-size:11px; color:rgba(255,255,255,0.3); }
+        .round-badge .value { font-size:13px; font-weight:700; color:#ffd700; }
+
+        .match-list { padding:0 12px; display:flex; flex-direction:column; gap:8px; padding-bottom:12px; }
+        .match-card { background:#1a1a2e; border-radius:12px; padding:12px 14px; border:1px solid rgba(255,255,255,0.03); transition:0.3s; }
+
+        .match-card .match-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; }
+        .match-card .match-header .match-number { font-size:11px; font-weight:700; color:rgba(255,255,255,0.3); }
+        .match-card .match-header .match-status { font-size:10px; font-weight:700; padding:1px 10px; border-radius:10px; text-transform:uppercase; }
+        .match-card .match-header .match-status.live { background:rgba(239,68,68,0.15); color:#ef4444; }
+        .match-card .match-header .match-status.live .pulse { display:inline-block; width:5px; height:5px; border-radius:50%; background:#ef4444; margin-right:4px; animation:pulseDot 1s ease-in-out infinite; }
+        .match-card .match-header .match-status.ended { background:rgba(255,255,255,0.05); color:rgba(255,255,255,0.3); }
+        .match-card .match-header .match-status.upcoming { background:rgba(255,215,0,0.08); color:#ffd700; }
+
+        .match-card .match-teams { display:flex; align-items:center; justify-content:space-between; padding:2px 0; }
+        .match-card .match-teams .team { display:flex; flex-direction:column; align-items:center; gap:2px; font-size:13px; font-weight:600; color:#f8fafc; max-width:40%; text-align:center; }
+        .match-card .match-teams .team .team-flag { font-size:18px; }
+        .match-card .match-teams .team .team-name { font-size:10px; font-weight:600; line-height:1.2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:70px; }
+        .match-card .match-teams .score { font-size:16px; font-weight:800; color:#ffd700; min-width:36px; text-align:center; }
+        .match-card .match-teams .score.live { color:#10b981; }
+        .match-card .match-teams .score.ended { color:rgba(255,255,255,0.3); }
+
+        .match-card .match-progress { margin-top:6px; padding-top:6px; border-top:1px solid rgba(255,255,255,0.03); display:flex; align-items:center; gap:8px; }
+        .match-card .match-progress .progress-bar { flex:1; height:3px; background:rgba(255,255,255,0.05); border-radius:10px; overflow:hidden; }
+        .match-card .match-progress .progress-bar .progress-fill { height:100%; border-radius:10px; background:linear-gradient(to right, #10b981, #ffd700); transition:width 1s ease; }
+        .match-card .match-progress .progress-label { font-size:9px; font-weight:600; color:rgba(255,255,255,0.3); min-width:35px; }
+        .match-card .match-date-time { font-size:10px; color:rgba(255,255,255,0.2); text-align:right; margin-top:4px; }
+
+        .empty-state { text-align:center; padding:60px 20px; color:rgba(255,255,255,0.4); }
+        .empty-state .empty-icon { font-size:70px; display:block; margin-bottom:16px; color:rgba(255,215,0,0.1); }
+        .empty-state h3 { font-size:22px; font-weight:700; color:rgba(255,255,255,0.5); margin-bottom:8px; }
+        .empty-state p { font-size:14px; color:rgba(255,255,255,0.3); line-height:1.6; max-width:320px; margin:0 auto; }
+        .empty-state .play-jackpot-btn { display:inline-block; margin-top:20px; padding:14px 36px; background:linear-gradient(135deg, #ffd700, #f59e0b); color:#0a0a0a; border:none; border-radius:30px; font-weight:800; font-size:16px; cursor:pointer; transition:0.3s; text-decoration:none; box-shadow:0 4px 20px rgba(255,215,0,0.15); }
+
+        .bottom-nav { position:fixed; bottom:0; left:50%; transform:translateX(-50%); width:100%; max-width:480px; background:rgba(10,10,10,0.98); display:flex; justify-content:space-around; align-items:center; padding:8px 0 14px 0; border-top:1px solid rgba(255,215,0,0.1); z-index:200; }
+        .nav-item { text-align:center; color:rgba(255,255,255,0.3); font-size:10px; font-weight:600; cursor:pointer; padding:4px 12px; transition:0.2s; border:none; background:transparent; }
+        .nav-item i { display:block; font-size:20px; margin-bottom:2px; }
+        .nav-item.active { color:#ffd700; }
+
+        .toast { position:fixed; bottom:90px; left:50%; transform:translateX(-50%); background:rgba(10,10,10,0.95); color:#ffffff; padding:10px 20px; border-radius:8px; font-weight:600; font-size:12px; box-shadow:0 4px 30px rgba(0,0,0,0.5); opacity:0; transition:opacity 0.3s ease; z-index:999; max-width:90%; text-align:center; border:1px solid rgba(255,255,255,0.05); }
+        .toast.show { opacity:1; }
+
+        @media (max-width:480px) {
+            .match-card .match-teams .team .team-name { font-size:9px; max-width:50px; }
+            .match-card .match-teams .score { font-size:14px; min-width:30px; }
+            .empty-state .empty-icon { font-size:50px; }
+            .empty-state h3 { font-size:18px; }
+            .empty-state .play-jackpot-btn { font-size:14px; padding:12px 28px; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="app">
+
+        <div class="topbar">
+            <div class="logo">
+                <i class="fas fa-arrow-left" onclick="history.back()"></i>
+                🌍 World Cup Live
+            </div>
+            <div class="live-count">
+                <span class="dot"></span>
+                <span id="liveCount">0 Live</span>
+            </div>
+        </div>
+
+        <div class="round-badge">
+            <span class="label">Round</span>
+            <span class="value" id="roundDisplay">Loading...</span>
+        </div>
+
+        <div class="match-list" id="matchList">
+            <div class="empty-state">
+                <span class="empty-icon">🌍</span>
+                <h3>No World Cup Matches</h3>
+                <p>Your selected matches will appear here.</p>
+                <button class="play-jackpot-btn" onclick="location.href='bet.html'">🏆 Pick 12 Games</button>
+            </div>
+        </div>
+
+        <div class="bottom-nav">
+            <div class="nav-item" onclick="location.href='index.html'"><i class="fas fa-home"></i> Home</div>
+            <div class="nav-item active" onclick="location.href='world-cup-live.html'"><i class="fas fa-globe"></i> World Cup</div>
+            <div class="nav-item" onclick="location.href='bet.html'"><i class="fas fa-gamepad"></i> Predictor</div>
+            <div class="nav-item" onclick="location.href='settings.html'"><i class="fas fa-cog"></i> Settings</div>
+        </div>
+
+    </div>
+
+    <div id="toast" class="toast">Message</div>
+
+    <script>
+        const SUPABASE_URL = "https://gcesrhfyupmkrevaqpfr.supabase.co";
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdjZXNyaGZ5dXBta3JldmFxcGZyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI4MjQ0MjAsImV4cCI6MjA5ODQwMDQyMH0.LarBYjP0Eg4HfFV_x5GVS7K1d4AuRfBWOjo0D1kL2xM";
+
+        function getCurrentUser() {
+            var localUser = JSON.parse(localStorage.getItem('phc_current_user'));
+            if (!localUser || !localUser.email) return null;
+            return localUser;
+        }
+
+        async function querySupabase(table, query = '') {
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/${table}${query}`, {
+                    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
+                });
+                if (!response.ok) return [];
+                return await response.json();
+            } catch (e) { return []; }
+        }
+
+        function getRoundNumber() {
+            var now = new Date();
+            var year = now.getFullYear();
+            var month = String(now.getMonth() + 1).padStart(2, '0');
+            var day = String(now.getDate()).padStart(2, '0');
+            return year + month + day;
+        }
+
+        async function loadMatches() {
+            var user = getCurrentUser();
+            if (!user) { window.location.href = 'login.html'; return; }
+
+            var roundNumber = getRoundNumber();
+            document.getElementById('roundDisplay').textContent = 'Round ' + roundNumber;
+
+            var storedMatches = localStorage.getItem('phc_live_matches');
+            if (storedMatches) {
+                try {
+                    var parsed = JSON.parse(storedMatches);
+                    if (parsed && parsed.length > 0) {
+                        renderMatches(parsed);
+                    }
+                } catch (e) {}
+            }
+
+            var entries = await querySupabase('jackpot_entries', 
+                `?user_email=eq.${user.email}&round_number=eq.${roundNumber}&order=match_number.asc`);
+
+            if (entries && entries.length > 0) {
+                var matches = entries.map(function(entry) {
+                    return {
+                        id: entry.match_id || entry.id,
+                        number: entry.match_number || 0,
+                        home: entry.home_team || 'Home',
+                        away: entry.away_team || 'Away',
+                        homeFlag: entry.home_flag || '🏳️',
+                        awayFlag: entry.away_flag || '🏳️',
+                        homeScore: entry.home_score || 0,
+                        awayScore: entry.away_score || 0,
+                        status: entry.status || 'upcoming',
+                        minute: entry.minute || 0,
+                        matchTime: new Date(entry.match_time || entry.match_date),
+                        date: entry.match_date || ''
+                    };
+                });
+                localStorage.setItem('phc_live_matches', JSON.stringify(matches));
+                renderMatches(matches);
+            }
+        }
+
+        function renderMatches(matches) {
+            var container = document.getElementById('matchList');
+            
+            if (!matches || matches.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <span class="empty-icon">🌍</span>
+                        <h3>No World Cup Matches</h3>
+                        <p>Your selected matches will appear here.</p>
+                        <button class="play-jackpot-btn" onclick="location.href='bet.html'">🏆 Pick 12 Games</button>
+                    </div>
+                `;
+                document.getElementById('liveCount').textContent = '0';
+                return;
+            }
+
+            var html = '';
+            var liveCount = 0;
+            var now = new Date();
+
+            var sorted = matches.slice().sort(function(a, b) {
+                var order = { 'running': 0, 'live': 0, 'upcoming': 1, 'ended': 2 };
+                return (order[a.status] || 1) - (order[b.status] || 1);
+            });
+
+            sorted.forEach(function(match) {
+                var isLive = match.status === 'running' || match.status === 'live';
+                var isEnded = match.status === 'ended';
+                var statusClass = isLive ? 'live' : (isEnded ? 'ended' : 'upcoming');
+                var scoreClass = isLive ? 'live' : (isEnded ? 'ended' : '');
+                var statusLabel = isLive ? (match.minute || 0) + "'" : (isEnded ? 'FT' : 'Upcoming');
+                var progress = Math.min(100, ((match.minute || 0) / 90) * 100);
+                var timeDisplay = match.date || '';
+
+                if (isLive) liveCount++;
+
+                html += `
+                    <div class="match-card">
+                        <div class="match-header">
+                            <span class="match-number">${match.number || '#'}</span>
+                            <span class="match-status ${statusClass}">
+                                ${isLive ? '<span class="pulse"></span>' : ''}
+                                ${statusLabel}
+                            </span>
+                        </div>
+                        <div class="match-teams">
+                            <div class="team">
+                                <span class="team-flag">${match.homeFlag || '🏳️'}</span>
+                                <span class="team-name">${match.home}</span>
+                            </div>
+                            <div class="score ${scoreClass}">${match.homeScore} - ${match.awayScore}</div>
+                            <div class="team">
+                                <span class="team-name">${match.away}</span>
+                                <span class="team-flag">${match.awayFlag || '🏳️'}</span>
+                            </div>
+                        </div>
+                        ${isLive ? `
+                        <div class="match-progress">
+                            <span class="progress-label">${match.minute || 0}'</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${progress}%;"></div>
+                            </div>
+                            <span class="progress-label">Live</span>
+                        </div>
+                        ` : ''}
+                        <div class="match-date-time">${timeDisplay}</div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+            document.getElementById('liveCount').textContent = liveCount + ' Live';
+        }
+
+        (function() {
+            if (localStorage.getItem("phc_dark_mode") === "true") {
+                document.body.classList.add("dark");
+            }
+        })();
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadMatches();
+            setInterval(function() { loadMatches(); }, 5000);
+            console.log('🌍 World Cup Live loaded!');
+        });
+    </script>
+
+</body>
+</html>

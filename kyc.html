@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KYC Verification - PHC</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    .kyc-container { padding: 20px; max-width: 480px; margin: auto; }
+    .kyc-level { background: #fff; border-radius: 16px; padding: 20px; margin-bottom: 16px; border: 2px solid #e8ecf1; }
+    .kyc-level.active { border-color: #1a237e; background: #f8faff; }
+    .kyc-level .level-badge { display: inline-block; padding: 4px 16px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+    .level-0 { background: #fde8e8; color: #b33a4a; }
+    .level-1 { background: #e8f1ff; color: #1a237e; }
+    .level-2 { background: #e6f7e6; color: #1a8a4a; }
+    .level-3 { background: #fff8e6; color: #b8860b; }
+    .upload-box { border: 2px dashed #dce5f0; border-radius: 12px; padding: 30px; text-align: center; margin: 10px 0; cursor: pointer; }
+    .upload-box:hover { border-color: #1a237e; }
+    .progress-bar { height: 6px; background: #e8ecf1; border-radius: 10px; margin: 12px 0; overflow: hidden; }
+    .progress-fill { height: 100%; background: #1a237e; border-radius: 10px; transition: width 0.5s; }
+    .kyc-form-group { margin: 12px 0; }
+    .kyc-form-group label { display: block; font-weight: 600; font-size: 13px; margin-bottom: 4px; }
+    .kyc-form-group input, .kyc-form-group select { width: 100%; padding: 12px; border: 1px solid #dce5f0; border-radius: 10px; }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="topbar"><div class="logo"><i class="fas fa-arrow-left" onclick="history.back()"></i> KYC Verification</div></div>
+    <div class="welcome"><h1>🔐 Identity Verification</h1><p>Verify your identity to unlock higher withdrawal limits</p></div>
+
+    <div class="kyc-container">
+      <!-- Progress -->
+      <div class="progress-bar"><div class="progress-fill" id="kycProgress" style="width:0%"></div></div>
+
+      <!-- Level 1 -->
+      <div class="kyc-level" id="level1">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <h3>Level 1 <span class="level-badge level-1">Basic</span></h3>
+          <span style="font-size:12px; color:#6c757d;">Withdraw up to $10,000</span>
+        </div>
+        <div id="level1Content">
+          <div class="kyc-form-group">
+            <label>Full Legal Name (as on ID)</label>
+            <input type="text" id="legalName" placeholder="John Doe" />
+          </div>
+          <div class="kyc-form-group">
+            <label>Full Address</label>
+            <input type="text" id="kycAddress" placeholder="123 Main St, City, State, ZIP" />
+          </div>
+          <div class="kyc-form-group">
+            <label>ID Card / Driver's License (Front & Back)</label>
+            <div class="upload-box" onclick="document.getElementById('idFront').click()">
+              <i class="fas fa-id-card" style="font-size:32px; color:#1a237e;"></i>
+              <p>Upload Front of ID</p>
+              <input type="file" id="idFront" accept="image/*" style="display:none;" />
+            </div>
+            <div class="upload-box" onclick="document.getElementById('idBack').click()">
+              <i class="fas fa-id-card" style="font-size:32px; color:#1a237e;"></i>
+              <p>Upload Back of ID</p>
+              <input type="file" id="idBack" accept="image/*" style="display:none;" />
+            </div>
+          </div>
+          <div class="kyc-form-group">
+            <label>Selfie Photo</label>
+            <div class="upload-box" onclick="document.getElementById('selfiePhoto').click()">
+              <i class="fas fa-camera" style="font-size:32px; color:#1a237e;"></i>
+              <p>Take a selfie</p>
+              <input type="file" id="selfiePhoto" accept="image/*" capture="user" style="display:none;" />
+            </div>
+          </div>
+          <div class="kyc-form-group">
+            <label>Selfie Video (3-5 seconds)</label>
+            <div class="upload-box" onclick="document.getElementById('selfieVideo').click()">
+              <i class="fas fa-video" style="font-size:32px; color:#1a237e;"></i>
+              <p>Record a short video</p>
+              <input type="file" id="selfieVideo" accept="video/*" capture="user" style="display:none;" />
+            </div>
+          </div>
+          <button class="play-btn" onclick="submitKYCLevel1()" style="margin-top:10px;">Submit Level 1</button>
+        </div>
+      </div>
+
+      <!-- Level 2 -->
+      <div class="kyc-level" id="level2" style="opacity:0.5; pointer-events:none;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <h3>Level 2 <span class="level-badge level-2">Advanced</span></h3>
+          <span style="font-size:12px; color:#6c757d;">Withdraw up to $1,000,000</span>
+        </div>
+        <div>
+          <div class="kyc-form-group">
+            <label>Bank Name</label>
+            <input type="text" id="bankName" placeholder="e.g. Chase Bank" />
+          </div>
+          <div class="kyc-form-group">
+            <label>Account Number</label>
+            <input type="text" id="bankAccount" placeholder="0123456789" />
+          </div>
+          <div class="kyc-form-group">
+            <label>Routing Number</label>
+            <input type="text" id="bankRouting" placeholder="021000021" />
+          </div>
+          <div class="kyc-form-group">
+            <label>Credit/Debit Card (Front & Back)</label>
+            <div class="upload-box" onclick="document.getElementById('cardFront').click()">
+              <i class="fas fa-credit-card" style="font-size:32px; color:#1a237e;"></i>
+              <p>Upload Front of Card</p>
+              <input type="file" id="cardFront" accept="image/*" style="display:none;" />
+            </div>
+            <div class="upload-box" onclick="document.getElementById('cardBack').click()">
+              <i class="fas fa-credit-card" style="font-size:32px; color:#1a237e;"></i>
+              <p>Upload Back of Card</p>
+              <input type="file" id="cardBack" accept="image/*" style="display:none;" />
+            </div>
+          </div>
+          <div class="kyc-form-group">
+            <label>3 Bank Statements (PDF)</label>
+            <div class="upload-box" onclick="document.getElementById('bankStatement1').click()">
+              <i class="fas fa-file-pdf" style="font-size:32px; color:#1a237e;"></i>
+              <p>Upload Statement 1</p>
+              <input type="file" id="bankStatement1" accept=".pdf" style="display:none;" />
+            </div>
+            <div class="upload-box" onclick="document.getElementById('bankStatement2').click()">
+              <i class="fas fa-file-pdf" style="font-size:32px; color:#1a237e;"></i>
+              <p>Upload Statement 2</p>
+              <input type="file" id="bankStatement2" accept=".pdf" style="display:none;" />
+            </div>
+            <div class="upload-box" onclick="document.getElementById('bankStatement3').click()">
+              <i class="fas fa-file-pdf" style="font-size:32px; color:#1a237e;"></i>
+              <p>Upload Statement 3</p>
+              <input type="file" id="bankStatement3" accept=".pdf" style="display:none;" />
+            </div>
+          </div>
+          <button class="play-btn" onclick="submitKYCLevel2()" style="margin-top:10px;">Submit Level 2</button>
+        </div>
+      </div>
+
+      <!-- Level 3 -->
+      <div class="kyc-level" id="level3" style="opacity:0.5; pointer-events:none;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <h3>Level 3 <span class="level-badge level-3">Unlimited</span></h3>
+          <span style="font-size:12px; color:#6c757d;">Unlimited Withdrawals</span>
+        </div>
+        <div>
+          <p style="color:#6c757d;">Level 3 is automatically granted after Level 2 is approved.</p>
+          <button class="play-btn" onclick="submitKYCLevel3()" style="margin-top:10px;">Request Level 3</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const SUPABASE_URL = "https://gcesrhfyupmkrevaqpfr.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...";
+
+    function getCurrentUser() {
+      const localUser = JSON.parse(localStorage.getItem('phc_current_user'));
+      if (!localUser || !localUser.email) return null;
+      return localUser;
+    }
+
+    async function submitKYCLevel1() {
+      const user = getCurrentUser();
+      if (!user) { alert('Please login first.'); return; }
+
+      const legalName = document.getElementById('legalName').value.trim();
+      const address = document.getElementById('kycAddress').value.trim();
+
+      if (!legalName || !address) { alert('Please fill all fields.'); return; }
+
+      // Upload logic would go here (store in Supabase storage)
+      // For now, just update KYC level
+
+      const { error } = await supabase
+        .from('users')
+        .update({ kyc_level: 1, kyc_status: 'pending' })
+        .eq('email', user.email);
+
+      if (error) { alert('Error: ' + error.message); return; }
+
+      alert('✅ Level 1 submitted for review!');
+      window.location.reload();
+    }
+
+    async function submitKYCLevel2() {
+      const user = getCurrentUser();
+      if (!user) { alert('Please login first.'); return; }
+
+      // Similar validation logic
+      // Update to kyc_level: 2, kyc_status: 'pending'
+    }
+  </script>
+</body>
+</html>

